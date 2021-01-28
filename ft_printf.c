@@ -1,9 +1,5 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
 #include "ft_printf.h"
+
 
 // 메인 printf함수
 int ft_printf(const char *s, ...)
@@ -20,16 +16,10 @@ int ft_printf(const char *s, ...)
     // percent변수에 문자열에서 %부분 주소값 받아오기
     while ((percent = ft_strchr(s_copy, '%')))
     {
-        // %이전의 문자열들 출력
         write(1, s_copy, percent - s_copy);
-        // 구조체 멤버들 0으로 초기화
         ft_memset(&flags, 0, sizeof(t_flags));
         percent++;
-        if (*percent == '-')
-        {
-            flags.minus = 1;
-            percent++;
-        }
+        check_flag(&percent, '-', &flags);
         while (ft_isdigit(*percent))
         {
             if (!flags.width && *percent - '0' == 0)
@@ -38,17 +28,9 @@ int ft_printf(const char *s, ...)
                 flags.width = flags.width * 10 + *percent - '0';
             percent++;
         }
-        if (*percent == '*')
-        {
-            flags.star = 1;
-            percent++;
-        }
-        if (*percent == '.')
-        {
-            flags.dot = 1;
-            percent++;
-        }
-        // printf("\n* flag: %d\n", flags.dot);
+        check_flag(&percent, '*', &flags);
+        check_flag(&percent, '.', &flags);
+
         while (ft_isdigit(*percent))
         {
             flags.dot_width = flags.dot_width * 10 + *percent - '0';

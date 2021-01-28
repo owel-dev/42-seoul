@@ -119,3 +119,17 @@ int		itoa_len(long long num)
     }
     return (len);
 }
+
+void check_flag(char **percent, char c, t_flags *flags)
+{
+    if (**percent == c)
+    {
+        if (c == '-')
+            flags->minus = 1;
+        else if (c == '*')
+            flags->star = 1;
+        else if (c == '.')
+            flags->dot = 1;
+        (*percent)++;
+    }
+}

@@ -1,7 +1,27 @@
 #include "ft_printf.h"
 
+int get_arg(int *arg, va_list ap, t_flags *flags)
+{
+    if (flags->star)
+    {
+        *arg = va_arg(ap, int);
+        if (arg < 0)
+        {
+            flags->minus = 1;
+            *arg *= -1;
+        }
+        flags->width = (int)*arg;
+    }
 
+    if (flags->dot_star)
+    {
+        *arg = va_arg(ap, int);
+        flags->dot_width = *arg;
+    }
 
+    *arg = va_arg(ap, int);
+    return (itoa_len(*arg));
+}
 
 // 메인 printf함수
 int ft_printf(const char *s, ...)
@@ -39,14 +59,16 @@ int ft_printf(const char *s, ...)
                 }
                 flags.width = arg;
             }
+
             if (flags.dot_star)
             {
                 arg = va_arg(ap, int);
                 flags.dot_width = arg;
             }
+
             arg = va_arg(ap, int);
             len = itoa_len(arg);
-
+    
             flags.dot_width = flags.dot_width - len;
             if (flags.dot_width < 0)
                 flags.width = flags.width - len;

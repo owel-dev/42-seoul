@@ -139,9 +139,9 @@ void check_flag(char **percent, char c, t_flags *flags, int isdot)
     }
 }
 
-void check_disit(char **percent, t_flags *flags, int dot)
+void check_disit(char **percent, t_flags *flags, int isdot)
 {
-    if (!dot)
+    if (!isdot)
     {
         while (ft_isdigit(**percent))
         {

@@ -5,12 +5,12 @@ int get_arg(int *arg, va_list ap, t_flags *flags)
     if (flags->star)
     {
         *arg = va_arg(ap, int);
-        if (arg < 0)
+        if (*arg < 0)
         {
             flags->minus = 1;
             *arg *= -1;
         }
-        flags->width = (int)*arg;
+        flags->width = *arg;
     }
 
     if (flags->dot_star)
@@ -49,25 +49,7 @@ int ft_printf(const char *s, ...)
         check_flag(&percent, '*', &flags, 1);
         if (*percent == 'd')
         {	
-            if (flags.star)
-            {
-                arg = va_arg(ap, int);
-                if (arg < 0)
-                {
-                    flags.minus = 1;
-                    arg *= -1;
-                }
-                flags.width = arg;
-            }
-
-            if (flags.dot_star)
-            {
-                arg = va_arg(ap, int);
-                flags.dot_width = arg;
-            }
-
-            arg = va_arg(ap, int);
-            len = itoa_len(arg);
+            len = get_arg(&arg, ap, &flags);
     
             flags.dot_width = flags.dot_width - len;
             if (flags.dot_width < 0)

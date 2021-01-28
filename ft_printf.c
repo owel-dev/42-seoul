@@ -22,14 +22,7 @@ int ft_printf(const char *s, ...)
         ft_memset(&flags, 0, sizeof(t_flags));
         percent++;
         check_flag(&percent, '-', &flags, 0);
-        while (ft_isdigit(*percent))
-        {
-            if (!flags.width && *percent - '0' == 0)
-                flags.zero = 1;
-            else
-                flags.width = flags.width * 10 + *percent - '0';
-            percent++;
-        }
+        check_disit(&percent, &flags, 0);
         check_flag(&percent, '*', &flags, 0);
         check_flag(&percent, '.', &flags, 0);
         while (ft_isdigit(*percent))

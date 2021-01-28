@@ -26,5 +26,7 @@ char	*ft_strchr(const char *s, int c);
 size_t	ft_strlen(const char *str);
 void	ft_putnbr_fd(int n, int fd);
 int		itoa_len(long long num);
-void    check_flag(char **percent, char c, t_flags *flags);
+void    check_flag(char **percent, char c, t_flags *flags, int dot);
+void    check_disit(char **percent, t_flags *flags);
+
 

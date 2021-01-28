@@ -1,6 +1,8 @@
 #include "ft_printf.h"
 
 
+
+
 // 메인 printf함수
 int ft_printf(const char *s, ...)
 {
@@ -19,7 +21,7 @@ int ft_printf(const char *s, ...)
         write(1, s_copy, percent - s_copy);
         ft_memset(&flags, 0, sizeof(t_flags));
         percent++;
-        check_flag(&percent, '-', &flags);
+        check_flag(&percent, '-', &flags, 0);
         while (ft_isdigit(*percent))
         {
             if (!flags.width && *percent - '0' == 0)
@@ -28,20 +30,14 @@ int ft_printf(const char *s, ...)
                 flags.width = flags.width * 10 + *percent - '0';
             percent++;
         }
-        check_flag(&percent, '*', &flags);
-        check_flag(&percent, '.', &flags);
-
+        check_flag(&percent, '*', &flags, 0);
+        check_flag(&percent, '.', &flags, 0);
         while (ft_isdigit(*percent))
         {
             flags.dot_width = flags.dot_width * 10 + *percent - '0';
             percent++;
         }
-        if (*percent == '*')
-        {
-            flags.dot_star = 1;
-            percent++;
-        }
-
+        check_flag(&percent, '*', &flags, 1);
         if (*percent == 'd')
         {	
             if (flags.star)

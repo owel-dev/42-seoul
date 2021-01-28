@@ -25,11 +25,7 @@ int ft_printf(const char *s, ...)
         check_disit(&percent, &flags, 0);
         check_flag(&percent, '*', &flags, 0);
         check_flag(&percent, '.', &flags, 0);
-        while (ft_isdigit(*percent))
-        {
-            flags.dot_width = flags.dot_width * 10 + *percent - '0';
-            percent++;
-        }
+        check_disit(&percent, &flags, 1);
         check_flag(&percent, '*', &flags, 1);
         if (*percent == 'd')
         {	

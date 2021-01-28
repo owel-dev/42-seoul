@@ -144,13 +144,13 @@ void check_disit(char **percent, t_flags *flags, int dot)
     if (!dot)
     {
         while (ft_isdigit(**percent))
-            {
-                if (!flags->width && **percent - '0' == 0)
-                    flags->zero = 1;
-                else
-                    flags->width = flags->width * 10 + **percent - '0';
-                (*percent)++;
-            }
+        {
+            if (!flags->width && **percent - '0' == 0)
+                flags->zero = 1;
+            else
+                flags->width = flags->width * 10 + **percent - '0';
+            (*percent)++;
+        }
     }
     else
     {
@@ -160,5 +160,4 @@ void check_disit(char **percent, t_flags *flags, int dot)
             (*percent)++;
         }
     }
-    
 }

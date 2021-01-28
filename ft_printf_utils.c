@@ -193,3 +193,43 @@ void get_width(t_flags *flags, int len)
     else
         flags->width = flags->width - flags->dot_width - len;
 }
+
+void output_plus(t_flags *flags, int arg)
+{
+    if (flags->zero && !flags->dot)
+    {
+        while((flags->width)-- > 0)
+            write(1, "0", 1);
+    }
+    else
+    {
+        while((flags->width)-- > 0)
+            write(1, " ", 1);
+    }
+    if (flags->dot && flags->dot_width > 0)
+    {
+        while((flags->dot_width)-- > 0)
+            write(1, "0", 1);
+    }
+    ft_putnbr_fd(arg, 1);
+}
+
+void output_minus(t_flags *flags, int arg)
+{
+    if (flags->dot && flags->dot > 0)
+    {
+        while ((flags->dot_width)-- > 0)
+            write(1, "0", 1);
+    }
+    ft_putnbr_fd(arg, 1);
+    if (flags->zero)
+    {
+        while ((flags->width)-- > 0)
+            write(1, "0", 1);
+    }
+    else
+    {
+        while ((flags->width)-- > 0)
+            write(1, " ", 1);
+    }
+}

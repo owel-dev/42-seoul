@@ -29,44 +29,9 @@ int ft_printf(const char *s, ...)
             len = get_arg(&arg, ap, &flags);
             get_width(&flags, len);
             if (!flags.minus)
-            {
-                if (flags.zero && !flags.dot)
-                {
-                    while((flags.width)-- > 0)
-                        write(1, "0", 1);
-                }
-                else
-                {
-                    while((flags.width)-- > 0)
-                        write(1, " ", 1);
-                }
-                if (flags.dot && flags.dot_width > 0)
-                {
-                    while((flags.dot_width)-- > 0)
-                        write(1, "0", 1);
-                }
-                ft_putnbr_fd(arg, 1);
-
-            }
+                output_plus(&flags, arg);
             else
-            {
-                if (flags.dot && flags.dot > 0)
-                {
-                    while ((flags.dot_width)-- > 0)
-                        write(1, "0", 1);
-                }
-                ft_putnbr_fd(arg, 1);
-                if (flags.zero)
-                {
-                    while ((flags.width)-- > 0)
-                        write(1, "0", 1);
-                }
-                else
-                {
-                    while ((flags.width)-- > 0)
-                        write(1, " ", 1);
-                }
-            }
+                output_minus(&flags, arg);
         }
         percent++;
         s_copy = percent;

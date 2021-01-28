@@ -161,3 +161,35 @@ void check_disit(char **percent, t_flags *flags, int isdot)
         }
     }
 }
+
+int get_arg(int *arg, va_list ap, t_flags *flags)
+{
+    if (flags->star)
+    {
+        *arg = va_arg(ap, int);
+        if (*arg < 0)
+        {
+            flags->minus = 1;
+            *arg *= -1;
+        }
+        flags->width = *arg;
+    }
+
+    if (flags->dot_star)
+    {
+        *arg = va_arg(ap, int);
+        flags->dot_width = *arg;
+    }
+
+    *arg = va_arg(ap, int);
+    return (itoa_len(*arg));
+}
+
+void get_width(t_flags *flags, int len)
+{
+    flags->dot_width = flags->dot_width - len;
+    if (flags->dot_width < 0)
+        flags->width = flags->width - len;
+    else
+        flags->width = flags->width - flags->dot_width - len;
+}

@@ -18,12 +18,7 @@ int ft_printf(const char *s, ...)
         write(1, s_copy, percent - s_copy);
         ft_memset(&flags, 0, sizeof(t_flags));
         percent++;
-        check_flag(&percent, '-', &flags, 0);
-        check_disit(&percent, &flags, 0);
-        check_flag(&percent, '*', &flags, 0);
-        check_flag(&percent, '.', &flags, 0);
-        check_disit(&percent, &flags, 1);
-        check_flag(&percent, '*', &flags, 1);
+        check_string(&percent, &flags);
         if (*percent == 'd')
         {	
             len = get_arg(&arg, ap, &flags);

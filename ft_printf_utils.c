@@ -233,3 +233,13 @@ void output_minus(t_flags *flags, int arg)
             write(1, " ", 1);
     }
 }
+
+void check_string(char **percent, t_flags *flags)
+{
+    check_flag(percent, '-', flags, 0);
+    check_disit(percent, flags, 0);
+    check_flag(percent, '*', flags, 0);
+    check_flag(percent, '.', flags, 0);
+    check_disit(percent, flags, 1);
+    check_flag(percent, '*', flags, 1);
+}

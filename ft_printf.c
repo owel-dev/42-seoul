@@ -1,32 +1,22 @@
 #include "ft_printf.h"
 
-
-
-
 // 메인 printf함수
 int ft_printf(const char *s, ...)
 {
     va_list ap;
     t_flags flags;
-    int len = 0;
+    int len;
     char *percent;
-    int arg;
     
+    len = 0;
     va_start(ap, s);
     while ((percent = ft_strchr(s, '%')))
     {
         len += putstr_count(s, percent - s);
         ft_memset(&flags, 0, sizeof(t_flags));
         percent++;
-        check_string(&percent, &flags);
-        if (*percent == 'd')
-        {	
-            set_width(&flags, get_arg(&arg, ap, &flags));
-            if (!flags.minus)
-                output_plus(&flags, arg);
-            else
-                output_minus(&flags, arg);
-        }
+        check_flag_width(&percent, &flags);
+        len += print_arg(percent, &flags, ap);
         percent++;
         s = percent;
     }

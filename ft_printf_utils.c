@@ -139,7 +139,7 @@ void check_flag(char **percent, char c, t_flags *flags, int isdot)
     }
 }
 
-void check_disit(char **percent, t_flags *flags, int isdot)
+void check_width(char **percent, t_flags *flags, int isdot)
 {
     if (!isdot)
     {
@@ -234,13 +234,13 @@ void output_minus(t_flags *flags, int arg)
     }
 }
 
-void check_string(char **percent, t_flags *flags)
+void check_flag_width(char **percent, t_flags *flags)
 {
     check_flag(percent, '-', flags, 0);
-    check_disit(percent, flags, 0);
+    check_width(percent, flags, 0);
     check_flag(percent, '*', flags, 0);
     check_flag(percent, '.', flags, 0);
-    check_disit(percent, flags, 1);
+    check_width(percent, flags, 1);
     check_flag(percent, '*', flags, 1);
 }
 
@@ -256,4 +256,18 @@ int putstr_count(const char *s, int len)
         i++;
     }
     return (i);
+}
+
+int print_arg(char *percent, t_flags *flags, va_list ap)
+{
+    int arg;
+    if (*percent == 'd')
+        {	
+            set_width(flags, get_arg(&arg, ap, flags));
+            if (!flags->minus)
+                output_plus(flags, arg);
+            else
+                output_minus(flags, arg);
+        }
+    return (0);
 }

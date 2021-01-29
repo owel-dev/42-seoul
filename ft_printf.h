@@ -32,5 +32,7 @@ int     get_arg(int *arg, va_list ap, t_flags *flags);
 void    set_width(t_flags *flags, int len);
 void    output_plus(t_flags *flags, int arg);
 void    output_minus(t_flags *flags, int arg);
-void    check_string(char **percent, t_flags *flags);
+void    check_flag_width(char **percent, t_flags *flags);
 int     putstr_count(const char *s, int len);
+int     print_arg(char *percent, t_flags *flags, va_list ap);
+

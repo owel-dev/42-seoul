@@ -21,7 +21,7 @@ int ft_printf(const char *s, ...)
         check_string(&percent, &flags);
         if (*percent == 'd')
         {	
-            get_width(&flags, get_arg(&arg, ap, &flags));
+            set_width(&flags, get_arg(&arg, ap, &flags));
             if (!flags.minus)
                 output_plus(&flags, arg);
             else

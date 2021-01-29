@@ -185,7 +185,7 @@ int get_arg(int *arg, va_list ap, t_flags *flags)
     return (itoa_len(*arg));
 }
 
-void get_width(t_flags *flags, int len)
+void set_width(t_flags *flags, int len)
 {
     flags->dot_width = flags->dot_width - len;
     if (flags->dot_width < 0)

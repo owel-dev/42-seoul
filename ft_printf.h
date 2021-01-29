@@ -33,9 +33,4 @@ void    get_width(t_flags *flags, int len);
 void    output_plus(t_flags *flags, int arg);
 void    output_minus(t_flags *flags, int arg);
 void    check_string(char **percent, t_flags *flags);
-
-
-
-
-
-
+int     putstr_count(const char *s, int len);

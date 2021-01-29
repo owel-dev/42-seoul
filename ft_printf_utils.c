@@ -243,3 +243,17 @@ void check_string(char **percent, t_flags *flags)
     check_disit(percent, flags, 1);
     check_flag(percent, '*', flags, 1);
 }
+
+int putstr_count(const char *s, int len)
+{
+    int i;
+
+    i = 0;
+    while (*s && (i < len || len == 0))
+    {
+        write(1, s, 1);
+        s++;
+        i++;
+    }
+    return (i);
+}

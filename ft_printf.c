@@ -1,38 +1,37 @@
 #include "ft_printf.h"
 
+
+
+
 // 메인 printf함수
 int ft_printf(const char *s, ...)
 {
     va_list ap;
-    va_start(ap, s);
     t_flags flags;
-    char *percent;
-    char *s_copy;
-    int arg;
     int len = 0;
-
-    s_copy = (char *)s;
-    // percent변수에 문자열에서 %부분 주소값 받아오기
-    while ((percent = ft_strchr(s_copy, '%')))
+    char *percent;
+    int arg;
+    
+    va_start(ap, s);
+    while ((percent = ft_strchr(s, '%')))
     {
-        write(1, s_copy, percent - s_copy);
+        len += putstr_count(s, percent - s);
         ft_memset(&flags, 0, sizeof(t_flags));
         percent++;
         check_string(&percent, &flags);
         if (*percent == 'd')
         {	
-            len = get_arg(&arg, ap, &flags);
-            get_width(&flags, len);
+            get_width(&flags, get_arg(&arg, ap, &flags));
             if (!flags.minus)
                 output_plus(&flags, arg);
             else
                 output_minus(&flags, arg);
         }
         percent++;
-        s_copy = percent;
+        s = percent;
     }
-    ft_putstr_fd(s_copy, 1);
-    return (0);
+    len += putstr_count(s, 0);
+    return (len);
 }
 
 int main()

@@ -86,15 +86,10 @@ size_t	ft_strlen(const char *str)
     return (len);
 }
 
-void	ft_putnbr_fd(int n, int fd)
+void	ft_putnbr_fd(long long n, int fd)
 {
     if (fd < 0)
         return ;
-    if (n == -2147483648)
-    {
-        write(fd, "-2147483648", 11);
-        return ;
-    }
     if (n < 0)
     {
         write(fd, "-", 1);
@@ -107,7 +102,7 @@ void	ft_putnbr_fd(int n, int fd)
 
 int		itoa_len(long long num)
 {
-    int		len;
+    long long	len;
 
     len = 1;
     if (num < 0)
@@ -118,6 +113,20 @@ int		itoa_len(long long num)
         len++;
     }
     return (len);
+}
+
+int putstr_count(const char *s, int len)
+{
+    int i;
+
+    i = 0;
+    while (*s && (i < len || len == 0))
+    {
+        write(1, s, 1);
+        s++;
+        i++;
+    }
+    return (i);
 }
 
 void check_flag(char **percent, char c, t_flags *flags, int isdot)
@@ -162,27 +171,14 @@ void check_width(char **percent, t_flags *flags, int isdot)
     }
 }
 
-int get_arg(int *arg, va_list ap, t_flags *flags)
+void check_flag_width(char **percent, t_flags *flags)
 {
-    if (flags->star)
-    {
-        *arg = va_arg(ap, int);
-        if (*arg < 0)
-        {
-            flags->minus = 1;
-            *arg *= -1;
-        }
-        flags->width = *arg;
-    }
-
-    if (flags->dot_star)
-    {
-        *arg = va_arg(ap, int);
-        flags->dot_width = *arg;
-    }
-
-    *arg = va_arg(ap, int);
-    return (itoa_len(*arg));
+    check_flag(percent, '-', flags, 0);
+    check_width(percent, flags, 0);
+    check_flag(percent, '*', flags, 0);
+    check_flag(percent, '.', flags, 0);
+    check_width(percent, flags, 1);
+    check_flag(percent, '*', flags, 1);
 }
 
 void set_width(t_flags *flags, int len)
@@ -194,7 +190,8 @@ void set_width(t_flags *flags, int len)
         flags->width = flags->width - flags->dot_width - len;
 }
 
-void output_plus(t_flags *flags, int arg)
+
+void output_plus(t_flags *flags, long long arg)
 {
     if (flags->zero && !flags->dot)
     {
@@ -214,7 +211,7 @@ void output_plus(t_flags *flags, int arg)
     ft_putnbr_fd(arg, 1);
 }
 
-void output_minus(t_flags *flags, int arg)
+void output_minus(t_flags *flags, long long arg)
 {
     if (flags->dot && flags->dot > 0)
     {
@@ -234,40 +231,85 @@ void output_minus(t_flags *flags, int arg)
     }
 }
 
-void check_flag_width(char **percent, t_flags *flags)
+int set_arg_int(long long *arg, va_list ap)
 {
-    check_flag(percent, '-', flags, 0);
-    check_width(percent, flags, 0);
-    check_flag(percent, '*', flags, 0);
-    check_flag(percent, '.', flags, 0);
-    check_width(percent, flags, 1);
-    check_flag(percent, '*', flags, 1);
+    *arg = va_arg(ap, int);
+    return (itoa_len(*arg));
 }
 
-int putstr_count(const char *s, int len)
+int set_arg(long long *arg, va_list ap)
 {
-    int i;
+    *arg = va_arg(ap, unsigned int);
+    return (itoa_len(*arg));
+}
 
-    i = 0;
-    while (*s && (i < len || len == 0))
+void has_star(va_list ap, t_flags *flags)
+{
+    int arg;
+
+    if (flags->star)
     {
-        write(1, s, 1);
-        s++;
-        i++;
+        arg = va_arg(ap, int);
+        if (arg < 0)
+        {
+            flags->minus = 1;
+            arg *= -1;
+        }
+        flags->width = arg;
     }
-    return (i);
+    if (flags->dot_star)
+    {
+        arg = va_arg(ap, int);
+        flags->dot_width = arg;
+    }
 }
 
 int print_arg(char *percent, t_flags *flags, va_list ap)
 {
-    int arg;
-    if (*percent == 'd')
-        {	
-            set_width(flags, get_arg(&arg, ap, flags));
-            if (!flags->minus)
-                output_plus(flags, arg);
-            else
-                output_minus(flags, arg);
+    long long arg;
+    if (*percent == 'd' || *percent == 'i')
+    {	
+        set_width(flags, set_arg_int(&arg, ap));
+        if (!flags->minus)
+            output_plus(flags, arg);
+        else
+            output_minus(flags, arg);
+    }
+    else if (*percent == 'u')
+    {
+        set_width(flags, set_arg(&arg, ap));
+        if (!flags->minus)
+        {
+            output_plus(flags, arg);
         }
+        else
+            output_minus(flags, arg);
+    }
+    // else if (*percent == 'c')
+    // {
+    //     set_width(flags, set_arg_uint(&arg, ap, flags));
+    //     if (!flags->minus)
+    //     {
+    //         output_plus(flags, arg);
+    //     }
+    //     else
+    //         output_minus(flags, arg);
+    // }
+    // else if (*percent == 's')
+    // {
+
+    // }
+    // else if (*percent == 'x')
+    // {
+
+    // }
+    // else if (*percent == 'X')
+    // {
+
+    // }
+    // else if (*percent == 'p')
+    // {
+
+    // }
     return (0);
 }

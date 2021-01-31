@@ -1,6 +1,7 @@
 *.out
 libft/
 printf*/
-main*.c
+*main.c
 nakim.c
 test.c
+Makefile

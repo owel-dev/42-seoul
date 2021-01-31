@@ -24,15 +24,19 @@ int		ft_isspace(int c);
 int		ft_atoi(const char *str);
 char	*ft_strchr(const char *s, int c);
 size_t	ft_strlen(const char *str);
-void	ft_putnbr_fd(int n, int fd);
+void	ft_putnbr_fd(long long n, int fd);
 int		itoa_len(long long num);
 void    check_flag(char **percent, char c, t_flags *flags, int isdot);
 void    check_disit(char **percent, t_flags *flags, int isdot);
-int     get_arg(int *arg, va_list ap, t_flags *flags);
+int     set_arg_int(long long *arg, va_list ap);
+int     set_arg_uint(long long *arg, va_list ap);
+
+
 void    set_width(t_flags *flags, int len);
-void    output_plus(t_flags *flags, int arg);
-void    output_minus(t_flags *flags, int arg);
+void    output_plus(t_flags *flags, long long arg);
+void    output_minus(t_flags *flags, long long arg);
 void    check_flag_width(char **percent, t_flags *flags);
 int     putstr_count(const char *s, int len);
 int     print_arg(char *percent, t_flags *flags, va_list ap);
+void    has_star(va_list ap, t_flags *flags);
 

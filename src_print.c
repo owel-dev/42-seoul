@@ -78,9 +78,9 @@ int print_format(char **arg, t_flags *flags)
     else
     {
         len += print_dotwidth(flags);
-        len += print_string(*arg, -1);
 		if (!flags->zero && !flags->dot && flags->minus)
 			write(1, "-", 1);
+        len += print_string(*arg, -1);
         len += print_width(flags);
     }
     if (flags->minus)

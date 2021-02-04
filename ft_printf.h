@@ -8,6 +8,7 @@ typedef struct s_flags{
     int len;
     int minus;
     int zero;
+    int width_minus;
     int width;
     int dot;
     int dot_width;
@@ -16,27 +17,38 @@ typedef struct s_flags{
 } t_flags;
 
 int     ft_printf(const char *s, ...);
-void	*ft_memset(void *str, int c, size_t n);
-void	ft_putchar_fd(char c, int fd);
-void	ft_putstr_fd(char *s, int fd);
+
 int		ft_isdigit(int c);
-int		ft_isspace(int c);
-int		ft_atoi(const char *str);
+void	*ft_memset(void *str, int c, size_t n);
+void	*ft_memcpy(void *d, const void *s, size_t n);
 char	*ft_strchr(const char *s, int c);
 size_t	ft_strlen(const char *str);
-void	ft_putnbr_fd(long long n, int fd);
-int		itoa_len(long long num);
+char	*ft_strdup(const char *s);
+char	*ft_strjoin(char const *s1, char const *s2);
+size_t	ft_strlcpy(char *dst, const char *src, size_t size);
+
+
 void    check_flag(char **percent, char c, t_flags *flags, int isdot);
-void    check_disit(char **percent, t_flags *flags, int isdot);
-int     set_arg_int(long long *arg, va_list ap);
-int     set_arg_uint(long long *arg, va_list ap);
+void    check_width(char **percent, t_flags *flags, int isdot);
+void    check_format(char **percent, t_flags *flags);
 
 
 void    set_width(t_flags *flags, int len);
-void    output_plus(t_flags *flags, long long arg);
-void    output_minus(t_flags *flags, long long arg);
-void    check_flag_width(char **percent, t_flags *flags);
-int     putstr_count(const char *s, int len);
-int     print_arg(char *percent, t_flags *flags, va_list ap);
-void    has_star(va_list ap, t_flags *flags);
+void    set_arg(char *percent, char **arg, va_list ap, t_flags *flags);
+void    set_star(va_list ap, t_flags *flags);
+void    set_format(char *percent, char **arg, t_flags *flags, va_list ap);
+
+
+int	    itoa_len(long long num);
+char    *set_long(long long n);
+char    *set_char(int c, t_flags *flags);
+char    *set_string(char *s, t_flags *flags);
+char    *set_hex(size_t n, char type);
+char    *set_add(void *add, char type);
+
+
+void    print_width(t_flags *flags);
+void    print_dotwidth(t_flags *flags);
+int     print_string(const char *s, int len);
+int     print_format(char *percent, char **arg, t_flags *flags, va_list ap);
 

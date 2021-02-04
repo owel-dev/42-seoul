@@ -7,20 +7,20 @@ int ft_printf(const char *s, ...)
     t_flags flags;
     int len;
     char *percent;
+    char *arg;
     
     len = 0;
     va_start(ap, s);
     while ((percent = ft_strchr(s, '%')))
     {
-        len += putstr_count(s, percent - s);
+        len += print_string(s, percent - s);
+        percent++;
         ft_memset(&flags, 0, sizeof(t_flags));
-        percent++;
-        check_flag_width(&percent, &flags);
-        has_star(ap, &flags);
-        len += print_arg(percent, &flags, ap);
-        percent++;
-        s = percent;
+        check_format(&percent, &flags);
+        set_format(percent, &arg, &flags, ap);
+        len += print_format(percent, &arg, &flags, ap);
+        s = ++percent;
     }
-    len += putstr_count(s, 0);
+    len += print_string(s, -1);
     return (len);
 }

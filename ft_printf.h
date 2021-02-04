@@ -40,15 +40,15 @@ void    set_format(char *percent, char **arg, t_flags *flags, va_list ap);
 
 
 int	    itoa_len(long long num);
-char    *set_long(long long n);
+char    *set_long(long long n, t_flags *flags);
 char    *set_char(int c, t_flags *flags);
 char    *set_string(char *s, t_flags *flags);
 char    *set_hex(size_t n, char type);
 char    *set_add(void *add, char type);
 
 
-void    print_width(t_flags *flags);
-void    print_dotwidth(t_flags *flags);
+int     print_width(t_flags *flags);
+int     print_dotwidth(t_flags *flags);
 int     print_string(const char *s, int len);
-int     print_format(char *percent, char **arg, t_flags *flags, va_list ap);
+int     print_format(char **arg, t_flags *flags);
 

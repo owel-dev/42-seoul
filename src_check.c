@@ -6,7 +6,7 @@ void check_flag(char **percent, char c, t_flags *flags, int isdot)
     if (**percent == c)
     {
         if (c == '-')
-            flags->width_minus = 1;
+			flags->width_minus = 1;
         else if (c == '*')
         {
             if (isdot)
@@ -32,6 +32,12 @@ void check_width(char **percent, t_flags *flags, int isdot)
                 flags->width = flags->width * 10 + **percent - '0';
             (*percent)++;
         }
+		if (**percent == '-')
+		{
+			flags->dot_width = 1;
+            (*percent)++;
+		}
+
     }
     else
     {
@@ -51,4 +57,9 @@ void check_format(char **percent, t_flags *flags)
     check_flag(percent, '.', flags, 0);
     check_width(percent, flags, 1);
     check_flag(percent, '*', flags, 1);
+	if (flags->zero && flags->width_minus)
+	{
+		flags->zero = 0;
+		flags->width_minus = 0;
+	}
 }

@@ -14,9 +14,9 @@ void set_width(t_flags *flags, int len)
 void set_arg(char *percent, char **arg, va_list ap, t_flags *flags)
 {
     if (*percent == 'd' || *percent == 'i')
-        *arg = set_long(va_arg(ap, int));
+        *arg = set_long(va_arg(ap, int), flags);
     else if (*percent == 'u')
-        *arg = set_long(va_arg(ap, unsigned int));
+        *arg = set_long(va_arg(ap, unsigned int), flags);
     else if (*percent == 'c')
     {
         *arg = set_char(va_arg(ap, int), flags);
@@ -26,13 +26,18 @@ void set_arg(char *percent, char **arg, va_list ap, t_flags *flags)
     else if (*percent == 's')
         *arg = set_string(va_arg(ap, char *), flags);
     else if (*percent == 'x')
-        *arg = set_hex(va_arg(ap, size_t), 'x');
+    {
+        *arg = set_hex(va_arg(ap, unsigned int), 'x');
+    }
     else if (*percent == 'X')
-        *arg = set_hex(va_arg(ap, size_t), 'X');
+        *arg = set_hex(va_arg(ap, unsigned int), 'X');
     else if (*percent == 'p')
         *arg = set_add(va_arg(ap, void *), 'x');
     else if (*percent == '%')
-        *arg = set_hex(va_arg(ap, void *), 'X');
+    {
+
+    }
+        // *arg = set_hex(va_arg(ap, void *), 'X');
 	// printf("\n*arg: %s\n", *arg);
     
 }
@@ -46,6 +51,7 @@ void set_star(va_list ap, t_flags *flags)
         arg = va_arg(ap, int);
         if (arg < 0)
         {
+            flags->zero = 0;
             flags->width_minus = 1;
             arg *= -1;
         }

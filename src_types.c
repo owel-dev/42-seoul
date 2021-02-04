@@ -5,8 +5,8 @@ int	itoa_len(long long num)
 	int		len;
 
 	len = 1;
-	if (num < 0)
-		len++;
+	// if (num < 0)
+	// 	len++;
 	while ((num / 10) != 0)
 	{
 		num /= 10;
@@ -23,15 +23,15 @@ char    *set_long(long long n, t_flags *flags)
 
 	negative = 0;
 	len = itoa_len(n);
+	// printf("\n%d\n", len);
 	(void)flags;
 	if (n == 0 && flags->dot && flags->dot_width == 0)
-	{
 		return (ft_strdup(""));
-	}
 	if (n < 0)
 	{
         n *= -1;
 		negative = 1;
+		flags->minus = 1;
 	}
     if (!(result = (char *)malloc(sizeof(char) * (len + 1))))
 		return (0);
@@ -41,8 +41,8 @@ char    *set_long(long long n, t_flags *flags)
 		result[len] = n % 10 + '0';
 		n /= 10;
 	}
-	if (negative)
-		result[0] = '-';
+	// if (negative)
+	// 	result[0] = '-';
     // printf("\nreturn: %s\n", result);
     return (result);
 }

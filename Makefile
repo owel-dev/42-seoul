@@ -36,6 +36,9 @@ re : fclean all
 
 .PHONY: all clean fclean re
 
+
+
+
 # NAME = a.out
 
 # FILES = ft_printf src_check src_libft src_print src_set src_types
@@ -49,3 +52,6 @@ re : fclean all
 
 # c :
 # 	rm *.o *.out
+
+# re : c all
+	

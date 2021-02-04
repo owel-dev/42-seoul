@@ -1,14 +1,25 @@
 #include "ft_printf.h"
 
-void set_width(t_flags *flags, int len)
+void set_star(va_list ap, t_flags *flags)
 {
-    flags->dot_width = flags->dot_width - len;
-    if (flags->dot_width < 0)
-        flags->width = flags->width - len;
-    else
-        flags->width = flags->width - flags->dot_width - len;
-    // printf("\nwidth: %d\n", flags->width);
-    // printf("\ndot_width: %d\n", flags->dot_width);
+    int arg;
+
+    if (flags->star)
+    {
+        arg = va_arg(ap, int);
+        if (arg < 0)
+        {
+            flags->zero = 0;
+            flags->width_minus = 1;
+            arg *= -1;
+        }
+        flags->width = arg;
+    }
+    if (flags->dot_star)
+    {
+        arg = va_arg(ap, int);
+        flags->dot_width = arg;
+    }
 }
 
 void set_arg(char *percent, char **arg, va_list ap, t_flags *flags)
@@ -42,27 +53,18 @@ void set_arg(char *percent, char **arg, va_list ap, t_flags *flags)
     
 }
 
-void set_star(va_list ap, t_flags *flags)
+void set_width(t_flags *flags, int len)
 {
-    int arg;
-
-    if (flags->star)
-    {
-        arg = va_arg(ap, int);
-        if (arg < 0)
-        {
-            flags->zero = 0;
-            flags->width_minus = 1;
-            arg *= -1;
-        }
-        flags->width = arg;
-    }
-    if (flags->dot_star)
-    {
-        arg = va_arg(ap, int);
-        flags->dot_width = arg;
-    }
+    flags->dot_width = flags->dot_width - len;
+    if (flags->dot_width < 0)
+        flags->width = flags->width - len;
+    else
+        flags->width = flags->width - flags->dot_width - len;
+    // printf("\nwidth: %d\n", flags->width);
+    // printf("\ndot_width: %d\n", flags->dot_width);
 }
+
+
 
 
 void set_format(char *percent, char **arg, t_flags *flags, va_list ap)

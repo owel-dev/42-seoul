@@ -13,6 +13,7 @@ void set_star(va_list ap, t_flags *flags)
             flags->width_minus = 1;
             arg *= -1;
         }
+        // if (flags->zero)
         flags->width = arg;
     }
     if (flags->dot_star)

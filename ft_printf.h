@@ -14,6 +14,8 @@ typedef struct s_flags{
     int dot_width;
     int star;
     int dot_star;
+    int print_zero;
+    int print_space;
 } t_flags;
 
 int     ft_printf(const char *s, ...);

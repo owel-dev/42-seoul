@@ -37,7 +37,6 @@ void check_width(char **percent, t_flags *flags, int isdot)
 			flags->dot_width = 1;
             (*percent)++;
 		}
-
     }
     else
     {

@@ -8,7 +8,10 @@ int print_width(t_flags *flags)
     if (flags->zero && !flags->dot)
     {
 		if (flags->minus)
+		{
 			write(1, "-", 1);
+			flags->width--;
+		}
         while ((flags->width)-- > 0)
 		{
             write(1, "0", 1);
@@ -19,11 +22,30 @@ int print_width(t_flags *flags)
     {
 		if (flags->minus)
 			flags->width--;
-        while ((flags->width)-- > 0)
+		if (flags->zero)
 		{
-            write(1, " ", 1);
-			len++;
+			while ((flags->width) > 0 && (flags->dot_width) != 0)
+			{
+				write(1, "0", 1);
+				len++;
+				flags->width--;
+				flags->dot_width--;
+			}
+			while ((flags->width)-- > 0)
+			{
+				write(1, " ", 1);
+				len++;
+			}
 		}
+		else
+		{
+			while ((flags->width)-- > 0)
+			{
+				write(1, " ", 1);
+				len++;
+			}
+		}
+		
     }
 	return (len);
 }

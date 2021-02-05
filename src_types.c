@@ -5,8 +5,6 @@ int	itoa_len(long long num)
 	int		len;
 
 	len = 1;
-	// if (num < 0)
-	// 	len++;
 	while ((num / 10) != 0)
 	{
 		num /= 10;
@@ -18,19 +16,16 @@ int	itoa_len(long long num)
 char    *set_long(long long n, t_flags *flags)
 {
     int len;
-	int negative;
     char *result;
 
-	negative = 0;
 	len = itoa_len(n);
-	// printf("\n%d\n", len);
-	(void)flags;
 	if (n == 0 && flags->dot && flags->dot_width == 0)
+	{
 		return (ft_strdup(""));
+	}
 	if (n < 0)
 	{
         n *= -1;
-		negative = 1;
 		flags->minus = 1;
 	}
     if (!(result = (char *)malloc(sizeof(char) * (len + 1))))
@@ -41,9 +36,6 @@ char    *set_long(long long n, t_flags *flags)
 		result[len] = n % 10 + '0';
 		n /= 10;
 	}
-	// if (negative)
-	// 	result[0] = '-';
-    // printf("\nreturn: %s\n", result);
     return (result);
 }
 
@@ -95,14 +87,12 @@ char *set_hex(size_t n, char type)
 	else
 		hex = "0123456789abcdef";
     len = 0;
-	// printf("\nn: %llu\n", n);
     n_copy = n;
     while (n_copy != 0)
 	{
 		n_copy /= 16;
 		len++;
 	}
-	// printf("\nlen: %d\n", len);
     buffer = (char *)malloc(sizeof(char) * len + 1);
     buffer[len] = 0;
 	while (len--)
@@ -110,7 +100,6 @@ char *set_hex(size_t n, char type)
 		buffer[len] = hex[(n % 16)];
 		n /= 16;
 	}
-	// printf("\nbuffer: %s\n", buffer);
 	return (buffer);
 }
 

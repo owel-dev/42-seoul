@@ -47,18 +47,3 @@ void check_width(char **percent, t_flags *flags, int isdot)
         }
     }
 }
-
-void check_format(char **percent, t_flags *flags)
-{
-    check_flag(percent, '-', flags, 0);
-    check_width(percent, flags, 0);
-    check_flag(percent, '*', flags, 0);
-    check_flag(percent, '.', flags, 0);
-    check_width(percent, flags, 1);
-    check_flag(percent, '*', flags, 1);
-	if (flags->zero && flags->width_minus)
-	{
-		flags->zero = 0;
-		flags->width_minus = 0;
-	}
-}

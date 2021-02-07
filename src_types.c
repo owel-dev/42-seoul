@@ -1,117 +1,109 @@
 #include "ft_printf.h"
 
-int	itoa_len(long long num)
+int print_num(t_flags *flags, size_t arg, char type, char *base)
 {
-	int		len;
+	char output;
+    int len;
 
-	len = 1;
-	while ((num / 10) != 0)
-	{
-		num /= 10;
-		len++;
-	}
-	return (len);
+    len = 1;
+    // printf("\narg: %d\n", arg);
+    // printf("\ntype: %c\n", type);
+
+    if (type == 'd')
+    {
+        if (arg >= 10)
+            len += print_num(flags, arg / 10, type, base);
+        output = (arg % 10) + '0';
+        write(1, &output, 1);
+    }
+    else if (type == 'u')
+    {
+        if ((unsigned int)arg >= 10)
+            len += print_num(flags, (unsigned int)arg / 10, type, base);
+        output = ((unsigned int)arg % 10) + '0';
+        write(1, &output, 1);
+    }
+    else if (type == 'x' || type == 'X' || type == 'p')
+    {
+        // printf("\narg: %d\n", arg);
+        if (type == 'p' && arg == 0)
+            return (len);
+        if (arg >= 16)
+		    len += print_num(flags, arg / 16, type, base);
+        write(1, &base[arg % 16], 1);
+    }
+    return (len);
 }
 
-char    *set_long(long long n, t_flags *flags)
+int print_int(t_flags *flags, char type)
 {
     int len;
-    char *result;
+    long long num;
+    char *base;
 
-	len = itoa_len(n);
-	if (n == 0 && flags->dot && flags->dot_width == 0)
-	{
-		return (ft_strdup(""));
-	}
-	if (n < 0)
-	{
-        n *= -1;
-		flags->minus = 1;
-	}
-    if (!(result = (char *)malloc(sizeof(char) * (len + 1))))
+    base = NULL;
+	len = 0;
+    num = flags->arg;
+    // printf("\narg: %u\n", num);
+	if (num == 0 && flags->dot && flags->dot_width == 0)
 		return (0);
-    result[len] = 0;
-	while (len--)
-	{
-		result[len] = n % 10 + '0';
-		n /= 10;
-	}
-    return (result);
+    // printf("\narg: %d\n", arg);
+    len += print_num(flags, num, type, NULL);
+    return (len);
 }
 
-char *set_char(int c, t_flags *flags)
+int print_char(t_flags *flags)
 {
-    char *result;
+    size_t c;
+    c = flags->arg;
 
-    result = (char *)malloc(sizeof(char) * 2);
-    result[0] = c;
-    result[1] = 0;
-    
-    flags->dot_width = 0;
-    flags->dot = 0;
-    return (result);
+    if (c == 0)
+        return (0);
+    write(1, &c, 1);
+    return (1);
 }
 
-char *set_string(char *s, t_flags *flags)
+int print_chars(t_flags *flags)
 {
-    char *result;
+    char *str;
     int len;
 
-    len = ft_strlen(s);
+    str = flags->string;
+    len = 0;
     if (flags->dot)
     {
-        if (flags->dot_width < len && flags->dot_width >= 0)
-        {
-            result = (char *)malloc(sizeof(char) * flags->dot_width + 1);
-            ft_strlcpy(result, s, flags->dot_width + 1);
-        }
-        else
-            result = ft_strdup(s);
+        while (str[len] && len < flags->dot_width)
+            write(1, &str[len++], 1);
     }
     else
-        result = ft_strdup(s);
-    flags->dot_width = 0;
-    flags->dot = 0;
-    return (result);
+    {
+        while (str[len])
+            write(1, &str[len++], 1);
+    }
+    return (len);
 }
 
-char *set_hex(size_t n, char type)
+int print_hex(t_flags *flags, char type)
 {
-    char *hex;
-    char *buffer;
     int len;
-    size_t n_copy;
+    char *base;
+    size_t arg;
 
-	if (type == 'X')
-		hex = "0123456789ABCDEF";
-	else
-		hex = "0123456789abcdef";
     len = 0;
-    n_copy = n;
-    while (n_copy != 0)
-	{
-		n_copy /= 16;
-		len++;
-	}
-    buffer = (char *)malloc(sizeof(char) * len + 1);
-    buffer[len] = 0;
-	while (len--)
-	{
-		buffer[len] = hex[(n % 16)];
-		n /= 16;
-	}
-	return (buffer);
-}
-
-char *set_add(void *add, char type)
-{
-    size_t n;
-    char *result;
-    char *pre;
-
-    n = (size_t)add;
-    result = set_hex(n, type);
-    pre = "0x";
-    result = ft_strjoin(pre, result);
-    return (result);
+    base = NULL;
+	if (type == 'X')
+		base = "0123456789ABCDEF";
+	else if (type == 'x' || type == 'p')
+    {
+		base = "0123456789abcdef";
+    }
+    arg = (size_t)flags->arg;
+    if (type == 'p')
+    {
+        write(1, "0x", 2);
+        if (flags->arg == 0)
+            write(1, "0", 1);
+    }
+    len += print_num(flags, arg, type, base);
+	return (len);
 }

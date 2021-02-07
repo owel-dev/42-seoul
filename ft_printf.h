@@ -16,41 +16,39 @@ typedef struct s_flags{
     int dot_star;
     int print_zero;
     int print_space;
+    long long arg;
+    char *string;
 } t_flags;
 
 int     ft_printf(const char *s, ...);
 
 int		ft_isdigit(int c);
 void	*ft_memset(void *str, int c, size_t n);
-void	*ft_memcpy(void *d, const void *s, size_t n);
 char	*ft_strchr(const char *s, int c);
-size_t	ft_strlen(const char *str);
-char	*ft_strdup(const char *s);
-char	*ft_strjoin(char const *s1, char const *s2);
-size_t	ft_strlcpy(char *dst, const char *src, size_t size);
-
 
 void    check_flag(char **percent, char c, t_flags *flags, int isdot);
 void    check_width(char **percent, t_flags *flags, int isdot);
 void    check_format(char **percent, t_flags *flags);
 
-
+int check_len(long long n, t_flags *flags, int type);
 void    set_width(t_flags *flags, int len);
-void    set_arg(char *percent, char **arg, va_list ap, t_flags *flags);
 void    set_star(va_list ap, t_flags *flags);
-void    set_format(char *percent, char **arg, t_flags *flags, va_list ap);
+void    set_arg(char *percent, t_flags *flags, va_list ap);
+int     set_len(char *percent, t_flags *flags);
+void    set_format(char *percent, t_flags *flags, va_list ap);
 
-
-int	    itoa_len(long long num);
-char    *set_long(long long n, t_flags *flags);
-char    *set_char(int c, t_flags *flags);
-char    *set_string(char *s, t_flags *flags);
-char    *set_hex(size_t n, char type);
-char    *set_add(void *add, char type);
-
-
-int     print_width(t_flags *flags);
-int     print_dotwidth(t_flags *flags);
 int     print_string(const char *s, int len);
-int     print_format(char **arg, t_flags *flags);
+int     print_spaces(t_flags *flags);
+int     print_zeros(t_flags *flags);
+int     print_minus(t_flags *flags, int position);
+int     print_arg(char *percent, t_flags *flags);
+int     print_format(char *percent, t_flags *flags);
+
+int     print_num(t_flags *flags, size_t arg, char tyoe, char *base);
+int     print_int(t_flags *flags, char type);
+int     print_char(t_flags *flags);
+int     print_chars(t_flags *flags);
+int     print_hex(t_flags *flags, char type);
+
+
 

@@ -1,73 +1,5 @@
 #include "ft_printf.h"
 
-int print_width(t_flags *flags)
-{
-	int len;
-
-	len = 0;
-    if (flags->zero && !flags->dot)
-    {
-		if (flags->minus)
-		{
-			write(1, "-", 1);
-			flags->width--;
-		}
-        while ((flags->width)-- > 0)
-		{
-            write(1, "0", 1);
-			len++;
-		}
-    }
-    else
-    {
-		if (flags->minus)
-			flags->width--;
-		if (flags->zero)
-		{
-			while ((flags->width) > 0 && (flags->dot_width) != 0)
-			{
-				write(1, "0", 1);
-				len++;
-				flags->width--;
-				flags->dot_width--;
-			}
-			while ((flags->width)-- > 0)
-			{
-				write(1, " ", 1);
-				len++;
-			}
-		}
-		else
-		{
-			while ((flags->width)-- > 0)
-			{
-				write(1, " ", 1);
-				len++;
-			}
-		}
-		
-    }
-	return (len);
-}
-
-int print_dotwidth(t_flags *flags)
-{
-	int len;
-
-	len = 0;
-    if (flags->dot)
-    {
-		if (flags->minus)
-			write(1, "-", 1);
-        while ((flags->dot_width)-- > 0)
-		{
-            write(1, "0", 1);
-			len++;
-		}
-    }
-	return (len);
-}
-
 int print_string(const char *s, int len)
 {
     int i;
@@ -84,28 +16,85 @@ int print_string(const char *s, int len)
     return (i);
 }
 
-int print_format(char **arg, t_flags *flags)
+int print_spaces(t_flags *flags)
+{
+	int len;
+
+	len = 0;
+    // printf("\nspace: %d\n", flags->print_space);
+	while (flags->print_space > 0)
+	{
+		write(1, " ", 1);
+		len++;
+		flags->print_space--;
+	}
+    return (len);
+}
+
+int print_zeros(t_flags *flags)
 {
     int len;
 
-	len = 0;
-    if (!flags->width_minus)
-    {
-        len += print_width(flags);
-        len += print_dotwidth(flags);
-		if (!flags->zero && !flags->dot && flags->minus)
-			write(1, "-", 1);
-        len += print_string(*arg, -1);
-    }
-    else
-    {
-        len += print_dotwidth(flags);
-		if (!flags->zero && !flags->dot && flags->minus)
-			write(1, "-", 1);
-        len += print_string(*arg, -1);
-        len += print_width(flags);
-    }
-    if (flags->minus)
+    len = 0;
+	while (flags->print_zero > 0)
+	{
+		write(1, "0", 1);
 		len++;
+		flags->print_zero--;
+	}
+	return (len);
+}
+
+int print_arg(char *percent, t_flags *flags)
+{
+    int len;
+
+    len = 0;
+    if (*percent == 'd' || *percent == 'i')
+        len += print_int(flags, 'd');
+    else if (*percent == 'u')
+        len += print_int(flags, 'u');
+    else if (*percent == 'c')
+        len += print_char(flags);
+    else if (*percent == 's')
+        len += print_chars(flags);
+    else if (*percent == 'x')
+        len += print_hex(flags, 'x');
+    else if (*percent == 'X')
+        len += print_hex(flags, 'X');
+    else if (*percent == 'p')
+        len += print_hex(flags, 'p');
+    else if (*percent == '%')
+    {
+
+    }
+    return (len);
+}
+
+
+int print_minus(t_flags *flags, int position)
+{
+    int len;
+
+    len = 0;
+    if (flags->minus)
+    {
+        // printf("\narg: \n");
+
+        if (position == 0)
+        {
+            if (flags->print_zero > 0)
+            {
+                write(1, "-", 1);
+                flags->minus = 0;
+                len++;
+            }
+        }
+        else if (position == 1)
+        {
+            write(1, "-", 1);
+            len++;
+        }
+    }
     return (len);
 }

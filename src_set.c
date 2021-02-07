@@ -40,13 +40,15 @@ void set_arg(char *percent, t_flags *flags, va_list ap)
         // printf("\narg: %d\n", flags->arg);
     }
     else if (*percent == 'u' || *percent == 'x' || *percent == 'X')
+    {
         flags->arg = va_arg(ap, unsigned int);
+    }
     else if (*percent == 'p')
     {
         flags->arg = (long long)va_arg(ap, void *);
-        flags->width -= 2;
-        if (flags->arg == 0)
-            flags->width--;   
+        // flags->width -= 2;
+        // if (flags->arg == 0)
+        //     flags->width--;   
     }
 }
 
@@ -70,6 +72,8 @@ int check_len(long long n, t_flags *flags, int type)
     }
     else if (type == 1)
     {
+        if (n == 0 && flags->dot && flags->dot_width == 0)
+            return (0);
         while ((n /= 16) != 0)
             len++;
     }
@@ -98,7 +102,6 @@ int set_len(char *percent, t_flags *flags)
             flags->dot = 0;
             flags->dot_width = 0;
         }
-
     }
     else if (*percent == 'd' || *percent == 'i' || *percent == 'u')
     {
@@ -108,7 +111,15 @@ int set_len(char *percent, t_flags *flags)
     else if (*percent == 'c' || *percent == '%')
         len = 1;
     else if (*percent == 'x' || *percent == 'X')
+    {
         len = check_len(flags->arg, flags, 1);
+        // printf("\nlen: %d\n", len);
+    }
+    else if (*percent == 'p')
+    {
+        len = check_len(flags->arg, flags, 1);
+        len += 2;
+    }
     return (len);
 }
 
@@ -143,9 +154,9 @@ void set_width(t_flags *flags, int len)
     }
     else
     {
+        flags->print_space = flags->width - len;
         // printf("\nlen: %d\n", len);
         // printf("\nwidth: %d\n", flags->width);
-        flags->print_space = flags->width - len;
         // printf("\nspace: %d\n", flags->print_space);
         flags->print_zero = flags->dot_width - len;
     }

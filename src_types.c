@@ -26,8 +26,12 @@ int print_num(t_flags *flags, size_t arg, char type, char *base)
     else if (type == 'x' || type == 'X' || type == 'p')
     {
         // printf("\narg: %d\n", arg);
+        // printf("\ndot: %d\n", flags->dot);
+        // printf("\ntype: %c\n", type);
+        if ((type == 'X' || type == 'x') && arg == 0 && flags->dot && flags->dot_width == 0)
+            return (0);
         if (type == 'p' && arg == 0)
-            return (len);
+            return (0);
         if (arg >= 16)
 		    len += print_num(flags, arg / 16, type, base);
         write(1, &base[arg % 16], 1);
@@ -100,9 +104,9 @@ int print_hex(t_flags *flags, char type)
     arg = (size_t)flags->arg;
     if (type == 'p')
     {
-        write(1, "0x", 2);
+        len += write(1, "0x", 2);
         if (flags->arg == 0)
-            write(1, "0", 1);
+            len += write(1, "0", 1);
     }
     len += print_num(flags, arg, type, base);
 	return (len);

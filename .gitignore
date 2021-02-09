@@ -1,7 +1,5 @@
 *.out
 *.o
-libft/
-printf*/
 main/
 nakim.c
 test.c

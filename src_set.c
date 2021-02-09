@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   src_set.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/10 02:42:13 by ulee              #+#    #+#             */
+/*   Updated: 2021/02/10 03:25:58 by ulee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
-void    set_star(va_list ap, t_flags *flags)
+void	set_star(va_list ap, t_flags *flags)
 {
-	int     arg;
+	int	arg;
 
 	if (flags->star)
 	{
@@ -22,7 +34,7 @@ void    set_star(va_list ap, t_flags *flags)
 	}
 }
 
-void 	set_arg(char *percent, t_flags *flags, va_list ap)
+void	set_arg(char *percent, t_flags *flags, va_list ap)
 {
 	if (*percent == 's')
 	{
@@ -40,9 +52,9 @@ void 	set_arg(char *percent, t_flags *flags, va_list ap)
 		flags->arg = -1;
 }
 
-int 	set_len(char *percent, t_flags *flags)
+int		set_len(char *percent, t_flags *flags)
 {
-	int 	len;
+	int	len;
 
 	len = 0;
 	if (*percent == 's')
@@ -61,9 +73,9 @@ int 	set_len(char *percent, t_flags *flags)
 	return (len);
 }
 
-void 	set_width(t_flags *flags, int len)
+void	set_width(t_flags *flags, int len)
 {
-	if(flags->minus)
+	if (flags->minus)
 		flags->width--;
 	if (flags->zero && flags->dot && flags->dot_width >= 0)
 	{

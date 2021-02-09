@@ -1,48 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   src_types.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/10 03:00:33 by ulee              #+#    #+#             */
+/*   Updated: 2021/02/10 03:45:15 by ulee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
-int 	print_num(t_flags *flags, size_t arg, char type)
+int				print_int(t_flags *flags, char type)
 {
-	char 	output;
-	int 	len;
-
-	len = 1;
-	if (type == 'd')
-	{
-		if (arg >= 10)
-			len += print_num(flags, arg / 10, type);
-		output = (arg % 10) + '0';
-		write(1, &output, 1);
-	}
-	else if (type == 'u')
-	{
-		if ((unsigned int)arg >= 10)
-			len += print_num(flags, (unsigned int)arg / 10, type);
-		output = ((unsigned int)arg % 10) + '0';
-		write(1, &output, 1);
-	}
-	return (len);
-}
-
-int 	print_numhex(t_flags *flags, size_t arg, char type, char *base)
-{
-	int 	len;
-
-	len = 1;
-	if ((type == 'X' || type == 'x') && arg == 0 && flags->dot && flags->dot_width == 0)
-			return (0);
-		if (type == 'p' && arg == 0)
-			return (0);
-		if (arg >= 16)
-			len += print_numhex(flags, arg / 16, type, base);
-		write(1, &base[arg % 16], 1);
-	return (len);
-	
-}
-
-int 	print_int(t_flags *flags, char type)
-{
-	int 		len;
-	long long 	num;
+	int			len;
+	long long	num;
 
 	len = 0;
 	num = flags->arg;
@@ -52,9 +25,10 @@ int 	print_int(t_flags *flags, char type)
 	return (len);
 }
 
-int print_char(t_flags *flags)
+int				print_char(t_flags *flags)
 {
-	char c;
+	char		c;
+
 	c = flags->arg;
 	if (c == 0)
 	{
@@ -65,10 +39,10 @@ int print_char(t_flags *flags)
 	return (1);
 }
 
-int 	print_chars(t_flags *flags)
+int				print_chars(t_flags *flags)
 {
-	char 	*str;
-	int 	len;
+	char		*str;
+	int			len;
 
 	str = flags->string;
 	len = 0;
@@ -85,11 +59,11 @@ int 	print_chars(t_flags *flags)
 	return (len);
 }
 
-int 	print_hex(t_flags *flags, char type)
+int				print_hex(t_flags *flags, char type)
 {
-	int 	len;
-	char 	*base;
-	size_t 	arg;
+	int			len;
+	char		*base;
+	size_t		arg;
 
 	len = 0;
 	base = NULL;

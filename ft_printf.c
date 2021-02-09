@@ -1,12 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/10 02:41:53 by ulee              #+#    #+#             */
+/*   Updated: 2021/02/10 03:10:05 by ulee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
-int 	ft_printf(const char *s, ...)
+int				ft_printf(const char *s, ...)
 {
-	va_list 	ap;
-	t_flags 	flags;
-	int 		len;
-	char 		*percent;
-	
+	va_list		ap;
+	t_flags		flags;
+	int			len;
+	char		*percent;
+
 	len = 0;
 	va_start(ap, s);
 	while ((percent = ft_strchr(s, '%')))

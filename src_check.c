@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   src_check.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/10 02:42:16 by ulee              #+#    #+#             */
+/*   Updated: 2021/02/10 03:24:10 by ulee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
-void    check_flag(char **percent, char c, t_flags *flags, int isdot)
+void	check_flag(char **percent, char c, t_flags *flags, int isdot)
 {
 	if (**percent == c)
 	{
@@ -19,7 +31,7 @@ void    check_flag(char **percent, char c, t_flags *flags, int isdot)
 	}
 }
 
-void    check_width(char **percent, t_flags *flags, int isdot)
+void	check_width(char **percent, t_flags *flags, int isdot)
 {
 	if (!isdot)
 	{

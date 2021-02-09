@@ -6,7 +6,7 @@
 #    By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/02/10 02:56:11 by ulee              #+#    #+#              #
-#    Updated: 2021/02/10 03:48:12 by ulee             ###   ########.fr        #
+#    Updated: 2021/02/10 04:07:26 by ulee             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ CC			= gcc
 CFLAGS		= -Wall -Wextra -Werror
 
 %.o: %.c
-	$(CC)  -c $< -o $@
+	$(CC) -c $< -o $@
 
 $(NAME) : $(OBJS)
 	make all -C ./libft
@@ -41,13 +41,10 @@ $(NAME) : $(OBJS)
 
 all : $(NAME)
 
-t : all
-	gcc -o a.out test.c -L. -l ftprintf
-
 clean :
 	make clean -C ./libft
 	$(RM) $(OBJS)
-
+	
 fclean : clean
 	make fclean -C ./libft
 	$(RM) $(NAME)

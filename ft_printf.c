@@ -6,7 +6,7 @@
 /*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/10 02:41:53 by ulee              #+#    #+#             */
-/*   Updated: 2021/02/10 03:10:05 by ulee             ###   ########.fr       */
+/*   Updated: 2021/02/10 04:09:28 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,6 @@ int				ft_printf(const char *s, ...)
 		s = ++percent;
 	}
 	len += print_string(s, -1);
+	va_end(ap);
 	return (len);
 }

@@ -46,6 +46,7 @@ SRCS		= ./ft_printf.c \
 			  ./src_libft.c \
 			  ./src_check.c \
 			  ./src_set.c   \
+			  ./src_set2.c   \
 			  ./src_print.c \
 			  ./src_types.c \
 
@@ -60,17 +61,18 @@ CFLAGS		= -Wall -Wextra -Werror
 	$(CC)  -c $< -o $@
 
 $(NAME) : $(OBJS)
+	make all -C ./libft
+	cp ./libft/libft.a $(NAME)
 	$(LIB) $(NAME) $(OBJS)
 
 all : $(NAME)
 
-t : $(SRCS:.c=.o) test.o
-	gcc -o a.out $^
-
 clean :
+	make clean -C ./libft
 	$(RM) $(OBJS)
 
 fclean : clean
+	make fclean -C ./libft
 	$(RM) $(NAME)
 
 re : fclean all

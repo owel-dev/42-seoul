@@ -20,7 +20,6 @@ int     ft_istype(int c)
         i++;
     }
     return (flag);
-
 }
 
 void	*ft_memset(void *str, int c, size_t n)
@@ -36,7 +35,6 @@ void	*ft_memset(void *str, int c, size_t n)
     return (str);
 }
 
-
 char	*ft_strchr(const char *s, int c)
 {
     while (*s != c)
@@ -46,4 +44,12 @@ char	*ft_strchr(const char *s, int c)
         s++;
     }
     return ((char *)s);
+}
+
+void delete_multiflag(t_flags *flags)
+{
+    if (flags->minus > 1)
+        flags->minus = 0;
+    if (flags->zero > 1)
+        flags->zero = 0;
 }

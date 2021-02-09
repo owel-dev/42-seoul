@@ -23,6 +23,7 @@ typedef struct s_flags{
 int     ft_printf(const char *s, ...);
 
 int		ft_isdigit(int c);
+// int     ft_istype(int c);
 void	*ft_memset(void *str, int c, size_t n);
 char	*ft_strchr(const char *s, int c);
 
@@ -30,7 +31,7 @@ void    check_flag(char **percent, char c, t_flags *flags, int isdot);
 void    check_width(char **percent, t_flags *flags, int isdot);
 void    check_format(char **percent, t_flags *flags);
 
-int check_len(long long n, t_flags *flags, int type);
+int     check_len(long long n, t_flags *flags, int type);
 void    set_width(t_flags *flags, int len);
 void    set_star(va_list ap, t_flags *flags);
 void    set_arg(char *percent, t_flags *flags, va_list ap);

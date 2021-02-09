@@ -12,6 +12,7 @@ int ft_printf(const char *s, ...)
     va_start(ap, s);
     while ((percent = ft_strchr(s, '%')))
     {
+        // printf("\npercent: %p\n", percent);
         len += print_string(s, percent - s);
         percent++;
         ft_memset(&flags, 0, sizeof(t_flags));

@@ -29,27 +29,15 @@ void set_arg(char *percent, t_flags *flags, va_list ap)
         flags->string = va_arg(ap, char *);
         if (flags->string == NULL)
             flags->string = "(null)";
-        // flags->dot = 0;
-        // flags->dot_width = 0;
     }
-        // while (flags->string[i] && i < flags->dot_width)
-        //     i++;
-    else if (*percent == 'd' || *percent == 'i' || *percent == 'c' || *percent == '%')
-    {
+    else if (*percent == 'd' || *percent == 'i' || *percent == 'c')
         flags->arg = va_arg(ap, int);
-        // printf("\narg: %d\n", flags->arg);
-    }
     else if (*percent == 'u' || *percent == 'x' || *percent == 'X')
-    {
         flags->arg = va_arg(ap, unsigned int);
-    }
     else if (*percent == 'p')
-    {
         flags->arg = (long long)va_arg(ap, void *);
-        // flags->width -= 2;
-        // if (flags->arg == 0)
-        //     flags->width--;   
-    }
+    else if (*percent == '%')
+        flags->arg = -1;
 }
 
 int check_len(long long n, t_flags *flags, int type)
@@ -105,16 +93,13 @@ int set_len(char *percent, t_flags *flags)
     }
     else if (*percent == 'd' || *percent == 'i' || *percent == 'u')
     {
+        // printf("\narg: %d\n", flags->arg);
         len = check_len(flags->arg, flags, 0);
-        // printf("\nlen: %d\n", len);
     }
     else if (*percent == 'c' || *percent == '%')
         len = 1;
     else if (*percent == 'x' || *percent == 'X')
-    {
         len = check_len(flags->arg, flags, 1);
-        // printf("\nlen: %d\n", len);
-    }
     else if (*percent == 'p')
     {
         len = check_len(flags->arg, flags, 1);
@@ -137,27 +122,18 @@ void set_width(t_flags *flags, int len)
             flags->print_space = flags->width - len;
     }
     else if (flags->zero)
-    {
         flags->print_zero = flags->width - len;
-    }
     else if (flags->width && flags->dot)
     {
-        // printf("\nwidth: %d\n", flags->width);
-        // printf("\nlen: %d\n", len);
         flags->print_zero = flags->dot_width - len;
         if (flags->print_zero > 0)
             flags->print_space = flags->width - flags->dot_width;
         else
-        {
             flags->print_space = flags->width - len;
-        }
     }
     else
     {
         flags->print_space = flags->width - len;
-        // printf("\nlen: %d\n", len);
-        // printf("\nwidth: %d\n", flags->width);
-        // printf("\nspace: %d\n", flags->print_space);
         flags->print_zero = flags->dot_width - len;
     }
 }

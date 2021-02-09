@@ -21,7 +21,6 @@ int print_spaces(t_flags *flags)
 	int len;
 
 	len = 0;
-    // printf("\nspace: %d\n", flags->print_space);
 	while (flags->print_space > 0)
 	{
 		write(1, " ", 1);
@@ -65,9 +64,7 @@ int print_arg(char *percent, t_flags *flags)
     else if (*percent == 'p')
         len += print_hex(flags, 'p');
     else if (*percent == '%')
-    {
-
-    }
+        len += write(1, "%", 1);
     return (len);
 }
 
@@ -79,8 +76,6 @@ int print_minus(t_flags *flags, int position)
     len = 0;
     if (flags->minus)
     {
-        // printf("\narg: \n");
-
         if (position == 0)
         {
             if (flags->print_zero > 0)

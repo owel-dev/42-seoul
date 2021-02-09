@@ -1,7 +1,8 @@
 *.out
+*.o
 libft/
 printf*/
-*main.c
+main/
 nakim.c
 test.c
 42TESTERS*/

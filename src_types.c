@@ -6,9 +6,6 @@ int print_num(t_flags *flags, size_t arg, char type, char *base)
     int len;
 
     len = 1;
-    // printf("\narg: %d\n", arg);
-    // printf("\ntype: %c\n", type);
-
     if (type == 'd')
     {
         if (arg >= 10)
@@ -25,9 +22,6 @@ int print_num(t_flags *flags, size_t arg, char type, char *base)
     }
     else if (type == 'x' || type == 'X' || type == 'p')
     {
-        // printf("\narg: %d\n", arg);
-        // printf("\ndot: %d\n", flags->dot);
-        // printf("\ntype: %c\n", type);
         if ((type == 'X' || type == 'x') && arg == 0 && flags->dot && flags->dot_width == 0)
             return (0);
         if (type == 'p' && arg == 0)
@@ -48,19 +42,16 @@ int print_int(t_flags *flags, char type)
     base = NULL;
 	len = 0;
     num = flags->arg;
-    // printf("\narg: %u\n", num);
 	if (num == 0 && flags->dot && flags->dot_width == 0)
 		return (0);
-    // printf("\narg: %d\n", arg);
     len += print_num(flags, num, type, NULL);
     return (len);
 }
 
 int print_char(t_flags *flags)
 {
-    size_t c;
+    char c;
     c = flags->arg;
-
     if (c == 0)
         return (0);
     write(1, &c, 1);

@@ -6,16 +6,16 @@ void check_flag(char **percent, char c, t_flags *flags, int isdot)
     if (**percent == c)
     {
         if (c == '-')
-			flags->width_minus = 1;
+			flags->width_minus++;
         else if (c == '*')
         {
             if (isdot)
-                flags->dot_star = 1;
+                flags->dot_star++;
             else
-                flags->star = 1;
+                flags->star++;
         }
         else if (c == '.')
-            flags->dot = 1;
+            flags->dot++;
         (*percent)++;
     }
 }
@@ -46,4 +46,9 @@ void check_width(char **percent, t_flags *flags, int isdot)
             (*percent)++;
         }
     }
+}
+
+void delete_multiflag(t_flags *flags)
+{
+    
 }

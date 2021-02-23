@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-int				print_int(t_flags *flags, char type)
+int	print_int(t_flags *flags, char type)
 {
 	int			len;
 	long long	num;
@@ -25,9 +25,9 @@ int				print_int(t_flags *flags, char type)
 	return (len);
 }
 
-int				print_char(t_flags *flags)
+int	print_char(t_flags *flags)
 {
-	char		c;
+	char	c;
 
 	c = flags->arg;
 	if (c == 0)
@@ -39,10 +39,10 @@ int				print_char(t_flags *flags)
 	return (1);
 }
 
-int				print_chars(t_flags *flags)
+int	print_chars(t_flags *flags)
 {
-	char		*str;
-	int			len;
+	char	*str;
+	int		len;
 
 	str = flags->string;
 	len = 0;
@@ -59,11 +59,11 @@ int				print_chars(t_flags *flags)
 	return (len);
 }
 
-int				print_hex(t_flags *flags, char type)
+int	print_hex(t_flags *flags, char type)
 {
-	int			len;
-	char		*base;
-	size_t		arg;
+	int		len;
+	char	*base;
+	size_t	arg;
 
 	len = 0;
 	base = NULL;

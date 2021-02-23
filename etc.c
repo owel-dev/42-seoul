@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-int			ft_istype(int c)
+int	ft_istype(int c)
 {
 	int		i;
 	int		flag;
@@ -30,43 +30,50 @@ int			ft_istype(int c)
 	return (flag);
 }
 
-int			check_len(long long n, t_flags *flags, int type)
+int	check_len(long long n, t_flags *flags)
 {
-	int		len;
+	int	len;
 
 	len = 1;
-	if (type == 0)
+	if (n == 0 && flags->dot && flags->dot_width == 0)
+		return (0);
+	if (n < 0)
 	{
-		if (n == 0 && flags->dot && flags->dot_width == 0)
-			return (0);
-		if (n < 0)
-		{
-			n *= -1;
-			flags->arg *= -1;
-			flags->minus = 1;
-		}
-		while ((n /= 10) != 0)
-			len++;
+		n *= -1;
+		flags->arg *= -1;
+		flags->minus = 1;
 	}
-	else if (type == 1)
+	while ((n / 10) != 0)
 	{
-		if (n == 0 && flags->dot && flags->dot_width == 0)
-			return (0);
-		while ((n /= 16) != 0)
-			len++;
+		n /= 10;
+		len++;
 	}
 	return (len);
 }
 
-int			check_strlen(t_flags *flags)
+int	check_hexlen(long long n, t_flags *flags)
+{
+	int	len;
+
+	len = 1;
+	if (n == 0 && flags->dot && flags->dot_width == 0)
+		return (0);
+	while ((n / 16) != 0)
+	{
+		n /= 16;
+		len++;
+	}
+	return (len);
+}
+
+int	check_strlen(t_flags *flags)
 {
 	int		len;
 
 	len = 0;
 	if (flags->dot)
 	{
-		while (flags->string[len] && (len < flags->dot_width || \
-		flags->dot_width < 0))
+		while (flags->string[len] && (len < flags->dot_width || flags->dot_width < 0))
 			len++;
 	}
 	else
@@ -82,7 +89,7 @@ int			check_strlen(t_flags *flags)
 	return (len);
 }
 
-void		delete_multiflag(t_flags *flags)
+void	delete_multiflag(t_flags *flags)
 {
 	if (flags->minus > 1)
 		flags->minus = 0;

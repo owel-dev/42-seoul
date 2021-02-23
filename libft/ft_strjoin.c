@@ -3,35 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 20:19:58 by ulee              #+#    #+#             */
-/*   Updated: 2020/11/22 17:07:03 by ulee             ###   ########.fr       */
+/*   Updated: 2021/02/15 04:49:35 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char			*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *first, char const *second)
 {
-	char		*result;
-	char		*result2;
-	int			s1_len;
-	int			s2_len;
+	char	*result;
+	int		first_len;
+	int		second_len;
 
-	if (s1 == NULL && s2 == NULL)
+	if (first == NULL && second == NULL)
 		return (NULL);
-	else if (s1 == NULL || s2 == NULL)
-		return (s1 == NULL ? ft_strdup(s2) : ft_strdup(s1));
-	s1_len = ft_strlen(s1);
-	s2_len = ft_strlen(s2);
-	if (!(result = (char *)malloc(sizeof(char) * (s1_len + s2_len + 1))))
-		return (0);
-	result2 = result;
-	while (*s1)
-		*result2++ = *s1++;
-	while (*s2)
-		*result2++ = *s2++;
-	*result2 = 0;
+	if (first == NULL || second == NULL)
+	{
+		if (first == NULL)
+			return (ft_strdup(second));
+		return (ft_strdup(first));
+	}
+	first_len = ft_strlen(first);
+	second_len = ft_strlen(second);
+	result = (char *)malloc(sizeof(char) * (first_len + second_len + 1));
+	if (result == NULL)
+		return (NULL);
+	ft_memcpy(result, first, first_len);
+	ft_strlcpy(result + first_len, second, second_len + 1);
 	return (result);
 }

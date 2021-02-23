@@ -3,51 +3,53 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 20:19:51 by ulee              #+#    #+#             */
-/*   Updated: 2020/11/22 16:08:32 by ulee             ###   ########.fr       */
+/*   Updated: 2021/02/15 05:07:29 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	**split_free(char **result)
+char	**all_free(char **result)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while (result[i])
+	while (result[i] != NULL)
 	{
 		free(result[i]);
+		result[i] = NULL;
 		i++;
 	}
 	free(result);
+	result = NULL;
 	return (NULL);
 }
 
-int		word_count(const char *s, char c)
+int	counting_words(const char *str, char c)
 {
-	int i;
-	int len;
+	int	i;
+	int	word_count;
 
 	i = 0;
-	len = 0;
-	while (s[i])
+	word_count = 0;
+	while (str[i] != '\0')
 	{
-		if (s[i] == c)
+		if (str[i] == c)
 			i++;
 		else
 		{
-			len++;
-			while (s[i] && s[i] != c)
+			word_count++;
+			while (str[i] != '\0' && str[i] != c)
 				i++;
 		}
 	}
-	return (len);
+	return (word_count);
 }
 
-char	*cut_word(const char *s, char c, int order)
+char	*cut_word(const char *str, char c, int word_number)
 {
 	int		start;
 	int		count;
@@ -55,45 +57,46 @@ char	*cut_word(const char *s, char c, int order)
 
 	i = 0;
 	count = 0;
-	while (s[i])
+	while (str[i])
 	{
-		if (s[i] == c)
+		if (str[i] == c)
 			i++;
 		else
 		{
 			count++;
-			if (count == order)
+			if (count == word_number)
 			{
 				start = i;
-				while (s[i] && s[i] != c)
+				while (str[i] && str[i] != c)
 					i++;
-				return (ft_substr(s, start, i - start));
+				return (ft_substr(str, start, i - start));
 			}
-			while (s[i] && s[i] != c)
+			while (str[i] && str[i] != c)
 				i++;
 		}
 	}
 	return (NULL);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split(char const *str, char c)
 {
 	char	**result;
+	int		word_count;
 	char	*word;
 	int		i;
-	int		len;
 
-	if (s == NULL)
+	if (str == NULL)
 		return (NULL);
-	len = word_count(s, c);
-	if (!(result = (char **)malloc(sizeof(char *) * (len + 1))))
+	word_count = counting_words(str, c);
+	result = (char **)calloc(sizeof(char *), (word_count + 1));
+	if (result == NULL)
 		return (NULL);
-	result[len] = NULL;
 	i = 0;
-	while (i < len)
+	while (i < word_count)
 	{
-		if (!(word = cut_word(s, c, i + 1)))
-			return (split_free(result));
+		word = cut_word(str, c, i + 1);
+		if (word == NULL)
+			return (all_free(result));
 		result[i] = word;
 		i++;
 	}

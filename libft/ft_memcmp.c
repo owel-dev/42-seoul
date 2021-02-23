@@ -3,33 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 20:19:28 by ulee              #+#    #+#             */
-/*   Updated: 2020/11/06 16:10:45 by ulee             ###   ########.fr       */
+/*   Updated: 2021/02/14 05:25:33 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_memcmp(const void *s1, const void *s2, size_t n)
+int	ft_memcmp(const void *first, const void *second, size_t byte_size)
 {
-	unsigned char	*c_s1;
-	unsigned char	*c_s2;
-	size_t			i;
+	size_t				i;
+	const unsigned char	*first_cast;
+	const unsigned char	*second_cast;
 
-	if (n == 0)
+	if (byte_size == 0)
 		return (0);
-	c_s1 = (unsigned char *)s1;
-	c_s2 = (unsigned char *)s2;
+	first_cast = first;
+	second_cast = second;
 	i = 0;
-	while (i < n - 1)
+	while (i < byte_size - 1)
 	{
-		if (*c_s1 != *c_s2)
-			return (*c_s1 - *c_s2);
-		c_s1++;
-		c_s2++;
+		if (first_cast[i] != second_cast[i])
+			return (first_cast[i] - second_cast[i]);
 		i++;
 	}
-	return (*c_s1 - *c_s2);
+	return (first_cast[i] - second_cast[i]);
 }

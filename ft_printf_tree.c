@@ -1,16 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   src_main.c                                         :+:      :+:    :+:   */
+/*   ft_printf_tree.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/10 03:00:04 by ulee              #+#    #+#             */
-/*   Updated: 2021/02/10 03:24:58 by ulee             ###   ########.fr       */
+/*   Updated: 2021/02/10 23:22:17 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+
+int	print_string(const char *str, int len)
+{
+	int	i;
+
+	i = 0;
+	if (len < -1 || len == 0)
+		return (0);
+	while (*str != NULL && (i < len || len == -1))
+	{
+		write(1, str, 1);
+		str++;
+		i++;
+	}
+	return (i);
+}
 
 void	check_format(char **percent, t_flags *flags)
 {
@@ -37,7 +53,7 @@ void	set_format(char *percent, t_flags *flags, va_list ap)
 	set_width(flags, len);
 }
 
-int		print_format(char *percent, t_flags *flags)
+int	print_format(char *percent, t_flags *flags)
 {
 	int	len;
 

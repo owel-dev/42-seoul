@@ -1,34 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   src_print.c                                        :+:      :+:    :+:   */
+/*   print_format.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/10 03:00:24 by ulee              #+#    #+#             */
-/*   Updated: 2021/02/10 03:26:41 by ulee             ###   ########.fr       */
+/*   Updated: 2021/02/10 23:22:29 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int		print_string(const char *s, int len)
-{
-	int	i;
-
-	i = 0;
-	if (len < -1 || len == 0)
-		return (0);
-	while (*s && (i < len || len == -1))
-	{
-		write(1, s, 1);
-		s++;
-		i++;
-	}
-	return (i);
-}
-
-int		print_spaces(t_flags *flags)
+int	print_spaces(t_flags *flags)
 {
 	int	len;
 
@@ -42,7 +26,7 @@ int		print_spaces(t_flags *flags)
 	return (len);
 }
 
-int		print_zeros(t_flags *flags)
+int	print_zeros(t_flags *flags)
 {
 	int	len;
 
@@ -56,7 +40,7 @@ int		print_zeros(t_flags *flags)
 	return (len);
 }
 
-int		print_arg(char *percent, t_flags *flags)
+int	print_arg(char *percent, t_flags *flags)
 {
 	int	len;
 
@@ -80,7 +64,7 @@ int		print_arg(char *percent, t_flags *flags)
 	return (len);
 }
 
-int		print_minus(t_flags *flags, int position)
+int	print_minus(t_flags *flags, int position)
 {
 	int	len;
 

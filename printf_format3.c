@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-int			print_num(t_flags *flags, size_t arg, char type)
+int	print_num(t_flags *flags, size_t arg, char type)
 {
 	char	output;
 	int		len;
@@ -35,13 +35,13 @@ int			print_num(t_flags *flags, size_t arg, char type)
 	return (len);
 }
 
-int			print_numhex(t_flags *flags, size_t arg, char type, char *base)
+int	print_numhex(t_flags *flags, size_t arg, char type, char *base)
 {
-	int		len;
+	int	len;
 
 	len = 1;
 	if ((type == 'X' || type == 'x') && arg == 0 && flags->dot && \
-	flags->dot_width == 0)
+flags->dot_width == 0)
 		return (0);
 	if (type == 'p' && arg == 0)
 		return (0);

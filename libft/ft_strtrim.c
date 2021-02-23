@@ -12,96 +12,25 @@
 
 #include "libft.h"
 
-int		is_set(char const *s1, char const *set)
+char	*ft_strtrim(char const *str, char const *remove_char)
 {
-	int		check;
+	const char	*str_end;
+	size_t		len;
+	char		*result;
 
-	check = 0;
-	while (*set)
-	{
-		set++;
-		if (*s1 == *set)
-		{
-			check = 1;
-			break ;
-		}
-	}
-	return (check);
-}
-
-int		cut_front(char const *s1, char const *set, int len)
-{
-	int check;
-	int i;
-	int j;
-	int start;
-
-	start = 0;
-	i = 0;
-	check = 0;
-	while (i < len)
-	{
-		check = 0;
-		j = 0;
-		if (s1[i] == set[j])
-			check = 1;
-		else
-			check = is_set(&s1[i], &set[j]);
-		if (check)
-			start = ++i;
-		else
-			break ;
-	}
-	return (start);
-}
-
-int		cut_back(char const *s1, char const *set, int len)
-{
-	int		check;
-	int		i;
-	int		j;
-	int		end;
-
-	end = 0;
-	i = len;
-	check = 0;
-	while (i >= 0)
-	{
-		check = 0;
-		j = 0;
-		if (s1[i] == set[j])
-			check = 1;
-		else
-			check = is_set(&s1[i], &set[j]);
-		if (check)
-			end = --i;
-		else
-			break ;
-	}
-	return (end);
-}
-
-char	*ft_strtrim(char const *s1, char const *set)
-{
-	int		start;
-	int		end;
-	char	*dst;
-	int		len;
-
-	if (s1 == NULL)
+	if (str == NULL)
 		return (NULL);
-	if (set == NULL)
-		return (ft_strdup(s1));
-	len = ft_strlen(s1);
-	start = 0;
-	end = len;
-	start = cut_front(s1, set, len);
-	end = cut_back(s1, set, len);
-	if (start >= end)
-		return (ft_strdup(""));
-	len = end - start + 2;
-	if (!(dst = (char *)malloc(sizeof(char) * len)))
-		return (0);
-	ft_strlcpy(dst, &s1[start], len);
-	return (dst);
+	if (remove_char == NULL)
+		return (ft_strdup(str));
+	while (*str != '\0' && ft_strchr(remove_char, *str) != NULL)
+		str++;
+	str_end = str + (ft_strlen(str) - 1);
+	while (*str != '\0' && ft_strrchr(remove_char, *str_end) != NULL)
+		str_end--;
+	len = str_end - str + 2;
+	result = (char *)malloc(sizeof(char) * len);
+	if (result == NULL)
+		return (NULL);
+	ft_strlcpy(result, str, len);
+	return (result);
 }

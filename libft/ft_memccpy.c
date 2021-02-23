@@ -3,34 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memccpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 20:19:23 by ulee              #+#    #+#             */
-/*   Updated: 2020/11/15 16:56:21 by ulee             ###   ########.fr       */
+/*   Updated: 2021/02/14 04:26:12 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memccpy(void *d, const void *s, int c, size_t n)
+void	*ft_memccpy(void *copy, const void *origin, int target, \
+				 size_t byte_size)
 {
-	size_t			i;
-	unsigned char	*d2;
-	unsigned char	*s2;
-	unsigned char	c2;
+	unsigned char		*copy_cast;
+	const unsigned char	*origin_cast;
+	unsigned char		target_cast;
+	size_t				i;
 
-	d2 = (unsigned char *)d;
-	s2 = (unsigned char *)s;
-	c2 = c;
+	copy_cast = copy;
+	origin_cast = origin;
+	target_cast = target;
 	i = 0;
-	while (i < n)
+	while (i < byte_size)
 	{
-		d2[i] = s2[i];
-		if (s2[i] == c2)
-		{
-			return (d2 + (i + 1));
-		}
+		copy_cast[i] = origin_cast[i];
+		if (copy_cast[i] == target_cast)
+			return (copy + (i + 1));
 		i++;
 	}
-	return (0);
+	return (NULL);
 }

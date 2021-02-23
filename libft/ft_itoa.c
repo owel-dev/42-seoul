@@ -3,55 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 20:18:55 by ulee              #+#    #+#             */
-/*   Updated: 2020/11/07 19:41:36 by ulee             ###   ########.fr       */
+/*   Updated: 2021/02/15 04:58:46 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		itoa_len(long long num)
+int	itoa_len(int num)
 {
-	int		len;
+	int	len;
 
 	len = 1;
 	if (num < 0)
 		len++;
 	while ((num / 10) != 0)
 	{
-		num /= 10;
 		len++;
+		num /= 10;
 	}
 	return (len);
 }
 
-char	*ft_itoa(int n)
+char	*ft_itoa(int num)
 {
 	char		*result;
-	long long	n_copy;
-	int			minus;
+	long long	num_cast;
+	int			is_minus;
 	int			len;
 
-	minus = 0;
-	n_copy = n;
-	len = itoa_len(n);
-	if (n_copy < 0)
+	is_minus = 0;
+	num_cast = num;
+	len = itoa_len(num);
+	if (num_cast < 0)
 	{
-		n_copy *= -1;
-		minus = 1;
+		num_cast *= -1;
+		is_minus = 1;
 	}
-	if (!(result = (char *)malloc(sizeof(char) * (len + 1))))
-		return (0);
-	result[len--] = 0;
-	while (len >= 0)
+	result = (char *)calloc(sizeof(char), (len + 1));
+	if (result == NULL)
+		return (NULL);
+	while (len != 0)
 	{
-		result[len] = n_copy % 10 + '0';
-		n_copy /= 10;
 		len--;
+		result[len] = num_cast % 10 + '0';
+		num_cast /= 10;
 	}
-	if (minus)
+	if (is_minus)
 		result[0] = '-';
 	return (result);
 }

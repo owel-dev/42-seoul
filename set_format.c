@@ -52,7 +52,7 @@ void	set_arg(char *percent, t_flags *flags, va_list ap)
 		flags->arg = -1;
 }
 
-int		set_len(char *percent, t_flags *flags)
+int	set_len(char *percent, t_flags *flags)
 {
 	int	len;
 
@@ -60,14 +60,14 @@ int		set_len(char *percent, t_flags *flags)
 	if (*percent == 's')
 		len += check_strlen(flags);
 	else if (*percent == 'd' || *percent == 'i' || *percent == 'u')
-		len = check_len(flags->arg, flags, 0);
+		len = check_len(flags->arg, flags);
 	else if (*percent == 'c' || *percent == '%')
 		len = 1;
 	else if (*percent == 'x' || *percent == 'X')
-		len = check_len(flags->arg, flags, 1);
+		len = check_hexlen(flags->arg, flags);
 	else if (*percent == 'p')
 	{
-		len = check_len(flags->arg, flags, 1);
+		len = check_hexlen(flags->arg, flags);
 		len += 2;
 	}
 	return (len);

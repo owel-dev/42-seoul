@@ -3,32 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 20:20:24 by ulee              #+#    #+#             */
-/*   Updated: 2020/11/15 18:37:12 by ulee             ###   ########.fr       */
+/*   Updated: 2021/02/15 04:53:38 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
+char	*ft_strnstr(const char *str, const char *part, size_t len)
 {
-	size_t	i;
-	size_t	j;
-
-	if (needle[0] == 0)
-		return ((char *)haystack);
-	i = 0;
-	while (haystack[i] && i < len)
+	if (*part == '\0')
+		return ((char *)str);
+	while (len != 0 && *str)
 	{
-		j = 0;
-		while (haystack[i + j] && needle[j] &&
-				i + j < len && haystack[i + j] == needle[j])
-			j++;
-		if (!needle[j])
-			return ((char *)(haystack + i));
-		i++;
+		while (*str && *part && *str == *part)
+			part++;
+		if (*part == '\0')
+			return ((char *)str);
+		len--;
+		str++;
 	}
 	return (NULL);
 }

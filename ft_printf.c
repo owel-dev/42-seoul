@@ -6,13 +6,13 @@
 /*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/10 02:41:53 by ulee              #+#    #+#             */
-/*   Updated: 2021/02/10 04:09:28 by ulee             ###   ########.fr       */
+/*   Updated: 2021/02/10 22:11:45 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int				ft_printf(const char *s, ...)
+int	ft_printf(const char *s, ...)
 {
 	va_list		ap;
 	t_flags		flags;
@@ -21,7 +21,8 @@ int				ft_printf(const char *s, ...)
 
 	len = 0;
 	va_start(ap, s);
-	while ((percent = ft_strchr(s, '%')))
+	percent = ft_strchr(s, '%');
+	while (percent != NULL)
 	{
 		len += print_string(s, percent - s);
 		ft_memset(&flags, 0, sizeof(t_flags));
@@ -30,6 +31,7 @@ int				ft_printf(const char *s, ...)
 		set_format(percent, &flags, ap);
 		len += print_format(percent, &flags);
 		s = ++percent;
+		percent = ft_strchr(s, '%');
 	}
 	len += print_string(s, -1);
 	va_end(ap);

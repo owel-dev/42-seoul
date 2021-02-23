@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 20:20:27 by ulee              #+#    #+#             */
-/*   Updated: 2020/11/03 21:11:11 by ulee             ###   ########.fr       */
+/*   Updated: 2021/02/15 04:57:38 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,18 @@
 
 char	*ft_strrchr(const char *str, int c)
 {
-	char	*str2;
-	int		len;
+	int		str_len;
+	char	*str_cast;
 
-	str2 = (char *)str;
-	if (c == 0)
-		return (str2 + ft_strlen(str));
-	len = ft_strlen(str);
-	while (len >= 0)
+	str_len = ft_strlen(str);
+	str_cast = (char *)str;
+	if (c == '\0')
+		return (str_cast + str_len);
+	while (str_len != 0)
 	{
-		if (str[len] == c)
-			return (&str2[len]);
-		len--;
+		str_len--;
+		if (str_cast[str_len] == c)
+			return (&str_cast[str_len]);
 	}
-	return (0);
+	return (NULL);
 }

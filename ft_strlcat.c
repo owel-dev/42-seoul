@@ -3,37 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 20:20:00 by ulee              #+#    #+#             */
-/*   Updated: 2020/11/06 19:33:52 by ulee             ###   ########.fr       */
+/*   Updated: 2021/02/14 07:02:01 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcat(char *d, const char *s, size_t dstsize)
+size_t	ft_strlcat(char *first, const char *second, size_t total_len)
 {
-	size_t d_len;
-	size_t s_len;
-	size_t i;
-	size_t j;
+	size_t	first_len;
+	size_t	second_len;
 
-	d_len = ft_strlen(d);
-	s_len = ft_strlen(s);
-	j = d_len;
-	i = 0;
-	if (d_len + 1 < dstsize && 0 < dstsize)
+	second_len = ft_strlen(second);
+	first_len = ft_strlen(first);
+	if (first_len >= total_len)
+		return (total_len + second_len);
+	if (first_len + second_len < total_len)
 	{
-		while (s[i] && d_len + i + 1 < dstsize)
-		{
-			d[j] = s[i];
-			j++;
-			i++;
-		}
-		d[j] = 0;
+		ft_memcpy(first + first_len, second, second_len);
+		first[first_len + second_len] = '\0';
 	}
-	if (d_len >= dstsize)
-		d_len = dstsize;
-	return (d_len + s_len);
+	else
+	{
+		ft_memcpy(first + first_len, second, total_len - first_len - 1);
+		first[total_len - 1] = '\0';
+	}
+	return (first_len + second_len);
 }

@@ -3,30 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 20:19:30 by ulee              #+#    #+#             */
-/*   Updated: 2020/11/15 19:09:21 by ulee             ###   ########.fr       */
+/*   Updated: 2021/02/14 04:55:49 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memcpy(void *d, const void *s, size_t n)
+void 	*ft_memcpy(void *copy, const void *origin, size_t byte_size)
 {
-	size_t			i;
-	unsigned char	*d2;
-	unsigned char	*s2;
+	size_t	i;
 
-	if (d == 0 && s == 0)
-		return (d);
-	d2 = (unsigned char *)d;
-	s2 = (unsigned char *)s;
-	i = 1;
-	while (i <= n)
+	if (copy == NULL && origin == NULL)
+		return (copy);
+	i = 0;
+	while (i < byte_size)
 	{
-		*d2++ = *s2++;
+		((unsigned char *)copy)[i] = ((const unsigned char *)origin)[i];
 		i++;
 	}
-	return (d);
+	return (copy);
 }

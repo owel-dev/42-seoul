@@ -3,30 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 20:18:18 by ulee              #+#    #+#             */
-/*   Updated: 2020/11/22 16:14:34 by ulee             ###   ########.fr       */
+/*   Updated: 2021/02/15 04:58:53 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_isspace(int c)
+int	is_space(int c)
 {
-	return (((9 <= c && c <= 13) || c == ' ') ? 1 : 0);
+	if ((9 <= c && c <= 13) || c == ' ')
+		return (1);
+	return (0);
 }
 
-int		ft_atoi(const char *str)
+int	ft_atoi(const char *str)
 {
-	long sign;
-	long num;
+	long	num;
+	int		is_minus;
 
-	while (ft_isspace(*str))
+	is_minus = 0;
+	while (is_space(*str))
 		str++;
-	sign = 1;
 	if (*str == '-')
-		sign *= -1;
+		is_minus = 1;
 	if (*str == '-' || *str == '+')
 		str++;
 	num = 0;
@@ -34,11 +36,13 @@ int		ft_atoi(const char *str)
 	{
 		num *= 10;
 		num += *str - '0';
-		if (num > 2147483648 && sign == 1)
-			return (-1);
-		if (num > 2147483648 && sign == -1)
+		if (num > 2147483648 && is_minus == 1)
 			return (0);
+		if (num > 2147483647 && is_minus == 0)
+			return (-1);
 		str++;
 	}
-	return (num * sign);
+	if (is_minus)
+		num *= -1;
+	return (num);
 }

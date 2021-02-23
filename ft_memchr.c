@@ -3,28 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 20:19:25 by ulee              #+#    #+#             */
-/*   Updated: 2020/11/06 15:46:00 by ulee             ###   ########.fr       */
+/*   Updated: 2021/02/15 04:54:54 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memchr(const void *s, int c, size_t n)
+void	*ft_memchr(const void *array, int target, size_t byte_size)
 {
-	size_t			i;
-	unsigned char	*temp;
-
-	temp = (unsigned char *)s;
-	i = 0;
-	while (i < n)
+	while (byte_size != 0)
 	{
-		if (*temp == (unsigned char)c)
-			return (temp);
-		i++;
-		temp++;
+		if (*(const unsigned char *)array == (unsigned char)target)
+			return ((void *)array);
+		byte_size--;
+		array++;
 	}
-	return (0);
+	return (NULL);
 }

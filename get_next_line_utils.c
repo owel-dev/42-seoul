@@ -14,44 +14,41 @@
 
 size_t	ft_strlen(const char *str)
 {
-	size_t len;
+	size_t	len;
 
 	len = 0;
-	while (*str++)
+	while (*str != '\0')
+	{
+		str++;
 		len++;
+	}
 	return (len);
 }
 
-void	*ft_memcpy(void *d, const void *s, size_t n)
+void 	*ft_memcpy(void *copy, const void *origin, size_t byte_size)
 {
-	size_t			i;
-	unsigned char	*d2;
-	unsigned char	*s2;
+	size_t	i;
 
-	if (d == 0 && s == 0)
-		return (d);
-	d2 = (unsigned char *)d;
-	s2 = (unsigned char *)s;
-	i = 1;
-	while (i <= n)
+	if (copy == NULL && origin == NULL)
+		return (copy);
+	i = 0;
+	while (i < byte_size)
 	{
-		*d2++ = *s2++;
+		((unsigned char *)copy)[i] = ((const unsigned char *)origin)[i];
 		i++;
 	}
-	return (d);
+	return (copy);
 }
 
 char	*ft_strchr(const char *str, int c)
 {
-	if (c == 0)
-		return ((char *)str + ft_strlen(str));
-	while (*str)
+	while (*str != c)
 	{
-		if (*str == c)
-			return ((char *)str);
+		if (*str == '\0')
+			return (NULL);
 		str++;
 	}
-	return (0);
+	return ((char *)str);
 }
 
 char	*ft_strdup(const char *s)
@@ -60,33 +57,35 @@ char	*ft_strdup(const char *s)
 	int		len;
 
 	len = ft_strlen(s);
-	if (!(result = malloc(sizeof(char) * (len + 1))))
-		return (0);
+	result = malloc(sizeof(char) * (len + 1));
+	if (result == NULL)
+		return (NULL);
 	ft_memcpy(result, s, len);
 	result[len] = 0;
 	return (result);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *first, char const *second)
 {
 	char	*result;
-	char	*result2;
-	int		s1_len;
-	int		s2_len;
+	int		first_len;
+	int		second_len;
 
-	if (s1 == NULL && s2 == NULL)
+	if (first == NULL && second == NULL)
 		return (NULL);
-	else if (s1 == NULL || s2 == NULL)
-		return (s1 == NULL ? ft_strdup(s2) : ft_strdup(s1));
-	s1_len = ft_strlen(s1);
-	s2_len = ft_strlen(s2);
-	if (!(result = (char *)malloc(sizeof(char) * (s1_len + s2_len + 1))))
-		return (0);
-	result2 = result;
-	while (*s1)
-		*result2++ = *s1++;
-	while (*s2)
-		*result2++ = *s2++;
-	*result2 = 0;
+	if (first == NULL || second == NULL)
+	{
+		if (first == NULL)
+			return (ft_strdup(second));
+		return (ft_strdup(first));
+	}
+	first_len = ft_strlen(first);
+	second_len = ft_strlen(second);
+	result = (char *)malloc(sizeof(char) * (first_len + second_len + 1));
+	if (result == NULL)
+		return (NULL);
+	ft_memcpy(result, first, first_len);
+	ft_memcpy(result + first_len, second, second_len + 1);
+	result[first_len + second_len] = '\0';
 	return (result);
 }

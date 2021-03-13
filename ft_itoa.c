@@ -6,7 +6,7 @@
 /*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 20:18:55 by ulee              #+#    #+#             */
-/*   Updated: 2021/03/14 03:51:33 by ulee             ###   ########.fr       */
+/*   Updated: 2021/03/14 04:05:28 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,19 @@ int	itoa_len(int num)
 	return (len);
 }
 
-char	*ft_itoa(int n)
+char	*ft_itoa(int num)
 {
 	char		*result;
-	long long	n_copy;
+	long long	num_cast;
 	int			is_minus;
 	int			len;
 
 	is_minus = 0;
-	n_copy = n;
-	len = itoa_len(n);
-	if (n_copy < 0)
+	num_cast = num;
+	len = itoa_len(num);
+	if (num_cast < 0)
 	{
-		n_copy *= -1;
+		num_cast *= -1;
 		is_minus = 1;
 	}
 	result = (char *)malloc(sizeof(char) * (len + 1));
@@ -48,8 +48,8 @@ char	*ft_itoa(int n)
 	result[len--] = 0;
 	while (len >= 0)
 	{
-		result[len--] = n_copy % 10 + '0';
-		n_copy /= 10;
+		result[len--] = num_cast % 10 + '0';
+		num_cast /= 10;
 	}
 	if (is_minus)
 		result[0] = '-';

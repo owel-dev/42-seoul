@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 20:19:51 by ulee              #+#    #+#             */
-/*   Updated: 2021/02/15 05:07:29 by ulee             ###   ########.fr       */
+/*   Updated: 2021/03/14 03:42:34 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,13 @@ char	**all_free(char **result)
 	while (result[i] != NULL)
 	{
 		free(result[i]);
-		result[i] = NULL;
 		i++;
 	}
 	free(result);
-	result = NULL;
 	return (NULL);
 }
 
-int	counting_words(const char *str, char c)
+int	count_words(const char *str, char c)
 {
 	int	i;
 	int	word_count;
@@ -87,7 +85,7 @@ char	**ft_split(char const *str, char c)
 
 	if (str == NULL)
 		return (NULL);
-	word_count = counting_words(str, c);
+	word_count = count_words(str, c);
 	result = (char **)calloc(sizeof(char *), (word_count + 1));
 	if (result == NULL)
 		return (NULL);

@@ -6,7 +6,7 @@
 /*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 18:33:15 by ulee              #+#    #+#             */
-/*   Updated: 2021/10/13 18:00:50 by ulee             ###   ########.fr       */
+/*   Updated: 2021/10/12 18:33:59 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <string.h>
 # include <sys/time.h>
 # include <stdio.h>
-# include "../libft/libft.h"
+# include "libft/libft.h"
 
 typedef struct s_philo
 {
@@ -59,9 +59,6 @@ void		eat(t_philo *philo);
 void		sleepy(t_philo *philo);
 void		think(t_philo *philo);
 
-int			is_num(char *str);
-int			right_range(char *str);
-int			check_arg(int ac, char **av);
 long long	get_ms_time(void);
 void 		print_status(t_philo *philo, char *str);
 

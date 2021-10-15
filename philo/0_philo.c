@@ -6,7 +6,7 @@
 /*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 18:33:12 by ulee              #+#    #+#             */
-/*   Updated: 2021/10/13 18:28:21 by ulee             ###   ########.fr       */
+/*   Updated: 2021/10/12 18:34:17 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	set_philos(t_info *info)
 	time = get_ms_time();
 	while (i < info->philo_count)
 	{
-		info->philos[i] = (t_philo *)malloc(sizeof(t_philo));
+		info->philos[i] = (t_philo *)malloc(sizeof(t_philo) * info->philo_count);
 		if (info->philos[i] == NULL)
 			return (-1);
 		info->philos[i]->when_last_eat = get_ms_time();
@@ -99,7 +99,7 @@ int	make_thread(t_info *info)
 int	main(int ac, char **av) {
 	t_info info;
 
-	if (check_arg(ac, av) == -1)
+	if (ac < 5)
 		return (-1);
 	if (set_info(&info ,ac, av) == -1)
 		return (-1);

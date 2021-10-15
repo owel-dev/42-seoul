@@ -6,15 +6,15 @@
 #    By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/12 18:33:31 by ulee              #+#    #+#              #
-#    Updated: 2021/10/13 17:44:24 by ulee             ###   ########.fr        #
+#    Updated: 2021/10/12 18:33:32 by ulee             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -pthread
-INCS = -I../libft -I./
-LIBFT = -L../libft -lft
+INCS = -I./libft -I./
+LIBFT = -L./libft -lft
 RM = rm -f
 
 FILE = 	0_philo\

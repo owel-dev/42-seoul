@@ -6,7 +6,7 @@
 /*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 18:33:36 by ulee              #+#    #+#             */
-/*   Updated: 2021/10/14 17:58:08 by ulee             ###   ########.fr       */
+/*   Updated: 2021/10/12 18:33:37 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,11 @@ void	monitor_run(void *arg)
 	}
 }
 
-void	philo_run(t_philo *philo)
+void	philo_run(void *arg)
 {
+	t_philo *philo;
+
+	philo = (t_philo *)arg;
 	while (philo->info->death == 0 && philo->eat_count < philo->info->must_eat)
 	{
 		eat(philo);

@@ -6,7 +6,7 @@
 /*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 18:33:15 by ulee              #+#    #+#             */
-/*   Updated: 2021/10/16 17:46:08 by ulee             ###   ########.fr       */
+/*   Updated: 2021/10/16 18:24:58 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include <stdio.h>
 # include <semaphore.h>
 # include <signal.h>
-# include "../libft/libft.h"
 
 typedef struct s_philo
 {

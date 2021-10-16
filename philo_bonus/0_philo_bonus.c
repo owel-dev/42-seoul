@@ -6,7 +6,7 @@
 /*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 18:33:12 by ulee              #+#    #+#             */
-/*   Updated: 2021/10/14 17:58:44 by ulee             ###   ########.fr       */
+/*   Updated: 2021/10/16 17:42:36 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,21 +29,36 @@ int	set_info(t_info *info, int ac, char **av)
 	return (0);
 }
 
-int	set_fork(t_info *info)
+int	set_sem(t_info *info)
 {
-	int i;
+	int	i;
 
-	i = 0;
+	sem_unlink("fork");
 	info->fork = sem_open("fork", O_CREAT, 0644, info->philo_count);
 	if (info->fork == SEM_FAILED)
 		return (-1);
+	sem_unlink("print");
+	info->print = sem_open("print", O_CREAT, 0644, 1);
+	if (info->print == SEM_FAILED)
+		return (-1);
+	sem_unlink("all_eat_count");
+	info->all_eat_count = sem_open("all_eat_count", O_CREAT, 0644, \
+		info->philo_count);
+	if (info->all_eat_count == SEM_FAILED)
+		return (-1);
+	i = 0;
+	while (i < info->philo_count)
+	{
+		sem_wait(info->all_eat_count);
+		i++;
+	}
 	return (0);
 }
 
 int	set_philos(t_info *info)
 {
-	int i;
-	long long time;
+	int			i;
+	long long	time;
 
 	info->philos = (t_philo **)malloc(sizeof(t_philo *) * info->philo_count);
 	if (info->philos == NULL)
@@ -67,44 +82,14 @@ int	set_philos(t_info *info)
 	return (0);
 }
 
-void kill_all_process(t_info *info)
-{
-	int i;
-
-	i = 0;
-	while (i < info->philo_count)
-		kill(info->philos[i++]->pid, SIGKILL);
-}
-
-void receive_signal(t_info *info)
-{
-	int i;
-	int status;
-	int eat_count;
-
-	i = 0;
-	eat_count = 0;
-	while(i < info->philo_count)
-	{
-		waitpid(-1, &status, 0);
-		if (status == 256)
-		{
-			kill_all_process(info);
-			return ;
-		}
-		if (status == 0)
-			eat_count++;
-		if (eat_count == info->must_eat)
-			return ;
-		i++;
-	}
-}
-
 int	make_process(t_info *info)
 {
-	int i;
+	int	i;
 
 	i = 0;
+	if (pthread_create(&info->moniter_id, NULL, \
+		(void *)&eat_monitor, (void *)info) != 0)
+		return (-1);
 	while (i < info->philo_count)
 	{
 		info->philos[i]->pid = fork();
@@ -113,24 +98,25 @@ int	make_process(t_info *info)
 			if (pthread_create(&info->moniter_id, NULL, \
 				(void *)&monitor_run, (void *)info->philos[i]) != 0)
 				return (-1);
-			// printf("%d\n",  info->philos[i]->philo_num);
 			philo_run(info->philos[i]);
+			exit(0);
 		}
 		i++;
 		usleep(100);
 	}
-	receive_signal(info);
+	receive_exit(info);
 	return (0);
 }
 
-int	main(int ac, char **av) {
-	t_info info;
+int	main(int ac, char **av)
+{
+	t_info	info;
 
 	if (check_arg(ac, av) == -1)
 		return (-1);
-	if (set_info(&info ,ac, av) == -1)
+	if (set_info(&info, ac, av) == -1)
 		return (-1);
-	if (set_fork(&info) == -1)
+	if (set_sem(&info) == -1)
 		return (-1);
 	if (set_philos(&info) == -1)
 		return (-1);

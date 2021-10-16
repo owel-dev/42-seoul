@@ -6,7 +6,7 @@
 /*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 18:33:12 by ulee              #+#    #+#             */
-/*   Updated: 2021/10/12 18:34:17 by ulee             ###   ########.fr       */
+/*   Updated: 2021/10/16 18:10:01 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ int	set_info(t_info *info, int ac, char **av)
 
 int	set_fork(t_info *info)
 {
-	pthread_mutex_t *fork;
-	int i;
+	pthread_mutex_t	*fork;
+	int				i;
 
 	i = 0;
 	info->fork = (pthread_mutex_t *) \
@@ -52,8 +52,8 @@ int	set_fork(t_info *info)
 
 int	set_philos(t_info *info)
 {
-	int i;
-	long long time;
+	int			i;
+	long long	time;
 
 	info->philos = (t_philo **)malloc(sizeof(t_philo *) * info->philo_count);
 	if (info->philos == NULL)
@@ -62,7 +62,8 @@ int	set_philos(t_info *info)
 	time = get_ms_time();
 	while (i < info->philo_count)
 	{
-		info->philos[i] = (t_philo *)malloc(sizeof(t_philo) * info->philo_count);
+		info->philos[i] = (t_philo *)malloc(sizeof(t_philo) * \
+			info->philo_count);
 		if (info->philos[i] == NULL)
 			return (-1);
 		info->philos[i]->when_last_eat = get_ms_time();
@@ -79,7 +80,7 @@ int	set_philos(t_info *info)
 
 int	make_thread(t_info *info)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < info->philo_count)
@@ -96,12 +97,13 @@ int	make_thread(t_info *info)
 	return (0);
 }
 
-int	main(int ac, char **av) {
-	t_info info;
+int	main(int ac, char **av)
+{
+	t_info	info;
 
-	if (ac < 5)
+	if (check_arg(ac, av) == -1)
 		return (-1);
-	if (set_info(&info ,ac, av) == -1)
+	if (set_info(&info, ac, av) == -1)
 		return (-1);
 	if (set_fork(&info) == -1)
 		return (-1);
@@ -110,6 +112,6 @@ int	main(int ac, char **av) {
 	if (make_thread(&info) == -1)
 		return (-1);
 	while (info.death == 0)
-		;
+		usleep(500);
 	return (0);
 }

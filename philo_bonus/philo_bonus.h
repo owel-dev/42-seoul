@@ -6,7 +6,7 @@
 /*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/12 18:33:15 by ulee              #+#    #+#             */
-/*   Updated: 2021/10/14 17:41:35 by ulee             ###   ########.fr       */
+/*   Updated: 2021/10/16 17:46:08 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 # include <semaphore.h>
 # include <signal.h>
 # include "../libft/libft.h"
-
 
 typedef struct s_philo
 {
@@ -42,6 +41,8 @@ typedef struct s_info
 	t_philo				**philos;
 	pthread_t			moniter_id;
 	sem_t				*fork;
+	sem_t				*print;
+	sem_t				*all_eat_count;
 	int					philo_count;
 	int					die_long;
 	int					eat_long;
@@ -51,14 +52,13 @@ typedef struct s_info
 	int					death;
 }				t_info;
 
-
 int			set_info(t_info *info, int ac, char **av);
-int			set_fork(t_info *info);
+int			set_sem(t_info *info);
 int			set_philos(t_info *info);
 int			make_process(t_info *info);
-void 		kill_all_process(t_info *info);
-void		receive_signal(t_info *info);
 
+void		kill_all_process(t_info *info);
+void		receive_exit(t_info *info);
 
 void		monitor_run(void *arg);
 void		philo_run(void *arg);
@@ -66,10 +66,18 @@ void		eat(t_philo *philo);
 void		sleepy(t_philo *philo);
 void		think(t_philo *philo);
 
+long long	get_ms_time(void);
+void		print_status(t_philo *philo, char *str);
+
+int			ft_isdigit(int c);
+void		kill_all_process(t_info *info);
+void		receive_exit(t_info *info);
+void		eat_monitor(void *arg);
+
+int			ft_isspace(int c);
 int			is_num(char *str);
+int			ft_atoi(const char *str);
 int			right_range(char *str);
 int			check_arg(int ac, char **av);
-long long	get_ms_time(void);
-void 		print_status(t_philo *philo, char *str);
 
 #endif

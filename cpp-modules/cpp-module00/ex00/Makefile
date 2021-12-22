@@ -6,11 +6,11 @@
 #    By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/21 20:05:19 by ulee              #+#    #+#              #
-#    Updated: 2021/12/21 20:05:19 by ulee             ###   ########.fr        #
+#    Updated: 2021/12/22 13:18:53 by ulee             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 all:
-	g++ -std=c++98 -Wall -Wextra -Werror megaphone.cpp -o megaphone
+	clang++ -std=c++98 -Wall -Wextra -Werror megaphone.cpp -o megaphone
 clean:
 	rn megaphone

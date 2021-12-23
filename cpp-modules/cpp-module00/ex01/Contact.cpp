@@ -6,7 +6,7 @@
 /*   By: a_ulee <a_ulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 12:20:16 by ulee              #+#    #+#             */
-/*   Updated: 2021/12/23 15:30:50 by a_ulee           ###   ########.fr       */
+/*   Updated: 2021/12/23 15:49:26 by a_ulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,16 +66,3 @@ void Contact::printSecret() {
   }
   std::cout << "\n";
 }
-// void setDarkestSecret(std::string secret_content)
-// {
-//     std::string password;
-
-//     std::cout << "input[set password] > ";
-//     std::cin >> password;
-//     this->password = password;
-//     this->password[10] = '.';
-//     this->darkest_secret = secret_content;
-// }
-
-// void getDarkestSecret(void)
-// {

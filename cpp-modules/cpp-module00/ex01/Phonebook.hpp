@@ -12,7 +12,7 @@ class Phonebook {
   Contact contact[8];
   int amount;
   int add_count;
-  // int d;
+
  public:
   Phonebook();
   ~Phonebook();

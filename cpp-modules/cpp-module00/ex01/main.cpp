@@ -3,28 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: a_ulee <a_ulee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 20:09:48 by ulee              #+#    #+#             */
-/*   Updated: 2021/12/21 20:45:45 by ulee             ###   ########.fr       */
+/*   Updated: 2021/12/23 15:31:11 by a_ulee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Phonebook.hpp"
 
-int main(int argc, char const *argv[])
-{
-    Phonebook phonebook;
-    std::string input;
-    
-    std::cout << "Please input: [ ADD | SEARCH | EXIT ] > ";
-    std::cin >> input;
-    if (input == "EXIT")
-        return 0;
-    if (input == "ADD")
-        phonebook.add();
-    if (input == "SEARCH")
-        phonebook.add();
+int main() {
+  Phonebook phonebook;
+  std::string input;
 
-    return 0;
+  while (true) {
+    std::cout << "Please input: [ add | search | exit | secret ] > ";
+    std::getline(std::cin, input);
+    if (input == "exit") return 0;
+    if (input == "add") phonebook.add();
+    if (input == "search") phonebook.search();
+    if (input == "secret") phonebook.secret();
+  }
+  return 0;
 }

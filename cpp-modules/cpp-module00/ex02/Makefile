@@ -5,17 +5,19 @@
 #                                                     +:+ +:+         +:+      #
 #    By: a_ulee <a_ulee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/12/21 20:05:19 by ulee              #+#    #+#              #
-#    Updated: 2021/12/25 00:14:12 by a_ulee           ###   ########.fr        #
+#    Created: 2021/12/21 20:05:22 by ulee              #+#    #+#              #
+#    Updated: 2021/12/25 00:18:31 by a_ulee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CLANG = clang++
-CLANGFLAGS = -Wall -Wextra -Werror -std=c++98
-NAME = megaphone
+CLANGFLAGS = -Wall -Wextra -Werror
+NAME = account
 RM = rm -f
 
-SRCS = megaphone.cpp
+SRCS = 	Account.cpp \
+		test.cpp \
+		
 OBJS = $(SRCS:.cpp=.o)
 
 %.o : %.c
@@ -28,6 +30,7 @@ $(NAME): $(OBJS)
 
 clean:
 	$(RM) $(OBJS)
+	$(RM) My_account.log
 
 fclean: clean
 	$(RM) $(NAME)
@@ -35,8 +38,6 @@ fclean: clean
 re: fclean $(NAME)
 
 test: $(NAME)
-	./megaphone "shhhhh... I think the students are asleep..."
-	./megaphone Damnit " ! " "Sorry students, I thought this thing was off."
-	./megaphone
+	./account > My_account.log
 
 .PHONY: all clean fclean re test

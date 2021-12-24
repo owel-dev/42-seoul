@@ -3,14 +3,41 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ulee <ulee@student.42.fr>                  +#+  +:+       +#+         #
+#    By: a_ulee <a_ulee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/21 20:05:22 by ulee              #+#    #+#              #
-#    Updated: 2021/12/22 15:34:03 by ulee             ###   ########.fr        #
+#    Updated: 2021/12/25 00:14:09 by a_ulee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-all:
-	clang++ -std=c++98 -Wall -Wextra -Werror Phonebook.cpp Contact.cpp main.cpp -o Phonebook; ./Phonebook
+CLANG = clang++
+CLANGFLAGS = -Wall -Wextra -Werror -std=c++98
+NAME = phonebook
+RM = rm -f
+
+SRCS = 	Phonebook.cpp \
+		Contact.cpp \
+		main.cpp
+		
+OBJS = $(SRCS:.cpp=.o)
+
+%.o : %.c
+	$(CLANG) $(CLANGFLAGS) -c $< -o $@
+
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	$(CLANG) $(CLANGFLAGS) -o $(NAME) $(OBJS)
+
 clean:
-	rn megaphone
+	$(RM) $(OBJS)
+
+fclean: clean
+	$(RM) $(NAME)
+
+re: fclean $(NAME)
+
+test: $(NAME)
+	./phonebook
+
+.PHONY: all clean fclean re test

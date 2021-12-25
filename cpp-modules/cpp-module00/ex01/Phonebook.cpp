@@ -6,7 +6,7 @@
 /*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 20:40:33 by ulee              #+#    #+#             */
-/*   Updated: 2021/12/25 00:38:37 by ulee             ###   ########.fr       */
+/*   Updated: 2021/12/25 19:05:40 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ void Phonebook::add(void) {
 }
 
 void Phonebook::printHeader(void) {
-  std::cout << "\n   index   first_name  last_name  nick_name  #darkest_secret"
+  std::cout << "\n   index   first_name last_name  nick_name  phone_number "
+               "#darkest_secret"
             << "\n";
   std::cout << "-------------------------------------------------------------"
             << "\n";
@@ -34,6 +35,7 @@ void Phonebook::printHeader(void) {
 
 void Phonebook::printAllFileds(void) {
   for (int i = 0; i < this->amount; i++) {
+    std::cout << std::setw(10) << i << '|';
     this->contact[i].printField();
     std::cout << "\n";
   }

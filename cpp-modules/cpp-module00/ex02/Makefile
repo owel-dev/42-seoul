@@ -6,7 +6,7 @@
 #    By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/21 20:05:22 by ulee              #+#    #+#              #
-#    Updated: 2021/12/25 00:38:46 by ulee             ###   ########.fr        #
+#    Updated: 2021/12/25 18:59:35 by ulee             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ SRCS = 	Account.cpp \
 		
 OBJS = $(SRCS:.cpp=.o)
 
-%.o : %.c
+%.o : %.cpp
 	$(CLANG) $(CLANGFLAGS) -c $< -o $@
 
 all: $(NAME)

@@ -6,7 +6,7 @@
 #    By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/21 20:05:22 by ulee              #+#    #+#              #
-#    Updated: 2021/12/25 00:38:41 by ulee             ###   ########.fr        #
+#    Updated: 2021/12/25 18:59:31 by ulee             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ SRCS = 	Phonebook.cpp \
 		
 OBJS = $(SRCS:.cpp=.o)
 
-%.o : %.c
+%.o : %.cpp
 	$(CLANG) $(CLANGFLAGS) -c $< -o $@
 
 all: $(NAME)

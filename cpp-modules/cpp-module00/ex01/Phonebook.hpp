@@ -6,7 +6,7 @@
 /*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/25 00:33:22 by a_ulee            #+#    #+#             */
-/*   Updated: 2021/12/25 00:38:39 by ulee             ###   ########.fr       */
+/*   Updated: 2021/12/25 19:17:06 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ class Phonebook {
   void search(void);
   void secret(void);
   void printHeader(void);
-  void printAllFileds(void);
+  void printAllFields(void);
 };
 
 #endif

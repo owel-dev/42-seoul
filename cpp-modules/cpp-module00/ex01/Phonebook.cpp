@@ -6,7 +6,7 @@
 /*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 20:40:33 by ulee              #+#    #+#             */
-/*   Updated: 2021/12/25 19:05:40 by ulee             ###   ########.fr       */
+/*   Updated: 2021/12/25 19:17:41 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void Phonebook::printHeader(void) {
             << "\n";
 }
 
-void Phonebook::printAllFileds(void) {
+void Phonebook::printAllFields(void) {
   for (int i = 0; i < this->amount; i++) {
     std::cout << std::setw(10) << i << '|';
     this->contact[i].printField();
@@ -46,7 +46,7 @@ void Phonebook::search(void) {
   int index;
 
   printHeader();
-  printAllFileds();
+  printAllFields();
   while (true) {
     std::cout << "input [ index | exit ]> ";
     std::getline(std::cin, input);

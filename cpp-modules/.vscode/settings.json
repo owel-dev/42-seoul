@@ -62,7 +62,11 @@
 		"vector": "cpp",
 		"iomanip": "cpp",
 		"__bits": "cpp",
-		"clocale": "cpp"
+		"clocale": "cpp",
+		"fstream": "cpp",
+		"deque": "cpp",
+		"stack": "cpp",
+		"thread": "cpp"
 	},
 	"C_Cpp.errorSquiggles": "Disabled"
 }

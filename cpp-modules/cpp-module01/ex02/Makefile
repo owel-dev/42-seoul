@@ -6,20 +6,16 @@
 #    By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/25 15:04:00 by ulee              #+#    #+#              #
-#    Updated: 2021/12/27 17:26:49 by ulee             ###   ########.fr        #
+#    Updated: 2021/12/26 12:22:57 by ulee             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CLANG = clang++
 CLANGFLAGS = -Wall -Wextra -Werror
-NAME = zombie
+NAME = brain
 RM = rm -f
 
-SRCS = 	main.cpp \
-				Zombie.cpp \
-				newZombie.cpp \
-				randomChump.cpp \
-		
+SRCS = 	main.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 %.o : %.cpp

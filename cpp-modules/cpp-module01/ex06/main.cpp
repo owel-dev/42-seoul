@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Zombie.cpp                                         :+:      :+:    :+:   */
+/*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/26 12:22:38 by ulee              #+#    #+#             */
-/*   Updated: 2021/12/27 17:26:26 by ulee             ###   ########.fr       */
+/*   Created: 2021/12/27 13:52:33 by ulee              #+#    #+#             */
+/*   Updated: 2021/12/27 17:25:19 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Zombie.hpp"
-Zombie::Zombie() {}
-Zombie::~Zombie() { std::cout << "Zombie Destructor called\n"; }
+#include "Karen.hpp"
 
-void Zombie::setName(std::string name) { this->zombie_name = name; }
-std::string Zombie::getName() { return (this->zombie_name); }
-
-void Zombie::announce(void) {
-  std::cout << '<' << this->getName() << "> "
-            << "BraiiiiiiinnnzzzZ..." << '\n';
+int main(int ac, char** av) {
+  if (ac != 2) {
+    std::cerr << "Error: argument." << std::endl;
+    return 1;
+  }
+  Karen karen;
+  try {
+    karen.complain(karen.filter(av[1]));
+  } catch (char const* e) {
+    std::cerr << "Error: " << e << '\n';
+    return 1;
+  }
+  return 0;
 }

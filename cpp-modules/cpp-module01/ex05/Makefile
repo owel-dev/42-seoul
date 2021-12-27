@@ -6,20 +6,18 @@
 #    By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/25 15:04:00 by ulee              #+#    #+#              #
-#    Updated: 2021/12/27 17:26:49 by ulee             ###   ########.fr        #
+#    Updated: 2021/12/27 17:25:11 by ulee             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CLANG = clang++
 CLANGFLAGS = -Wall -Wextra -Werror
-NAME = zombie
+NAME = karen
 RM = rm -f
 
 SRCS = 	main.cpp \
-				Zombie.cpp \
-				newZombie.cpp \
-				randomChump.cpp \
-		
+				Karen.cpp
+				
 OBJS = $(SRCS:.cpp=.o)
 
 %.o : %.cpp
@@ -35,6 +33,7 @@ clean:
 
 fclean: clean
 	@$(RM) $(NAME)
+	@$(RM) test.txt.replace
 
 re: fclean $(NAME)
 

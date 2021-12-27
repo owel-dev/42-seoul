@@ -5,13 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/26 12:22:38 by ulee              #+#    #+#             */
-/*   Updated: 2021/12/27 17:26:26 by ulee             ###   ########.fr       */
+/*   Created: 2021/12/26 12:22:48 by ulee              #+#    #+#             */
+/*   Updated: 2021/12/27 17:27:13 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Zombie.hpp"
+
 Zombie::Zombie() {}
+
 Zombie::~Zombie() { std::cout << "Zombie Destructor called\n"; }
 
 void Zombie::setName(std::string name) { this->zombie_name = name; }

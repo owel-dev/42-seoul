@@ -6,20 +6,18 @@
 #    By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/25 15:04:00 by ulee              #+#    #+#              #
-#    Updated: 2021/12/27 17:26:49 by ulee             ###   ########.fr        #
+#    Updated: 2021/12/27 17:34:34 by ulee             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CLANG = clang++
 CLANGFLAGS = -Wall -Wextra -Werror
-NAME = zombie
+NAME = filter
 RM = rm -f
 
 SRCS = 	main.cpp \
-				Zombie.cpp \
-				newZombie.cpp \
-				randomChump.cpp \
-		
+				Karen.cpp
+				
 OBJS = $(SRCS:.cpp=.o)
 
 %.o : %.cpp
@@ -35,11 +33,15 @@ clean:
 
 fclean: clean
 	@$(RM) $(NAME)
+	@$(RM) test.txt.replace
 
 re: fclean $(NAME)
 
 test: $(NAME)
-	$(addprefix ./, $(NAME))
+	@$(addprefix ./, $(NAME)) DEBUG
+	@$(addprefix ./, $(NAME)) INFO
+	@$(addprefix ./, $(NAME)) WARNING
+	@$(addprefix ./, $(NAME)) ERROR
 	@make fclean
 
 .PHONY: all clean fclean re test

@@ -6,13 +6,13 @@
 #    By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/25 15:04:00 by ulee              #+#    #+#              #
-#    Updated: 2022/01/01 16:35:39 by ulee             ###   ########.fr        #
+#    Updated: 2022/01/01 16:38:36 by ulee             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CLANG = clang++
 CLANGFLAGS = -Wall -Wextra -Werror
-NAME = two
+NAME = three
 RM = rm -f
 
 SRCS = 	main.cpp \

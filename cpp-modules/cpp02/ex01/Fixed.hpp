@@ -6,9 +6,12 @@
 /*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/01 16:35:18 by ulee              #+#    #+#             */
-/*   Updated: 2022/01/01 16:35:18 by ulee             ###   ########.fr       */
+/*   Updated: 2022/01/02 16:08:41 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#ifndef FIXED_HPP
+#define FIXED_HPP
 
 #include <cmath>
 #include <iostream>
@@ -32,3 +35,5 @@ class Fixed {
 };
 
 std::ostream &operator<<(std::ostream &out, Fixed const &obj);
+
+#endif

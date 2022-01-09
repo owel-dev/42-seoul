@@ -17,10 +17,10 @@ MateriaSource& MateriaSource::operator=(const MateriaSource& obj) {
   return (*this);
 }
 
-void MateriaSource::learnMateria(AMateria* obj) {
+void MateriaSource::learnMateria(AMateria* m) {
   for (int i = 0; i < 4; i++) {
     if (this->materias[i] == NULL) {
-      this->materias[i] = obj;
+      this->materias[i] = m;
       return;
     }
   }

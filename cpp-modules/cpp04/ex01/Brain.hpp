@@ -5,8 +5,9 @@
 
 class Brain {
  private:
- public:
   std::string ideas[SIZE];
+
+ public:
   Brain();
   Brain(const Brain& obj);
   Brain(std::string str);

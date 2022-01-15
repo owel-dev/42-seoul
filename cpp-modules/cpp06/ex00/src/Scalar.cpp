@@ -19,7 +19,7 @@ void Scalar::ConvertChar(void) const {
     num = std::stoi(this->str);
     if (255 < num || num < 0) throw ImpossibleExeption();
     if (!isprint(num)) throw NonDisplaybleException();
-    std::cout << char(num);
+    std::cout << static_cast<char>(num);
   } catch (NonDisplaybleException& e) {
     std::cerr << "Non displayable";
   } catch (...) {

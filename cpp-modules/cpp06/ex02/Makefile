@@ -20,10 +20,13 @@ endif
 SRCS = $(addsuffix .cpp, $(FILES))
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 
-$(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp
+$(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp $(OBJ_DIR)
 	@$(CLANG) $(CLANGFLAGS) -I $(INC_DIR) -c $< -o $@	
 
 all: $(NAME)
+
+$(OBJ_DIR) :
+	@mkdir obj
 
 $(NAME): $(OBJS)
 	@$(CLANG) $(CLANGFLAGS) -o $(NAME) $(OBJS)

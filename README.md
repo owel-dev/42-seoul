@@ -1,1 +1,0 @@
-# 42Seoul_cursus

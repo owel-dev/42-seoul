@@ -1,4 +1,3 @@
-// #include "MutantStack.cpp"
 #include "MutantStack.hpp"
 
 int main() {

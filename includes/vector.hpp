@@ -184,17 +184,20 @@ class vector {
   /*
    * Element access
    */
-  // reference at(size_type n) {
-  //   if (n >= _size) throw std::out_of_range("vector");
-  //   return _start[n];
-  // }
-  // reference operator[](size_type n);
-  // const_reference operator[](size_type n) const;
-  // const_reference at(size_type n) const;
-  // reference front() { return *_start; }
-  // const_reference front() const { return *_start; }
-  // reference back() { return *(_end - 1); }
-  // const_reference back() const { return *(_end - 1); }
+  reference at(size_type n) {
+    if (n >= size()) throw std::out_of_range("vector");
+    return _begin[n];
+  }
+  const_reference at(size_type n) const {
+    if (n >= size()) throw std::out_of_range("vector");
+    return _begin[n];
+  }
+  reference operator[](size_type n) { return _begin[n]; };
+  const_reference operator[](size_type n) const { return _begin[n]; }
+  reference front() { return *_begin; }
+  const_reference front() const { return *_begin; }
+  reference back() { return *(_end - 1); }
+  const_reference back() const { return *(_end - 1); }
 
   /*
    * Modifiers

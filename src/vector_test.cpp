@@ -108,5 +108,32 @@ void capacity_resize() {
 
   print_vector<std::vector<int> >(v);
   print_vector<ft::vector<int> >(my_v);
-  // std::cout << v.max_size() << std::endl;
+  std::cout << std::endl;
+}
+
+void access() {
+  std::vector<int> v;
+  ft::vector<int> my_v;
+  std::cout << "[ access ]" << std::endl;
+  std::cout << "--------------------------" << std::endl;
+  v.push_back(1);
+  v.push_back(2);
+  v.push_back(3);
+  v.push_back(4);
+  v.push_back(5);
+
+  my_v.push_back(1);
+  my_v.push_back(2);
+  my_v.push_back(3);
+  my_v.push_back(4);
+  my_v.push_back(5);
+
+  std::cout << "std_vector: "
+            << "at(3): " << v.size() << " vector[3]: " << v[3]
+            << " front: " << v.front() << " back: " << v.back() << std::endl;
+  std::cout << "my__vector: "
+            << "at(3): " << my_v.size() << " vector[3]: " << my_v[3]
+            << " front: " << my_v.front() << " back: " << my_v.back()
+            << std::endl;
+  std::cout << std::endl;
 }

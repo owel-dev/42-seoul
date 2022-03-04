@@ -15,6 +15,7 @@ int main() {
   modifier_push_back();
   capacity_reserve();
   capacity_resize();
+  access();
 
   // int a[5] = {1, 2, 3, 4, 5};
   // std::vector<int *> v;

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iterator>
+#include <map>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -12,6 +13,16 @@ int main() {
   construct_n_value();
   construct_iterator();
   modifier_push_back();
+  capacity_reserve();
+  capacity_resize();
+
+  // int a[5] = {1, 2, 3, 4, 5};
+  // std::vector<int *> v;
+  // v.push_back(a);
+  // v.push_back(a + 1);
+  // v.push_back(a + 2);
+  // for (std::vector<int *>::iterator it = v.begin(); it != v.end(); ++it) {
+  //   std::cout << *it << std::endl;
 
   // std::cout << "#2: #size10 size: " << v2.size() << std::endl;
   // std::cout << "#2: #size10 size: " << _v2.size() << std::endl;

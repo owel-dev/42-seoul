@@ -5,8 +5,9 @@
 #include <memory>
 #include <stdexcept>
 
+// #include "split_buffer.hpp"
 #include "utils.hpp"
-#include "vector_iterator.hpp"
+// #include "vector_iterator.hpp"
 
 namespace ft {
 
@@ -26,8 +27,8 @@ class vector {
   typedef T& reference;
   typedef const T& const_reference;
 
-  typedef ft::vector_iterator<value_type> iterator;
-  typedef ft::vector_iterator<const value_type> const_iterator;
+  typedef pointer iterator;
+  typedef const pointer const_iterator;
   // typedef ft::vector_iterator<const value_type> iterator;
   // typedef typename allocator_type::size_type size_type;
   // typedef Allocator::const_pointer const_pointer;
@@ -44,7 +45,8 @@ class vector {
   /*
    * 커스텀 함수
    */
-  void re_allocate(size_type n) {
+
+  void init_allocate(size_type n) {
     if (n > max_size()) throw std::out_of_range("vector");
     _begin = _end = _alloc.allocate(n);
     _end_cap = _begin + n;
@@ -56,10 +58,14 @@ class vector {
     }
   }
 
-  void construct_at_end(pointer _new_end, pointer val) {
-    for (; _end != _new_end; ++_end, ++val) {
-      _alloc.construct(_end, *val);
+  void construct_at_end(pointer _new_end, pointer prev) {
+    for (; _end != _new_end; ++_end, ++prev) {
+      _alloc.construct(_end, *prev);
     }
+  }
+
+  void destruct_at_end(pointer new_end) {
+    while (_end != new_end) _alloc.destroy(--_end);
   }
 
   size_type new_capacity(size_type size) {
@@ -81,7 +87,7 @@ class vector {
                   const allocator_type& alloc = allocator_type())
       : _alloc(alloc) {
     if (n > 0) {
-      re_allocate(n);
+      init_allocate(n);
       construct_at_end(_end + n, val);
     }
   }
@@ -126,10 +132,10 @@ class vector {
   /*
    * 반복자
    */
-  iterator begin() { return iterator(_begin); }
-  // const_iterator begin() const { return const_itrator(_vector); }
-  iterator end() const { return iterator(_end); }
-  // const_iterator end() const { return const_iterator(_vector + _size); }
+  iterator begin() { return _begin; }
+  const_iterator begin() const { return _begin; }
+  iterator end() { return _end; }
+  const_iterator end() const { return _end; }
   // reverse_iterator rbegin() { return reverse_iterator(_vector + _size - 1); }
   // const_reverse_iterator rbegin() const {
   //   return const_reverse_iterator(_vector + _size - 1);
@@ -142,19 +148,37 @@ class vector {
   /*
    * Capacity
    */
+
+  void append(size_type additional_size, const value_type& val) {
+    size_type exrta_capacity = _end_cap - _end;
+    if (exrta_capacity < additional_size) {
+      size_type current_size = size();
+      reserve(current_size + additional_size);
+    }
+    pointer new_end = _end + additional_size;
+    construct_at_end(new_end, val);
+  }
+
   size_type size() const { return _end - _begin; }
   size_type max_size() const { return allocator_type().max_size(); }
-  // void resize(size_type n) { if }
+  void resize(size_type new_size, const value_type& val = value_type()) {
+    size_type current_size = size();
+    if (current_size < new_size) {
+      append(new_size - current_size, val);
+    } else if (current_size > new_size) {
+      destruct_at_end(_begin + new_size);
+    }
+  }
+
   size_type capacity() const { return _end_cap - _begin; }
-  // bool empty() const {}
+  bool empty() const { return size() == 0 ? true : false; }
   void reserve(size_type n) {
-    size_type prev_size = size();
     pointer prev_begin = _begin;
-    re_allocate(n);
-    // for (size_t i = 0; i < prev_size; ++i, ++_end)
-    //   _alloc.construct(_end, prev_begin[i]);
-    construct_at_end(_end + prev_size, prev_begin);
-    _alloc.deallocate(prev_begin, prev_size);
+    size_type prev_size = size();
+    size_type prev_capacity = capacity();
+    init_allocate(n);
+    construct_at_end(_begin + prev_size, prev_begin);
+    _alloc.deallocate(prev_begin, prev_capacity);
   }
 
   /*

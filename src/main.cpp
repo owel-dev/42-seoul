@@ -15,10 +15,10 @@ int main() {
   modifier_push_back();
   modifier_pop_back();
   modifier_assign();
+  modifier_insert();
   capacity_reserve();
   capacity_resize();
   access();
-
   // int a[5] = {1, 2, 3, 4, 5};
   // std::vector<int *> v;
   // v.push_back(a);

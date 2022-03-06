@@ -193,16 +193,40 @@ void modifier_insert() {
   std::cout << "[ modifier_insert ]" << std::endl;
   std::cout << "--------------------------" << std::endl;
 
-  v.push_back(2);
-  v.push_back(3);
-  v.push_back(4);
-  v.push_back(5);
+  v.insert(v.begin() + 1, 7);
   std::cout << "std_vector: "
             << "size: " << v.size() << " capacity: " << v.capacity()
             << std::endl;
   print_vector<std::vector<int> >(v);
 
+  my_v.insert(my_v.begin() + 1, 7);
   std::cout << "my__vector: "
+            << "size: " << my_v.size() << " capacity: " << my_v.capacity()
+            << std::endl;
+  print_vector<ft::vector<int> >(my_v);
+
+  v.insert(v.begin() + 2, 3, 9);
+  std::cout << "std_vector: "
+            << "size: " << v.size() << " capacity: " << v.capacity()
+            << std::endl;
+  print_vector<std::vector<int> >(v);
+
+  my_v.insert(my_v.begin() + 2, 3, 9);
+  std::cout << "my__vector: "
+            << "size: " << my_v.size() << " capacity: " << my_v.capacity()
+            << std::endl;
+  print_vector<ft::vector<int> >(my_v);
+
+  std::vector<int> test_vec(3, 8);
+
+  v.insert(v.begin() + 7, test_vec.begin(), test_vec.end());
+  std::cout << "std_vector: "
+            << "size: " << v.size() << " capacity: " << v.capacity()
+            << std::endl;
+  print_vector<std::vector<int> >(v);
+
+  my_v.insert(my_v.begin() + 7, test_vec.begin(), test_vec.end());
+  std::cout << "std_vector: "
             << "size: " << my_v.size() << " capacity: " << my_v.capacity()
             << std::endl;
   print_vector<ft::vector<int> >(my_v);

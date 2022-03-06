@@ -244,18 +244,74 @@ class vector {
   }
 
   void pop_back() { __destruct_at_end(__end_ - 1); }
-  // iterator insert(iterator position, const value_type& __val) {
-  //   pointer __pos = __begin_ + (position - __begin_);
-  //   if (__end_ < __end_cap_) {
-  //     if (__pos == __end_cap_) __construct_at_end(__end_ + 1, val);
-  //   }
-  // }
-  // void insert(iterator position, size_type __n, const value_type& __val) {}
-  // template <class InputIterator>
-  // void insert(interator position, InputIterator first, InputIterator last) {}
+
+  iterator insert(iterator position, const value_type& __val) {
+    size_type __d = position - __begin_;
+    if (__end_ == __end_cap_) {
+      this->reserve(__recommand_cap(1));
+    }
+    pointer __pos = __begin_ + __d;
+    if (__pos == __end_)
+      __alloc_.construct(__end_, __val);
+    else {
+      for (pointer __old_end = __end_; __old_end != __pos; --__old_end)
+        __alloc_.construct(__old_end, *(__old_end - 1));
+      ++__end_;
+      __alloc_.construct(__pos, __val);
+    }
+    return __pos;
+  }
+
+  template <class InputIterator>
+  iterator insert(InputIterator __position, size_type __n,
+                  const value_type& __val) {
+    size_type __d = __position - __begin_;
+    if (__end_cap_ < __end_ + __n) {
+      this->reserve(__recommand_cap(capacity() + __d));
+    }
+    pointer __pos = __begin_ + __d;
+    if (__pos == __end_)
+      __construct_at_end(__end_ + __n, __val);
+    else {
+      pointer __back = __end_ + __n - 1;
+      for (pointer __old_end = __end_; __old_end != __pos;
+           --__old_end, --__back) {
+        __alloc_.construct(__back, *(__old_end - 1));
+      }
+      for (size_t i = 0; i < __n; ++i, ++__pos, ++__end_)
+        __alloc_.construct(__pos, __val);
+    }
+    return __pos - __n;
+  }
+  template <class InputIterator>
+  iterator insert(iterator __position, InputIterator __first,
+                  InputIterator __last,
+                  typename ft::enable_if<!ft::is_integral<InputIterator>::value,
+                                         InputIterator>::type* = nullptr) {
+    size_type __off = __position - __begin_;
+    size_type __n = __last - __first;
+    if (__end_cap_ < __end_ + __n) {
+      this->reserve(__recommand_cap(capacity() + __off));
+    }
+    pointer __pos = __begin_ + __off;
+    if (__pos == __end_)
+      __construct_at_end(__end_ + __n, *__first);
+    else {
+      pointer __back = __end_ + __n - 1;
+      for (pointer __old_end = __end_; __old_end != __pos;
+           --__old_end, --__back) {
+        __alloc_.construct(__back, *(__old_end - 1));
+      }
+      for (size_t i = 0; i < __n; ++i, ++__pos, ++__end_, ++__first)
+        __alloc_.construct(__pos, *__first);
+    }
+    return __pos - __n;
+  }
+
   // iterator erase(iterator position) {}
+
   // iterator erase(iterator first, iterator last) {}
-  // void swap(vector& x) {}
+  void swap(vector& x) {}
   void clear() { __destruct_at_end(__begin_); }
 };
 

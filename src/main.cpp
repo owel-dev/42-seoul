@@ -23,6 +23,10 @@ int main() {
   capacity_reserve();
   capacity_resize();
   access();
+
+  construct_copy();
+  relation_operators();
+
   // int a[5] = {1, 2, 3, 4, 5};
   // std::vector<int *> v;
   // v.push_back(a);

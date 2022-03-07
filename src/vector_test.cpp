@@ -42,8 +42,10 @@ void construct_n_value() {
 }
 
 void construct_iterator() {
-  std::vector<int> v(7, 3);
-  ft::vector<int> my_v(7, 3);
+  int a[6] = {1, 2, 3, 4, 5, 6};
+
+  std::vector<int> v(a, a + 6);
+  ft::vector<int> my_v(a, a + 6);
 
   std::cout << "[ construct_iterator ]" << std::endl;
   std::cout << "--------------------------" << std::endl;
@@ -55,6 +57,26 @@ void construct_iterator() {
             << "size: " << my_v.size() << " capacoty: " << my_v.capacity()
             << std::endl;
   print_vector<ft::vector<int> >(my_v);
+  std::cout << std::endl;
+}
+
+void construct_copy() {
+  std::vector<int> v(10, 7);
+  ft::vector<int> my_v(10, 7);
+
+  std::vector<int> v_copy(v);
+  ft::vector<int> my_v_copy(my_v);
+  std::cout << "[ construct_n_value ]" << std::endl;
+  std::cout << "--------------------------" << std::endl;
+  std::cout << "std_vector: "
+            << "size: " << v_copy.size() << " capacoty: " << v_copy.capacity()
+            << std::endl;
+  print_vector<std::vector<int> >(v_copy);
+
+  std::cout << "my__vector: "
+            << "size: " << my_v_copy.size()
+            << " capacoty: " << my_v_copy.capacity() << std::endl;
+  print_vector<ft::vector<int> >(my_v_copy);
   std::cout << std::endl;
 }
 
@@ -366,4 +388,31 @@ void modifier_swap() {
             << std::endl;
   print_vector<ft::vector<int> >(my_v2);
   std::cout << std::endl;
+}
+
+void relation_operators() {
+  int a[5] = {1, 2, 3, 4, 5};
+  int b[5] = {1, 2, 3, 4, 6};
+  ft::vector<int> v(a, a + 5);
+  ft::vector<int> my_v(b, b + 5);
+
+  std::cout << "[ relation_operators ]" << std::endl;
+  std::cout << "--------------------------" << std::endl;
+  std::cout << "std_vector: "
+            << "size: " << v.size() << " capacoty: " << v.capacity()
+            << std::endl;
+  print_vector<ft::vector<int> >(v);
+
+  std::cout << "my__vector: "
+            << "size: " << my_v.size() << " capacoty: " << my_v.capacity()
+            << std::endl;
+  print_vector<ft::vector<int> >(my_v);
+  std::cout << std::endl;
+
+  std::cout << "std_vec == my_vec: " << (v == my_v) << "\n"
+            << "std_vec != my_vec: " << (v != my_v) << "\n"
+            << "std_vec <  my_vec: " << (v < my_v) << "\n"
+            << "std_vec >  my_vec: " << (v > my_v) << "\n"
+            << "std_vec <= my_vec: " << (v <= my_v) << "\n"
+            << "std_vec >= my_vec: " << (v >= my_v) << std::endl;
 }

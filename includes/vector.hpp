@@ -308,11 +308,37 @@ class vector {
     return __pos - __n;
   }
 
-  // iterator erase(iterator position) {}
+  iterator erase(iterator position) {
+    __alloc_.destroy(position);
+    size_type __n = __end_ - __begin_ - 1;
+    std::memcpy(position, position + 1, __n * sizeof(value_type));
+    *(__end_ - 1) = 0;
+    --__end_;
+    return (position);
+  }
 
-  // iterator erase(iterator first, iterator last) {}
-  void swap(vector& x) {}
+  iterator erase(iterator first, iterator last) {
+    for (iterator __pos = first; __pos != last; ++__pos) {
+      __alloc_.destroy(__pos);
+    }
+    size_type __move_n = __end_ - last;
+    size_type __erase_n = last - first;
+    std::memcpy(first, last, __move_n * sizeof(value_type));
+    // std::memset(__end_ - __erase_n, 0, __erase_n);
+    __end_ -= __erase_n;
+  }
+  void swap(vector& x) {
+    if (*this == x) return;
+    std::swap(this->__begin_, x.__begin_);
+    std::swap(this->__end_, x.__end_);
+    std::swap(this->__end_cap_, x.__end_cap_);
+  }
   void clear() { __destruct_at_end(__begin_); }
+
+  bool operator==(const vector& y) {
+    return this->size() == y.size() &&
+           std::equal(this->begin(), this->end(), y.begin());
+  }
 };
 
 }  // namespace ft

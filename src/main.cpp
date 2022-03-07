@@ -12,10 +12,14 @@ int main() {
   construct_void();
   construct_n_value();
   construct_iterator();
+
   modifier_push_back();
   modifier_pop_back();
   modifier_assign();
   modifier_insert();
+  modifier_erase();
+  modifier_swap();
+
   capacity_reserve();
   capacity_resize();
   access();

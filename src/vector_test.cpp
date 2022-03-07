@@ -233,3 +233,137 @@ void modifier_insert() {
 
   std::cout << std::endl;
 }
+
+void modifier_erase() {
+  std::vector<int> v;
+  ft::vector<int> my_v;
+
+  v.push_back(1);
+  v.push_back(2);
+  v.push_back(3);
+  v.push_back(4);
+  v.push_back(5);
+  v.push_back(6);
+  v.push_back(7);
+
+  my_v.push_back(1);
+  my_v.push_back(2);
+  my_v.push_back(3);
+  my_v.push_back(4);
+  my_v.push_back(5);
+  my_v.push_back(6);
+  my_v.push_back(7);
+
+  std::cout << "[ modifier_erase ]" << std::endl;
+  std::cout << "--------------------------" << std::endl;
+
+  v.erase(v.begin() + 2);
+  std::cout << "std_vector: "
+            << "size: " << v.size() << " capacity: " << v.capacity()
+            << std::endl;
+  print_vector<std::vector<int> >(v);
+
+  my_v.erase(my_v.begin() + 2);
+  std::cout << "my__vector: "
+            << "size: " << my_v.size() << " capacity: " << my_v.capacity()
+            << std::endl;
+  print_vector<ft::vector<int> >(my_v);
+  std::cout << std::endl;
+
+  v.erase(v.begin() + 1, v.begin() + 3);
+  std::cout << "std_vector: "
+            << "size: " << v.size() << " capacity: " << v.capacity()
+            << std::endl;
+  print_vector<std::vector<int> >(v);
+
+  my_v.erase(my_v.begin() + 1, my_v.begin() + 3);
+  std::cout << "my__vector: "
+            << "size: " << my_v.size() << " capacity: " << my_v.capacity()
+            << std::endl;
+  print_vector<ft::vector<int> >(my_v);
+
+  std::cout << std::endl;
+}
+
+void modifier_swap() {
+  std::vector<int> v;
+  std::vector<int> v2;
+
+  ft::vector<int> my_v;
+  ft::vector<int> my_v2;
+  std::cout << "[ modifier_swap ]" << std::endl;
+  std::cout << "--------------------------" << std::endl;
+  v.push_back(1);
+  v.push_back(2);
+  v.push_back(3);
+  v.push_back(4);
+  v.push_back(5);
+
+  v2.push_back(11);
+  v2.push_back(21);
+  v2.push_back(31);
+  v2.push_back(41);
+  v2.push_back(51);
+
+  my_v.push_back(1);
+  my_v.push_back(2);
+  my_v.push_back(3);
+  my_v.push_back(4);
+  // my_v.push_back(5);
+
+  my_v2.push_back(11);
+  my_v2.push_back(12);
+  my_v2.push_back(13);
+  my_v2.push_back(14);
+  my_v2.push_back(15);
+
+  std::cout << "std_vector: "
+            << "size: " << v.size() << " capacity: " << v.capacity()
+            << std::endl;
+  print_vector<std::vector<int> >(v);
+
+  std::cout << "std_vector2: "
+            << "size: " << v2.size() << " capacity: " << v2.capacity()
+            << std::endl;
+  print_vector<std::vector<int> >(v2);
+  std::cout << std::endl;
+
+  v.swap(v2);
+
+  std::cout << "std_vector: "
+            << "size: " << v.size() << " capacity: " << v.capacity()
+            << std::endl;
+  print_vector<std::vector<int> >(v);
+
+  std::cout << "std_vector2: "
+            << "size: " << v2.size() << " capacity: " << v2.capacity()
+            << std::endl;
+  print_vector<std::vector<int> >(v2);
+  std::cout << std::endl;
+
+  std::cout << "my__vector: "
+            << "size: " << my_v.size() << " capacity: " << my_v.capacity()
+            << std::endl;
+  print_vector<ft::vector<int> >(my_v);
+  std::cout << std::endl;
+
+  std::cout << "my__vector2: "
+            << "size: " << my_v2.size() << " capacity: " << my_v2.capacity()
+            << std::endl;
+  print_vector<ft::vector<int> >(my_v2);
+  std::cout << std::endl;
+
+  my_v.swap(my_v2);
+
+  std::cout << "my__vector: "
+            << "size: " << my_v.size() << " capacity: " << my_v.capacity()
+            << std::endl;
+  print_vector<ft::vector<int> >(my_v);
+  std::cout << std::endl;
+
+  std::cout << "my__vector2: "
+            << "size: " << my_v2.size() << " capacity: " << my_v2.capacity()
+            << std::endl;
+  print_vector<ft::vector<int> >(my_v2);
+  std::cout << std::endl;
+}

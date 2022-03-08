@@ -6,6 +6,7 @@
 #include <stdexcept>
 
 // #include "split_buffer.hpp"
+#include "reverse_iterator.hpp"
 #include "utils.hpp"
 // #include "vector_reverse_iterator.hpp"
 
@@ -29,8 +30,8 @@ class vector {
 
   typedef pointer iterator;
   typedef const pointer const_iterator;
-  // typedef ft::reverse_iterator<iterator> reverse_iterator;
-  // typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+  typedef ft::reverse_iterator<iterator> reverse_iterator;
+  typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
  private:
   allocator_type _alloc;
@@ -141,14 +142,10 @@ class vector {
   const_iterator begin() const { return _begin; }
   iterator end() { return _end; }
   const_iterator end() const { return _end; }
-  // reverse_iterator rbegin() { return reverse_iterator(_vector + _size - 1); }
-  // const_reverse_iterator rbegin() const {
-  //   return const_reverse_iterator(_vector + _size - 1);
-  // }
-  // reverse_iterator rend() { return reverse_iterator(_vector - 1); }
-  // const_reverse_iterator rend() const {
-  //   return const_reverse_iterator(_vector - 1);
-  // }
+  reverse_iterator rbegin() { return reverse_iterator(_end); }
+  const_reverse_iterator rbegin() const { return reverse_iterator(_end); }
+  reverse_iterator rend() { return reverse_iterator(_begin); }
+  const_reverse_iterator rend() const { return reverse_iterator(_begin); }
 
   /*
    * Capacity

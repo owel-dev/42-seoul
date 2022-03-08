@@ -415,4 +415,41 @@ void relation_operators() {
             << "std_vec >  my_vec: " << (v > my_v) << "\n"
             << "std_vec <= my_vec: " << (v <= my_v) << "\n"
             << "std_vec >= my_vec: " << (v >= my_v) << std::endl;
+  std::cout << std::endl;
+}
+
+void reverse_iterator() {
+  int a[5] = {1, 2, 3, 4, 5};
+  ft::vector<int> v(a, a + 5);
+
+  std::cout << "[ reverse_iterator ]" << std::endl;
+  std::cout << "--------------------------" << std::endl;
+  std::cout << "vector: ";
+  print_vector<ft::vector<int> >(v);
+  std::cout << std::endl;
+
+  std::cout << "vector_reverse_print: ";
+  for (ft::vector<int>::reverse_iterator it = v.rbegin(); it != v.rend();
+       it++) {
+    std::cout << *it << " ";
+  }
+
+  std::cout << std::endl;
+  std::cout << std::endl;
+
+  ft::vector<int>::reverse_iterator it = v.rbegin();
+  ft::vector<int>::reverse_iterator it2 = v.rbegin() + 1;
+
+  std::cout << "reverse_iterator[3]: " << it[3] << std::endl;
+  std::cout << "*(reverse_iterator + 3): " << *(it + 3) << std::endl;
+  std::cout << std::endl;
+
+  std::cout << "v1 == v2: " << (it == it2) << "\n"
+            << "v1 != v2: " << (it != it2) << "\n"
+            << "v1 <  v2: " << (it < it2) << "\n"
+            << "v1 >  v2: " << (it > it2) << "\n"
+            << "v1 <= v2: " << (it <= it2) << "\n"
+            << "v1 >= v2: " << (it >= it2) << std::endl;
+
+  std::cout << std::endl;
 }

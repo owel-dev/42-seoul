@@ -5,10 +5,8 @@
 #include <memory>
 #include <stdexcept>
 
-// #include "split_buffer.hpp"
+#include "etc.hpp"
 #include "reverse_iterator.hpp"
-#include "utils.hpp"
-// #include "vector_reverse_iterator.hpp"
 
 namespace ft {
 
@@ -99,7 +97,7 @@ class vector {
 
   explicit vector(size_type n, const value_type& val = value_type(),
                   const allocator_type& alloc = allocator_type())
-      : _alloc(alloc) {
+      : _alloc(alloc), _begin(nullptr), _end(nullptr), _end_cap(nullptr) {
     if (n > 0) {
       vallocate(n);
       construct_at_end(_end + n, val);
@@ -119,7 +117,8 @@ class vector {
     }
   }
 
-  vector(const vector& copy) : _alloc(copy._alloc) {
+  vector(const vector& copy)
+      : _alloc(copy._alloc), _begin(nullptr), _end(nullptr), _end_cap(nullptr) {
     size_type n = copy.size();
     if (n > 0) {
       vallocate(n);
@@ -313,11 +312,6 @@ class vector {
     std::swap(this->_end_cap, x._end_cap);
   }
   void clear() { destruct_at_end(_begin); }
-
-  bool operator==(const vector& y) {
-    return this->size() == y.size() &&
-           std::equal(this->begin(), this->end(), y.begin());
-  }
 };
 
 template <class T, class Alloc>

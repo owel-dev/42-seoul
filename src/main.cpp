@@ -8,6 +8,7 @@
 
 // #include "map.hpp"
 // #include "map_test.cpp"
+#include "stack_test.cpp"
 #include "vector.hpp"
 #include "vector_test.cpp"
 
@@ -34,6 +35,8 @@ int main() {
   vector_relation_operators();
   vector_reverse_iterator();
 
+  stack_member_functions();
+  stack_relation_operators();
   // std::vector<int> v = std::vector<int>(5, 7);
   // for (std::vector<int>::iterator it = v.begin(); it != v.end(); ++it)
   //   std::cout << *it << std::endl;

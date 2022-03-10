@@ -6,9 +6,14 @@
 #include <utility>
 #include <vector>
 
-#include "vector_test_utils.cpp"
+template <class T>
+void print_vector(T& v) {
+  for (typename T::iterator it = v.begin(); it != v.end(); ++it)
+    std::cout << *it << " ";
+  std::cout << std::endl;
+}
 
-void construct_void() {
+void vector_construct_void() {
   std::vector<int> v;
   ft::vector<int> my_v;
   std::cout << "[ construct_void ]" << std::endl;
@@ -25,7 +30,7 @@ void construct_void() {
   std::cout << std::endl;
 }
 
-void construct_n_value() {
+void vector_construct_n_value() {
   std::vector<int> v(10, 7);
   ft::vector<int> my_v(10, 7);
   std::cout << "[ construct_n_value ]" << std::endl;
@@ -41,7 +46,7 @@ void construct_n_value() {
   std::cout << std::endl;
 }
 
-void construct_iterator() {
+void vector_construct_iterator() {
   int a[6] = {1, 2, 3, 4, 5, 6};
 
   std::vector<int> v(a, a + 6);
@@ -60,7 +65,7 @@ void construct_iterator() {
   std::cout << std::endl;
 }
 
-void construct_copy() {
+void vector_construct_copy() {
   std::vector<int> v(10, 7);
   ft::vector<int> my_v(10, 7);
 
@@ -80,7 +85,7 @@ void construct_copy() {
   std::cout << std::endl;
 }
 
-void modifier_push_back() {
+void vector_modifier_push_back() {
   std::vector<int> v(3, 1);
   ft::vector<int> my_v(3, 1);
 
@@ -98,7 +103,7 @@ void modifier_push_back() {
   std::cout << std::endl;
 }
 
-void modifier_pop_back() {
+void vector_modifier_pop_back() {
   std::vector<int> v(1, 1);
   ft::vector<int> my_v(1, 1);
 
@@ -124,7 +129,7 @@ void modifier_pop_back() {
   std::cout << std::endl;
 }
 
-void capacity_reserve() {
+void vector_capacity_reserve() {
   std::vector<int> v(3, 10);
   ft::vector<int> my_v(3, 10);
   std::cout << "[ capacity_reserve ]" << std::endl;
@@ -140,7 +145,7 @@ void capacity_reserve() {
   std::cout << std::endl;
 }
 
-void capacity_resize() {
+void vector_capacity_resize() {
   std::vector<int> v;
   ft::vector<int> my_v;
   std::cout << "[ capacity_resize ]" << std::endl;
@@ -159,7 +164,7 @@ void capacity_resize() {
   std::cout << std::endl;
 }
 
-void access() {
+void vector_access() {
   std::vector<int> v;
   ft::vector<int> my_v;
   std::cout << "[ access ]" << std::endl;
@@ -186,7 +191,7 @@ void access() {
   std::cout << std::endl;
 }
 
-void modifier_assign() {
+void vector_modifier_assign() {
   std::vector<int> v(3, 1);
   ft::vector<int> my_v(3, 1);
 
@@ -208,7 +213,7 @@ void modifier_assign() {
   std::cout << std::endl;
 }
 
-void modifier_insert() {
+void vector_modifier_insert() {
   std::vector<int> v(3, 1);
   ft::vector<int> my_v(3, 1);
 
@@ -256,7 +261,7 @@ void modifier_insert() {
   std::cout << std::endl;
 }
 
-void modifier_erase() {
+void vector_modifier_erase() {
   std::vector<int> v;
   ft::vector<int> my_v;
 
@@ -307,7 +312,7 @@ void modifier_erase() {
   std::cout << std::endl;
 }
 
-void modifier_swap() {
+void vector_modifier_swap() {
   std::vector<int> v;
   std::vector<int> v2;
 
@@ -390,7 +395,7 @@ void modifier_swap() {
   std::cout << std::endl;
 }
 
-void relation_operators() {
+void vector_relation_operators() {
   int a[5] = {1, 2, 3, 4, 5};
   int b[5] = {1, 2, 3, 4, 6};
   ft::vector<int> v(a, a + 5);
@@ -418,7 +423,7 @@ void relation_operators() {
   std::cout << std::endl;
 }
 
-void reverse_iterator() {
+void vector_reverse_iterator() {
   int a[5] = {1, 2, 3, 4, 5};
   ft::vector<int> v(a, a + 5);
 

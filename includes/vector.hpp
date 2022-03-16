@@ -304,6 +304,8 @@ class vector {
     std::memcpy(first, last, move_n * sizeof(value_type));
     std::memset(_end - erase_n, 0, erase_n);
     _end -= erase_n;
+
+    return (first);
   }
   void swap(vector& x) {
     if (*this == x) return;

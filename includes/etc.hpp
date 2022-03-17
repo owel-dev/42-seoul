@@ -3,8 +3,34 @@
 
 #include <iostream>
 #include <memory>
+#define NC "\e[0m"
+#define RED_C "\e[31m"
+#define BLACK_C "\e[30m \e[1m"
+#define BLUE "\e[36m"
 
 namespace ft {
+
+enum Color { RED, BLACK, DOUBLE_BLACK };
+
+template <class T>
+struct Node {
+  T data;
+  int color;
+  Node *left, *right, *parent;
+
+  Node() {
+    this->data = 0;
+    this->color = BLACK;
+    this->left = this->right = this->parent = nullptr;
+  }
+
+  explicit Node(int data, Node* nil) {
+    this->data = data;
+    this->color = RED;
+    this->parent = nullptr;
+    this->left = this->right = nil;
+  }
+};
 
 template <class T1, class T2>
 class pair {

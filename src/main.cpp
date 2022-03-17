@@ -17,31 +17,31 @@ int main() {
   /*
    * vector 테스트
    */
-  vector_construct_void();
-  vector_construct_n_value();
-  vector_construct_iterator();
+  // vector_construct_void();
+  // vector_construct_n_value();
+  // vector_construct_iterator();
 
-  vector_modifier_push_back();
-  vector_modifier_pop_back();
-  vector_modifier_assign();
-  vector_modifier_insert();
-  vector_modifier_erase();
-  vector_modifier_swap();
+  // vector_modifier_push_back();
+  // vector_modifier_pop_back();
+  // vector_modifier_assign();
+  // vector_modifier_insert();
+  // vector_modifier_erase();
+  // vector_modifier_swap();
 
-  vector_capacity_reserve();
-  vector_capacity_resize();
-  vector_access();
+  // vector_capacity_reserve();
+  // vector_capacity_resize();
+  // vector_access();
 
-  vector_construct_copy();
-  vector_relation_operators();
-  vector_reverse_iterator();
+  // vector_construct_copy();
+  // vector_relation_operators();
+  // vector_reverse_iterator();
 
-  stack_member_functions();
-  stack_relation_operators();
+  // stack_member_functions();
+  // stack_relation_operators();
 
   RBTree_test();
 
-  // std::vector<int> v = std::vector<int>(5, 7);
+    // std::vector<int> v = std::vector<int>(5, 7);
   // for (std::vector<int>::iterator it = v.begin(); it != v.end(); ++it)
   //   std::cout << *it << std::endl;
 

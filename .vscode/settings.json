@@ -70,7 +70,8 @@
     "deque": "cpp",
     "queue": "cpp",
     "iomanip": "cpp",
-    "__memory": "cpp"
+    "__memory": "cpp",
+    "version": "cpp"
   },
   "C_Cpp.errorSquiggles": "Disabled"
 }

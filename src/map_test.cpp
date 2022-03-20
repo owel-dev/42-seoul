@@ -1,21 +1,22 @@
-void line(int x0, int y0, int x1, int y1) {
-  int dx = abs(x1 - x0), plus_x = x0 < x1 ? 1 : -1;
-  int dy = abs(y1 - y0), plus_y = y0 < y1 ? 1 : -1;
-  int err = (dx > dy ? dx : -dy) / 2;
-  int e2;
+#include "map.hpp"
 
-  for (;;) {
-    setPixel(x0, y0);
-    if (x0 == x1 && y0 == y1) break;
+#include <iostream>
+#include <iterator>
+#include <memory>
+#include <stack>
+#include <utility>
+#include <vector>
 
-    e2 = err;
-    if (e2 > -dx) {
-      err -= dy;
-      x0 += plus_x;
-    }
-    if (e2 < dy) {
-      err += dx;
-      y0 += plus_y;
-    }
+void map_modifier_insert(){
+  ft::map<int, std::string> m;
+  m.insert(ft::make_pair(4, "4"));
+  m.insert(ft::make_pair(3, "3"));
+  m.insert(ft::make_pair(1, "1"));
+  m.insert(ft::make_pair(2, "2"));
+
+  for (ft::map<int, std::string>::iterator it = m.begin(); it != m.end(); it++)
+  {
+    std::cout << *it << std::endl;
   }
+  
 }

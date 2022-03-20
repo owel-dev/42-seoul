@@ -7,44 +7,48 @@
 #include <map>
 #include <memory>
 #include <stdexcept>
+#include "RBTree.hpp"
 
-template <class Key,                       // map::key_type
-          class T,                         // map::mapped_type
-          class Compare = std::less<Key>,  // map::key_compare
+namespace ft {
+
+template <class Key,                      // map::key_type
+          class T,                        // map::mapped_type
+          class Compare = std::less<Key>, // map::key_compare
           class Alloc =
-              std::allocator<ft::pair<const Key, T> >  // map::allocator_type
+              std::allocator<ft::pair<const Key, T> > // map::allocator_type
           >
 class map {
- public:
+public:
   typedef Key key_type;
   typedef T mapped_type;
-  typedef typename ft::pair<key_type, value_type> value_type;
-  typedef typename Compare key_compare;
+  typedef typename ft::pair<key_type, mapped_type> value_type;
+  typedef  Compare key_compare;
   typedef Alloc allocator_type;
   typedef typename allocator_type::reference reference;
   typedef typename allocator_type::const_reference const_reference;
   typedef typename allocator_type::pointer pointer;
   typedef typename allocator_type::const_pointer const_pointer;
-  // typedef ft::map_iterator<value_type> iterator;
   // typedef const ft::map_iterator<value_type> const_iterator;
-  typedef ft::reverse_iterator<iterator> reverse_iterator;
-  typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+  typedef ft::rb_tree<value_type> tree_type;
+  typedef ft::rb_tree_iterator<value_type> iterator;
+  // typedef ft::reverse_iterator<iterator> reverse_iterator;
+  // typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
   typedef long difference_type;
   typedef unsigned long size_type;
 
- private:
+private:
   allocator_type _alloc;
   key_compare _comp;
-  // RBTree _tree;
+  tree_type _tree;
 
- public:
+public:
   /*
    * basic
    */
   //? comp: 정렬 방식, 오름차순 or 내림차순, 디폴트는 less(오름차순).
-  explicit map(const key_compare& comp = key_compare(),
-               const allocator_type& alloc = allocator_type())
-      : _alloc(alloc), _comp(comp) {}
+  explicit map(const key_compare &comp = key_compare(),
+               const allocator_type &alloc = allocator_type())
+      : _alloc(alloc), _comp(comp), _tree(tree_type()) {}
 
   //? map클래스의 value_type에 맞는 Pair 반복자만 사용 가능, 해당 범위의
   //? 요소들을 요소로 가짐.
@@ -64,11 +68,13 @@ class map {
    */
 
   //? 가장 작은 key값의 반복자를 반환
-  // iterator begin() {}
+  iterator begin() {return iterator(_tree.begin());}
 
   // const_iterator begin() const {}
 
-  // iterator end() {}
+  iterator end() {
+    return iterator(_tree.end());
+  }
 
   // const_iterator end() const {}
 
@@ -105,7 +111,9 @@ class map {
 
   //? pair요소를 하나 삽입한다. 기존에 존재하는 요소와 key가 중복될 경우
   //? 삽입하지 않는다.
-  // pair<iterator, bool> insert(const value_type& val) {}
+  void insert(const value_type& val) {
+    _tree.insert_value(val);
+  }
 
   // iterator insert(iterator position, const value_type& val) {}
 
@@ -172,5 +180,6 @@ class map {
    */
   // allocator_type get_allocator() const;
 };
+} // namespace ft
 
 #endif

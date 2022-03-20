@@ -10,9 +10,8 @@
 
 namespace ft {
 
-template <class T, class Allocator = std::allocator<T> >
-class vector {
- public:
+template <class T, class Allocator = std::allocator<T>> class vector {
+public:
   /*
    * 멤버 타입
    */
@@ -21,29 +20,30 @@ class vector {
   typedef long difference_type;
   typedef unsigned long size_type;
 
-  typedef T* pointer;
-  typedef const T* const_pointer;
-  typedef T& reference;
-  typedef const T& const_reference;
+  typedef T *pointer;
+  typedef const T *const_pointer;
+  typedef T &reference;
+  typedef const T &const_reference;
 
   typedef pointer iterator;
   typedef const pointer const_iterator;
   typedef ft::reverse_iterator<iterator> reverse_iterator;
   typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
- private:
+private:
   allocator_type _alloc;
   pointer _begin;
   pointer _end;
   pointer _end_cap;
 
- public:
+public:
   /*
    * 커스텀 함수
    */
 
   void vallocate(size_type n) {
-    if (n > max_size()) throw std::out_of_range("vector");
+    if (n > max_size())
+      throw std::out_of_range("vector");
     _begin = _end = _alloc.allocate(n);
     _end_cap = _begin + n;
   }
@@ -56,7 +56,7 @@ class vector {
     }
   }
 
-  void construct_at_end(pointer new_end, const value_type& val) {
+  void construct_at_end(pointer new_end, const value_type &val) {
     for (; _end != new_end; ++_end) {
       _alloc.construct(_end, val);
     }
@@ -69,10 +69,11 @@ class vector {
   }
 
   void destruct_at_end(pointer new_end) {
-    while (_end != new_end) _alloc.destroy(--_end);
+    while (_end != new_end)
+      _alloc.destroy(--_end);
   }
 
-  void append(size_type add_size, const value_type& val) {
+  void append(size_type add_size, const value_type &val) {
     size_type exrta_cap = _end_cap - _end;
     if (exrta_cap < add_size) {
       this->reserve(size() + add_size);
@@ -83,20 +84,22 @@ class vector {
 
   size_type recommand_cap(size_type new_size) {
     const size_type max = max_size();
-    if (new_size > max) throw std::out_of_range("vector");
+    if (new_size > max)
+      throw std::out_of_range("vector");
     const size_type cap = capacity();
-    if (cap >= max / 2) return max;
+    if (cap >= max / 2)
+      return max;
     return std::max(2 * cap, new_size);
   }
 
   /*
    * 기본 생성자, 소멸자 등
    */
-  explicit vector(const allocator_type& alloc = allocator_type())
+  explicit vector(const allocator_type &alloc = allocator_type())
       : _alloc(alloc), _begin(nullptr), _end(nullptr), _end_cap(nullptr) {}
 
-  explicit vector(size_type n, const value_type& val = value_type(),
-                  const allocator_type& alloc = allocator_type())
+  explicit vector(size_type n, const value_type &val = value_type(),
+                  const allocator_type &alloc = allocator_type())
       : _alloc(alloc), _begin(nullptr), _end(nullptr), _end_cap(nullptr) {
     if (n > 0) {
       vallocate(n);
@@ -106,9 +109,9 @@ class vector {
 
   template <class InputIterator>
   vector(InputIterator first, InputIterator last,
-         const allocator_type& alloc = allocator_type(),
+         const allocator_type &alloc = allocator_type(),
          typename ft::enable_if<!ft::is_integral<InputIterator>::value,
-                                InputIterator>::type* = nullptr)
+                                InputIterator>::type * = nullptr)
       : _alloc(alloc) {
     size_type n = last - first;
     if (n > 0) {
@@ -117,7 +120,7 @@ class vector {
     }
   }
 
-  vector(const vector& copy)
+  vector(const vector &copy)
       : _alloc(copy._alloc), _begin(nullptr), _end(nullptr), _end_cap(nullptr) {
     size_type n = copy.size();
     if (n > 0) {
@@ -127,7 +130,7 @@ class vector {
   }
 
   ~vector() { vdeallocate(); }
-  vector& operator=(const vector& obj) {
+  vector &operator=(const vector &obj) {
     if (this != &obj) {
       this->assign(obj.begin(), obj.end());
     }
@@ -152,7 +155,7 @@ class vector {
 
   size_type size() const { return _end - _begin; }
   size_type max_size() const { return allocator_type().max_size(); }
-  void resize(size_type n, const value_type& val = value_type()) {
+  void resize(size_type n, const value_type &val = value_type()) {
     size_type s = size();
     if (s < n) {
       append(n - s, val);
@@ -176,11 +179,13 @@ class vector {
    * Element access
    */
   reference at(size_type n) {
-    if (n >= size()) throw std::out_of_range("vector");
+    if (n >= size())
+      throw std::out_of_range("vector");
     return _begin[n];
   }
   const_reference at(size_type n) const {
-    if (n >= size()) throw std::out_of_range("vector");
+    if (n >= size())
+      throw std::out_of_range("vector");
     return _begin[n];
   }
   reference operator[](size_type n) { return _begin[n]; };
@@ -193,7 +198,7 @@ class vector {
   /*
    * Modifiers
    */
-  void assign(size_type n, const value_type& val) {
+  void assign(size_type n, const value_type &val) {
     if (n <= capacity()) {
       size_type s = size();
       std::fill_n(_begin, std::min(n, s), val);
@@ -212,12 +217,13 @@ class vector {
   template <class InputIterator>
   void assign(InputIterator first, InputIterator last,
               typename ft::enable_if<!ft::is_integral<InputIterator>::value,
-                                     InputIterator>::type* = nullptr) {
+                                     InputIterator>::type * = nullptr) {
     clear();
-    for (; first != last; ++first) push_back(*first);
+    for (; first != last; ++first)
+      push_back(*first);
   }
 
-  void push_back(const value_type& val) {
+  void push_back(const value_type &val) {
     if (_end == _end_cap) {
       size_type new_size = recommand_cap(size() + 1);
       this->reserve(new_size);
@@ -227,7 +233,7 @@ class vector {
 
   void pop_back() { destruct_at_end(_end - 1); }
 
-  iterator insert(iterator position, const value_type& val) {
+  iterator insert(iterator position, const value_type &val) {
     size_type d = position - _begin;
     if (_end == _end_cap) {
       this->reserve(recommand_cap(1));
@@ -245,7 +251,7 @@ class vector {
   }
 
   template <class InputIterator>
-  iterator insert(InputIterator position, size_type n, const value_type& val) {
+  iterator insert(InputIterator position, size_type n, const value_type &val) {
     size_type d = position - _begin;
     if (_end_cap < _end + n) {
       this->reserve(recommand_cap(capacity() + d));
@@ -258,7 +264,8 @@ class vector {
       for (pointer old_end = _end; old_end != pos; --old_end, --back) {
         _alloc.construct(back, *(old_end - 1));
       }
-      for (size_t i = 0; i < n; ++i, ++pos, ++_end) _alloc.construct(pos, val);
+      for (size_t i = 0; i < n; ++i, ++pos, ++_end)
+        _alloc.construct(pos, val);
     }
     return pos - n;
   }
@@ -266,7 +273,7 @@ class vector {
   template <class InputIterator>
   iterator insert(iterator position, InputIterator first, InputIterator last,
                   typename ft::enable_if<!ft::is_integral<InputIterator>::value,
-                                         InputIterator>::type* = nullptr) {
+                                         InputIterator>::type * = nullptr) {
     size_type off = position - _begin;
     size_type n = last - first;
     if (_end_cap < _end + n) {
@@ -307,8 +314,9 @@ class vector {
 
     return (first);
   }
-  void swap(vector& x) {
-    if (*this == x) return;
+  void swap(vector &x) {
+    if (*this == x)
+      return;
     std::swap(this->_begin, x._begin);
     std::swap(this->_end, x._end);
     std::swap(this->_end_cap, x._end_cap);
@@ -317,37 +325,37 @@ class vector {
 };
 
 template <class T, class Alloc>
-bool operator==(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
   return lhs.size() == rhs.size() &&
          std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
 
 template <class T, class Alloc>
-bool operator!=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+bool operator!=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
   return !(lhs == rhs);
 }
 
 template <class T, class Alloc>
-bool operator<(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+bool operator<(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
   return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(),
                                       rhs.end());
 }
 
 template <class T, class Alloc>
-bool operator>(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+bool operator>(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
   return rhs < lhs;
 }
 
 template <class T, class Alloc>
-bool operator<=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+bool operator<=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
   return !(rhs < lhs);
 }
 
 template <class T, class Alloc>
-bool operator>=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+bool operator>=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
   return !(lhs < rhs);
 }
 
-}  // namespace ft
+} // namespace ft
 
 #endif

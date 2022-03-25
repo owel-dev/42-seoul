@@ -8,17 +8,17 @@
 #define BLACK_C "\e[30m \e[1m"
 #define BLUE "\e[36m"
 
-enum Color
-{
-    RED,
-    BLACK,
-};
+// enum Color
+// {
+//     RED,
+//     BLACK,
+//     DOUBLE_BLACK,
+// };
 namespace ft
 {
 
-  template <class T, class Alloc = std::allocator<T> > class rb_node
+template <class T, class Alloc = std::allocator<T> > class rb_node
 {
-
   public:
     typedef T value_type;
     typedef rb_node *node_pointer;
@@ -26,21 +26,22 @@ namespace ft
     typedef int color_type;
 
     value_type data;
-    color_type color;
+    // color_type color;
+    bool is_black;
     node_pointer left, right, parent;
     allocator_type _alloc;
 
   public:
-    rb_node()
+    explicit rb_node()
     {
-        this->color = BLACK;
+        this->is_black = true;
         this->left = this->right = this->parent = nullptr;
     }
 
     explicit rb_node(value_type data)
     {
         this->data = data;
-        this->color = RED;
+        this->is_black = false;
         this->left = this->right = this->parent = nullptr;
     }
 };
@@ -76,8 +77,9 @@ template <class T1, class T2> class pair
     }
 };
 
-template <class T1, class T2> pair<T1, T2> make_pair(T1 x, T2 y) {
-  return (pair<T1, T2>(x, y));
+template <class T1, class T2> pair<T1, T2> make_pair(T1 x, T2 y)
+{
+    return (pair<T1, T2>(x, y));
 }
 
 template <class T1, class T2> std::ostream &operator<<(std::ostream &os, const ft::pair<T1, T2> &x)

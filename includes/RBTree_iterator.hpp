@@ -8,24 +8,40 @@ namespace ft
 template <class T, class Node = ft::rb_node<T> > class rb_tree_iterator
 {
   public:
-    typedef T& reference;
     typedef T value_type;
-    typedef T* pointer;
+    typedef T *pointer;
+    typedef T &reference;
     typedef Node node_type;
-    typedef Node* node_pointer;
+    typedef Node *node_pointer;
 
   private:
     node_pointer _node;
 
   public:
-    rb_tree_iterator(const node_pointer x)
+    rb_tree_iterator(const node_pointer x) : _node(x)
     {
-        this->_node = x;
     }
 
-    rb_tree_iterator(const rb_tree_iterator &x)
+    rb_tree_iterator(const rb_tree_iterator &x) : _node(x._node)
     {
-        (*this) = x;
+    }
+
+    ~rb_tree_iterator()
+    {
+    }
+
+    void tree_min(node_pointer node)
+    {
+        while (node->left != nullptr)
+            node = node->left;
+        _node = node;
+    }
+
+    void tree_max(node_pointer node)
+    {
+        while (node->right != nullptr)
+            node = node->right;
+        _node = node;
     }
 
     rb_tree_iterator &operator=(const rb_tree_iterator &x)
@@ -98,22 +114,6 @@ template <class T, class Node = ft::rb_node<T> > class rb_tree_iterator
     {
         return _node == _node->parent->left;
     }
-
-    void tree_min(node_pointer node)
-    {
-        while (node->left != nullptr)
-            node = node->left;
-        _node = node;
-    }
-
-    void tree_max(node_pointer node)
-    {
-        while (node->right != nullptr)
-            node = node->right;
-        _node = node;
-    }
-
-    // ~rb_tree_iterator();
 };
 
 }; // namespace ft

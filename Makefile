@@ -23,10 +23,10 @@ $(OBJ_DIR) :
 	@mkdir obj
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	@$(CLANG) $(CLANGFLAGS) -I $(INC_DIR) -c $< -o $@	
+	$(CLANG) $(CLANGFLAGS) -I $(INC_DIR) -c $< -o $@	
 
 $(NAME): $(OBJS)
-	@$(CLANG) $(CLANGFLAGS) -o $(NAME) $(OBJS)
+	$(CLANG) $(CLANGFLAGS) -o $(NAME) $(OBJS)
 
 clean:
 	@$(RM) $(OBJS)

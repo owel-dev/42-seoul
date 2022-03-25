@@ -7,9 +7,9 @@
 #include <vector>
 
 // #include "map.hpp"
-#include "map_test.cpp"
 #include "RBTree.hpp"
 #include "RBTree_test.cpp"
+#include "map_test.cpp"
 // #include "stack_test.cpp"
 // #include "vector.hpp"
 // #include "vector_test.cpp"
@@ -41,9 +41,8 @@ int main()
     // stack_member_functions();
     // stack_relation_operators();
 
-    // RBTree_test();
-    map_modifier_insert();
-
+    RBTree_test();
+    // map_modifier_insert();
 
     // std::map<int, int> m1;
     // m1.insert(std::pair<int, int>(2, 999));

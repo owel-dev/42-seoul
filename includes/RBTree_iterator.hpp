@@ -14,7 +14,7 @@ template <class T, class Node = ft::rb_node<T> > class rb_tree_iterator
     typedef Node node_type;
     typedef Node *node_pointer;
 
-  private:
+    //   private:
     node_pointer _node;
 
   public:
@@ -28,6 +28,11 @@ template <class T, class Node = ft::rb_node<T> > class rb_tree_iterator
 
     ~rb_tree_iterator()
     {
+    }
+
+    rb_tree_iterator base()
+    {
+        return rb_tree_iterator(_node);
     }
 
     void tree_min(node_pointer node)

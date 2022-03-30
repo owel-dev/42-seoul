@@ -7,9 +7,12 @@ template<class Iterator>
 class map_iterator
 {
   public:
+  typedef typename Iterator::value_type value_type;
   typedef typename Iterator::node_pointer node_pointer;
   typedef typename Iterator::pointer pointer;
   typedef typename Iterator::reference reference;
+  typedef typename Iterator::difference_type difference_type;
+  typedef typename Iterator::size_type size_type;
 
   private:
   Iterator _it;
@@ -74,6 +77,8 @@ class map_const_iterator
   public:
   typedef typename Iterator::value_type value_type;
   typedef typename Iterator::node_pointer node_pointer;
+  typedef typename Iterator::difference_type difference_type;
+  typedef typename Iterator::size_type size_type;
   typedef value_type const *pointer;
   typedef const value_type &reference;
 

@@ -204,3 +204,18 @@ void map_equal_oper() {
   print_map<ft::map<int, std::string> >(my_m2);
   std::cout << std::endl;
 }
+
+void map_rev_iter(){
+  std::cout << "[ map_rev_iter ]" << std::endl;
+  std::cout << "--------------------------" << std::endl;
+  ft::map<int, std::string> m;
+  m.insert(ft::make_pair(1, "1"));
+  m.insert(ft::make_pair(2, "2"));
+  m.insert(ft::make_pair(3, "3"));
+  m.insert(ft::make_pair(4, "4"));
+  m.insert(ft::make_pair(5, "5"));
+
+  for (ft::map<int, std::string>::reverse_iterator it = m.rbegin(); it != m.rend(); ++it)
+    std::cout << it->first << " ";
+  std::cout << std::endl;
+}

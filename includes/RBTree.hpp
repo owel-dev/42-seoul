@@ -42,7 +42,7 @@ namespace ft {
 
     public:
         rb_tree(const compare_type &comp = compare_type())
-                : _alloc(allocator_type()), _comp(comp), _size(0) {
+                : _size(0), _alloc(allocator_type()), _comp(comp) {
           _end = _alloc.allocate(1);
           _alloc.construct(_end, Node());
           _begin = _end;

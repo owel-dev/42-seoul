@@ -110,13 +110,13 @@ class map
 
   const_iterator end() const { return _tree.end(); }
 
-   reverse_iterator rbegin() { return _tree.end();}
+   reverse_iterator rbegin() { return reverse_iterator(_tree.end());}
 
-   const_reverse_iterator rbegin() const {return _tree.end();}
+   const_reverse_iterator rbegin() const {return reverse_iterator(_tree.end());}
 
-  // reverse_iterator rend() {}    nbvc
+   reverse_iterator rend() {return reverse_iterator(_tree.begin());}
 
-  // const_reverse_iterator rend() const {}
+   const_reverse_iterator rend() const {return reverse_iterator(_tree.begin());}
 
   /*
    * capacity
@@ -128,8 +128,6 @@ class map
 
   size_type max_size() const {
     return _tree.max_size();
-//     std::min<size_type>(_alloc.max_size(),
-//                                std::numeric_limits<difference_type>::max());
   }
 
   /*
@@ -139,7 +137,7 @@ class map
   //? 인자와 동일한 key에 매핑된 value의 reference를 반환한다. 만약 동일한 key가
   //? 없을 경우, key를 컨테이너의 요소에 추가한 후(사이즈가 1 증가한다.) 매핑된
   //? value의 reference를 반환한다.
-  // mapped_type& operator[](const key_type& k) {}
+//   mapped_type& operator[](const key_type& k) {}
 
   /*
    * modifiers

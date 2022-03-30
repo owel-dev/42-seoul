@@ -46,6 +46,7 @@ int main() {
   map_modifiers();
   map_capacity();
   map_equal_oper();
+  map_rev_iter();
 
   // std::map<int, int> m1;
   // m1.insert(std::pair<int, int>(2, 999));

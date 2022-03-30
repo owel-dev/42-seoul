@@ -15,6 +15,8 @@ class rb_tree_iterator
   typedef T &reference;
   typedef Node node_type;
   typedef Node *node_pointer;
+  typedef long difference_type;
+  typedef long int size_type;
 
   //   private:
   node_pointer _node;
@@ -52,7 +54,7 @@ class rb_tree_iterator
       tree_min(_node->right);
       return *this;
     }
-    while (!tree_is_left_child(_node))
+    while (!tree_is_left_child())
       _node = _node->parent;
     _node = _node->parent;
     return *this;
@@ -69,7 +71,7 @@ class rb_tree_iterator
       tree_max(_node->left);
       return *this;
     }
-    while (tree_is_left_child(_node))
+    while (tree_is_left_child())
       _node = _node->parent;
     _node = _node->parent;
     return *this;
@@ -93,7 +95,7 @@ class rb_tree_iterator
 
   pointer operator->() const { return &_node->data; }
 
-  bool tree_is_left_child(node_pointer node) const {
+  bool tree_is_left_child() const {
     return _node == _node->parent->left;
   }
 };

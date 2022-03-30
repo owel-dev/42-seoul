@@ -1,0 +1,4 @@
+cmake-build-debug
+containers_test
+build/*
+.DS_Store

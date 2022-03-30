@@ -154,7 +154,10 @@ public:
    */
 
   size_type size() const { return _end - _begin; }
-  size_type max_size() const { return allocator_type().max_size(); }
+  size_type max_size() const {
+    return std::min<size_type>(_alloc.max_size(),
+                               std::numeric_limits<difference_type>::max());
+  }
   void resize(size_type n, const value_type &val = value_type()) {
     size_type s = size();
     if (s < n) {
@@ -324,36 +327,36 @@ public:
   void clear() { destruct_at_end(_begin); }
 };
 
-template <class T, class Alloc>
-bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
-  return lhs.size() == rhs.size() &&
-         std::equal(lhs.begin(), lhs.end(), rhs.begin());
-}
-
-template <class T, class Alloc>
-bool operator!=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
-  return !(lhs == rhs);
-}
-
-template <class T, class Alloc>
-bool operator<(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
-  return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin());
-}
-
-template <class T, class Alloc>
-bool operator>(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
-  return rhs < lhs;
-}
-
-template <class T, class Alloc>
-bool operator<=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
-  return !(rhs < lhs);
-}
-
-template <class T, class Alloc>
-bool operator>=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
-  return !(lhs < rhs);
-}
+//template <class T, class Alloc>
+//bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
+//  return lhs.size() == rhs.size() &&
+//         std::equal(lhs.begin(), lhs.end(), rhs.begin());
+//}
+//
+//template <class T, class Alloc>
+//bool operator!=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
+//  return !(lhs == rhs);
+//}
+//
+//template <class T, class Alloc>
+//bool operator<(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
+//  return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin());
+//}
+//
+//template <class T, class Alloc>
+//bool operator>(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
+//  return rhs < lhs;
+//}
+//
+//template <class T, class Alloc>
+//bool operator<=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
+//  return !(rhs < lhs);
+//}
+//
+//template <class T, class Alloc>
+//bool operator>=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
+//  return !(lhs < rhs);
+//}
 
 } // namespace ft
 

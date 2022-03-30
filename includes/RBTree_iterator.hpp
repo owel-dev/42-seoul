@@ -1,11 +1,15 @@
 #ifndef RBTREE_ITERATOR_HPP
 #define RBTREE_ITERATOR_HPP
+
 #include "etc.hpp"
 
-namespace ft {
+namespace ft
+{
 
-template <class T, class Node = ft::rb_node<T> > class rb_tree_iterator {
-public:
+template<class T, class Node = ft::rb_node<T> >
+class rb_tree_iterator
+{
+  public:
   typedef T value_type;
   typedef T *pointer;
   typedef T &reference;
@@ -15,7 +19,9 @@ public:
   //   private:
   node_pointer _node;
 
-public:
+  public:
+  rb_tree_iterator() {}
+
   rb_tree_iterator(const node_pointer x) : _node(x) {}
 
   rb_tree_iterator(const rb_tree_iterator &x) : _node(x._node) {}
@@ -54,7 +60,7 @@ public:
 
   rb_tree_iterator operator++(int) {
     rb_tree_iterator temp(*this);
-    operator++();
+    ++(*this);
     return temp;
   }
 
@@ -71,7 +77,7 @@ public:
 
   rb_tree_iterator operator--(int) {
     rb_tree_iterator temp(*this);
-    operator--();
+    --(*this);
     return temp;
   }
 

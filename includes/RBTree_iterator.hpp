@@ -6,17 +6,16 @@
 namespace ft
 {
 
-template<class T, class Node = ft::rb_node<T> >
+template<class T, class NodePtr, class Diff>
 class rb_tree_iterator
 {
   public:
   typedef T value_type;
   typedef T *pointer;
   typedef T &reference;
-  typedef Node node_type;
-  typedef Node *node_pointer;
-  typedef long difference_type;
-  typedef long int size_type;
+  typedef NodePtr node_pointer;
+  typedef Diff difference_type;
+  typedef unsigned long size_type;
 
   //   private:
   node_pointer _node;

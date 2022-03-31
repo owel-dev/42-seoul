@@ -219,3 +219,34 @@ void map_rev_iter(){
     std::cout << it->first << " ";
   std::cout << std::endl;
 }
+
+void map_big_oper(){
+  std::cout << "[ map_big_oper ]" << std::endl;
+  std::cout << "--------------------------" << std::endl;
+
+  std::map<int, std::string> m;
+  m.insert(std::make_pair(1, "1"));
+  m.insert(std::make_pair(2, "2"));
+  m.insert(std::make_pair(3, "3"));
+  m.insert(std::make_pair(4, "4"));
+  m.insert(std::make_pair(5, "5"));
+  m[3] = 97;
+  m[6] = 98;
+  for (std::map<int, std::string>::iterator it = m.begin(); it != m.end(); ++it)
+    std::cout << it->first << " " << it->second << ", ";
+  std::cout << std::endl;
+
+  ft::map<int, std::string> my_m;
+  my_m.insert(ft::make_pair(1, "1"));
+  my_m.insert(ft::make_pair(2, "2"));
+  my_m.insert(ft::make_pair(3, "3"));
+  my_m.insert(ft::make_pair(4, "4"));
+  my_m.insert(ft::make_pair(5, "5"));
+  my_m[3] = 97;
+  my_m[6] = 98;
+  for (ft::map<int, std::string>::iterator it = my_m.begin(); it != my_m.end(); ++it)
+    std::cout << it->first << " " << it->second << ", ";
+  std::cout << std::endl;
+
+
+}

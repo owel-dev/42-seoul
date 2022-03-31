@@ -1,8 +1,17 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
+#include <exception>
+#include <functional>
 #include <iostream>
+#include <map>
 #include <memory>
+#include <stdexcept>
+#include <__tree>
+#include <utility>
+#include <iomanip>
+#include <queue>
+
 #define NC "\e[0m"
 #define RED_C "\e[31m"
 #define BLACK_C "\e[30m \e[1m"

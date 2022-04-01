@@ -327,36 +327,36 @@ public:
   void clear() { destruct_at_end(_begin); }
 };
 
-//template <class T, class Alloc>
-//bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
-//  return lhs.size() == rhs.size() &&
-//         std::equal(lhs.begin(), lhs.end(), rhs.begin());
-//}
-//
-//template <class T, class Alloc>
-//bool operator!=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
-//  return !(lhs == rhs);
-//}
-//
-//template <class T, class Alloc>
-//bool operator<(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
-//  return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin());
-//}
-//
-//template <class T, class Alloc>
-//bool operator>(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
-//  return rhs < lhs;
-//}
-//
-//template <class T, class Alloc>
-//bool operator<=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
-//  return !(rhs < lhs);
-//}
-//
-//template <class T, class Alloc>
-//bool operator>=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
-//  return !(lhs < rhs);
-//}
+template <class T, class Alloc>
+bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
+  return lhs.size() == rhs.size() &&
+         std::equal(lhs.begin(), lhs.end(), rhs.begin());
+}
+
+template <class T, class Alloc>
+bool operator!=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
+  return !(lhs == rhs);
+}
+
+template <class T, class Alloc>
+bool operator<(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
+  return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin());
+}
+
+template <class T, class Alloc>
+bool operator>(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
+  return rhs < lhs;
+}
+
+template <class T, class Alloc>
+bool operator<=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
+  return !(rhs < lhs);
+}
+
+template <class T, class Alloc>
+bool operator>=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs) {
+  return !(lhs < rhs);
+}
 
 } // namespace ft
 

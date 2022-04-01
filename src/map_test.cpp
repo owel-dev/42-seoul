@@ -205,7 +205,7 @@ void map_equal_oper() {
   std::cout << std::endl;
 }
 
-void map_rev_iter(){
+void map_rev_iter() {
   std::cout << "[ map_rev_iter ]" << std::endl;
   std::cout << "--------------------------" << std::endl;
   ft::map<int, std::string> m;
@@ -220,7 +220,7 @@ void map_rev_iter(){
   std::cout << std::endl;
 }
 
-void map_big_oper(){
+void map_big_oper() {
   std::cout << "[ map_big_oper ]" << std::endl;
   std::cout << "--------------------------" << std::endl;
 
@@ -247,6 +247,55 @@ void map_big_oper(){
   for (ft::map<int, std::string>::iterator it = my_m.begin(); it != my_m.end(); ++it)
     std::cout << it->first << " " << it->second << ", ";
   std::cout << std::endl;
+}
 
+void map_modifier_erase() {
+  std::cout << "[ map_modifier_erase ]" << std::endl;
+  std::cout << "--------------------------" << std::endl;
 
+  std::map<int, std::string> m;
+  m.insert(std::make_pair(1, "1"));
+  m.insert(std::make_pair(2, "2"));
+  m.insert(std::make_pair(3, "3"));
+  m.insert(std::make_pair(4, "4"));
+  m.insert(std::make_pair(5, "5"));
+  m.insert(std::make_pair(6, "6"));
+  m.insert(std::make_pair(7, "7"));
+  m.insert(std::make_pair(8, "8"));
+
+  std::map<int, std::string>::iterator mit1 = m.begin();
+  std::map<int, std::string>::iterator mit2 = m.begin();
+  ++mit2;
+  ++mit2;
+  ++mit2;
+  ++mit2;
+  m.erase(mit1, mit2);
+  m.erase(6);
+
+  for (std::map<int, std::string>::iterator it = m.begin(); it != m.end(); ++it)
+    std::cout << it->first << ", ";
+  std::cout << std::endl;
+
+  ft::map<int, std::string> my_m;
+  my_m.insert(ft::make_pair(1, "1"));
+  my_m.insert(ft::make_pair(2, "2"));
+  my_m.insert(ft::make_pair(3, "3"));
+  my_m.insert(ft::make_pair(4, "4"));
+  my_m.insert(ft::make_pair(5, "5"));
+  my_m.insert(ft::make_pair(6, "6"));
+  my_m.insert(ft::make_pair(7, "7"));
+  my_m.insert(ft::make_pair(8, "8"));
+
+  ft::map<int, std::string>::iterator my_mit1 = my_m.begin();
+  ft::map<int, std::string>::iterator my_mit2 = my_m.begin();
+  ++my_mit2;
+  ++my_mit2;
+  ++my_mit2;
+  ++my_mit2;
+  my_m.erase(my_mit1, my_mit2);
+  my_m.erase(6);
+
+  for (ft::map<int, std::string>::iterator it = my_m.begin(); it != my_m.end(); ++it)
+    std::cout << it->first << ", ";
+  std::cout << std::endl;
 }

@@ -48,6 +48,7 @@ int main() {
   map_equal_oper();
   map_rev_iter();
   map_big_oper();
+  map_modifier_erase();
 
   // std::map<int, int> m1;
   // m1.insert(std::pair<int, int>(2, 999));

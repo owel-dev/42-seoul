@@ -1,16 +1,10 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
-#include <exception>
-#include <functional>
 #include <iostream>
-#include <map>
 #include <memory>
-#include <stdexcept>
-#include <__tree>
 #include <utility>
 #include <iomanip>
-#include <queue>
 
 #define NC "\e[0m"
 #define RED_C "\e[31m"
@@ -19,11 +13,21 @@
 
 namespace ft {
 
+// * equal
+
+
+// * lexilogical
+
+
+// * binary_function
+
 template <class T1, class T2, class Result> struct binary_function {
   typedef T1 first_argument_type;
   typedef T2 second_argument_type;
   typedef Result result_type;
 };
+
+// * rb_node
 
 template <class T, class Alloc = std::allocator<T> > class rb_node {
 public:
@@ -46,6 +50,8 @@ public:
     this->left = this->right = this->parent = nullptr;
   }
 };
+
+// * pair
 
 template <class T1, class T2> class pair {
 public:
@@ -112,6 +118,8 @@ bool operator>=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
   !(lhs < rhs);
 }
 
+// * iterator_traits
+
 template <class Iterator> struct iterator_traits {
   typedef typename Iterator::difference_type difference_type;
   typedef typename Iterator::value_type value_type;
@@ -137,12 +145,13 @@ template <class T> class iterator_traits<const T *> {
   typedef std::random_access_iterator_tag iterator_category;
 };
 
+// * enable_if
+
 template <bool B, class T = void> struct enable_if {};
 template <class T> struct enable_if<true, T> { typedef T type; };
 
-/* ----------------------------------------------- *
- *                   is_integral                   *
- * ----------------------------------------------- */
+// * is_integral
+
 template <typename T> struct is_integral { static const bool value = false; };
 
 template <> struct is_integral<bool> { static const bool value = true; };

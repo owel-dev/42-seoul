@@ -3,6 +3,8 @@
 //#include "map.hpp"
 namespace ft
 {
+
+// * iterator
 template<class Iterator>
 class map_iterator
 {
@@ -23,6 +25,10 @@ class map_iterator
   map_iterator(const Iterator x) : _it(x) {}
 
   ~map_iterator() {}
+
+  Iterator get_it(){
+    return _it;
+  }
 
   map_iterator &operator=(const map_iterator &x) {
     _it = x._it;
@@ -64,13 +70,11 @@ class map_iterator
   bool operator!=(const map_iterator &x) const {
     return this->_it != x._it;
   }
-//  friend class map;
   template <class, class, class, class> friend class map;
-
-
 
 };
 
+// * const_iterator
 template<class Iterator>
 class map_const_iterator
 {

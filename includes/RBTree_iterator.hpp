@@ -6,21 +6,24 @@
 namespace ft
 {
 
-template<class T, class NodePtr, class Diff>
+template<class T, class NodePtr>
 class rb_tree_iterator
 {
+  // * typedef
   public:
   typedef T value_type;
   typedef T *pointer;
   typedef T &reference;
   typedef NodePtr node_pointer;
-  typedef Diff difference_type;
+  typedef long difference_type;
   typedef unsigned long size_type;
 
-  //   private:
+  private:
+  // * private member
   node_pointer _node;
 
   public:
+  // * constructor
   rb_tree_iterator() {}
 
   rb_tree_iterator(const node_pointer x) : _node(x) {}
@@ -29,8 +32,11 @@ class rb_tree_iterator
 
   ~rb_tree_iterator() {}
 
-  rb_tree_iterator base() { return rb_tree_iterator(_node); }
+  node_pointer get_node() {
+    return _node;
+  }
 
+  // * operations
   void tree_min(node_pointer node) {
     while (node->left != nullptr)
       node = node->left;

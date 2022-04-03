@@ -17,6 +17,7 @@ class rb_tree_iterator
   typedef NodePtr node_pointer;
   typedef long difference_type;
   typedef unsigned long size_type;
+  typedef std::bidirectional_iterator_tag iterator_category;
 
   private:
   // * private member

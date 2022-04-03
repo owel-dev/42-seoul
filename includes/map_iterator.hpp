@@ -15,6 +15,7 @@ class map_iterator
   typedef typename Iterator::reference reference;
   typedef typename Iterator::difference_type difference_type;
   typedef typename Iterator::size_type size_type;
+  typedef typename Iterator::iterator_category iterator_category;
 
   private:
   Iterator _it;

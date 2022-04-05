@@ -100,8 +100,6 @@ class pair
 
   pair &operator=(const pair &pr)
   {
-    if (*this == pr)
-      return (*this);
     this->first = pr.first;
     this->second = pr.second;
     return (*this);

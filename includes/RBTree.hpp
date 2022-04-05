@@ -25,7 +25,7 @@ class rb_tree
   typedef typename allocator_type::difference_type difference_type;
 
   typedef ft::rb_tree_iterator<value_type, node_pointer> iterator;
-  typedef ft::rb_tree_iterator<value_type, node_pointer> const_iterator;
+  typedef ft::rb_tree_const_iterator<value_type, node_pointer> const_iterator;
 
   private:
   // * private member
@@ -46,7 +46,7 @@ class rb_tree
   }
 
   rb_tree(const rb_tree &x)
-          : _size(0)
+          : _size(0), _alloc(x._alloc), _comp(x._comp)
   {
     _end = _alloc.allocate(1);
     _alloc.construct(_end, node_type());
@@ -56,7 +56,7 @@ class rb_tree
 
   rb_tree &operator=(const rb_tree &x)
   {
-    if (this != x) {
+    if (this != &x) {
       clear();
       _alloc = x._alloc;
       _comp = x._comp;
@@ -73,7 +73,7 @@ class rb_tree
   }
 
   // * tree
-  node_pointer root() { return _end->left; }
+  node_pointer root() const{ return _end->left; }
 
   node_pointer *rootPtr() { return &_end->left; }
 
@@ -111,6 +111,21 @@ class rb_tree
     return node->parent;
   }
 
+  void rotate_right(node_pointer node)
+  {
+    node_pointer left_child = node->left;
+    node->left = left_child->right;
+    if (node->left != nullptr)
+      node->left->parent = node;
+    left_child->parent = node->parent;
+    if (is_left_child(node))
+      node->parent->left = left_child;
+    else
+      node->parent->right = left_child;
+    left_child->right = node;
+    node->parent = left_child;
+  }
+
   void rotate_left(node_pointer node)
   {
     node_pointer right_child = node->right;
@@ -136,7 +151,7 @@ class rb_tree
           new_node = new_node->parent;
           new_node->is_black = true;
           new_node = new_node->parent;
-          new_node->is_black = new_node == _begin;
+          new_node->is_black = new_node == root();
           uncle->is_black = true;
         } else {
           if (!is_left_child(new_node)) {
@@ -179,7 +194,7 @@ class rb_tree
     iterator it(node);
     ++it;
     if (node == _begin)
-      _begin = it.get_node();
+      _begin = it._node;
     remove_node(root(), node);
     --_size;
     return it;
@@ -353,12 +368,12 @@ class rb_tree
     if (hint == end() || _comp(data, *hint)) {
       iterator prev = hint;
       if (hint == begin() || _comp(*--prev, data)) {
-        if (hint.get_node()->left == nullptr) {
-          parent = hint.get_node();
+        if (hint._node->left == nullptr) {
+          parent = hint._node;
           return parent->left;
         } else {
-          parent = prev.get_node();
-          return prev.get_node()->right;
+          parent = prev._node;
+          return prev._node->right;
         }
       }
       return find_pos(parent, data);
@@ -366,34 +381,19 @@ class rb_tree
       iterator next = hint;
       ++next;
       if (next == end() || _comp(data, *next)) {
-        if (hint.get_node()->right == nullptr) {
-          parent = hint.get_node();
-          return hint.get_node()->right;
+        if (hint._node->right == nullptr) {
+          parent = hint._node;
+          return hint._node->right;
         } else {
-          parent = next.get_node();
+          parent = next._node;
           return parent->left;
         }
       }
       return find_pos(parent, data);
     }
-    parent = hint.get_node();
-    dummy = hint.get_node();
+    parent = hint._node;
+    dummy = hint._node;
     return dummy;
-  }
-
-  void rotate_right(node_pointer node)
-  {
-    node_pointer left_child = node->left;
-    node->left = left_child->right;
-    if (node->left != nullptr)
-      node->left->parent = node;
-    left_child->parent = node->parent;
-    if (is_left_child(node))
-      node->parent->left = left_child;
-    else
-      node->parent->right = left_child;
-    left_child->right = node;
-    node->parent = left_child;
   }
 
   void node_info(node_pointer node) const
@@ -460,7 +460,7 @@ class rb_tree
   template<class Key>
   iterator find(const Key &k)
   {
-    iterator it = lower_bound(k, root(), _end);
+    iterator it = lower_bound(k);
     if (it != end() && !_comp(k, *it))
       return it;
     return end();
@@ -469,66 +469,72 @@ class rb_tree
   template<class Key>
   const_iterator find(const Key &k) const
   {
-    iterator it = lower_bound(k, root(), _end);
+    const_iterator it = lower_bound(k);
     if (it != end() && !_comp(k, *it))
       return it;
     return end();
   }
 
   template<class Key>
-  iterator lower_bound(const Key &k,
-                       node_pointer root_node, node_pointer result)
+  iterator lower_bound(const Key &k)
   {
+    node_pointer root_node = root();
+    node_pointer ret = _end;
     while (root_node != nullptr) {
       if (!_comp(root_node->data, k)) {
-        result = root_node;
+        ret = root_node;
         root_node = root_node->left;
       } else
         root_node = root_node->right;
     }
-    return iterator(result);
+    return iterator(ret);
   }
 
   template<class Key>
-  const_iterator lower_bound(const Key &k,
-                             node_pointer root_node, node_pointer result) const
+  const_iterator lower_bound(const Key &k) const
   {
+    node_pointer root_node = root();
+    node_pointer ret = _end;
     while (root_node != nullptr) {
       if (!_comp(root_node->data, k)) {
-        result = root_node;
+        ret = root_node;
         root_node = root_node->left;
       } else
         root_node = root_node->right;
     }
-    return const_iterator(result);
+    return const_iterator(ret);
   }
 
   template<class Key>
-  iterator upper_bound(const Key &k,
-                       node_pointer root_node, node_pointer result)
+  iterator upper_bound(const Key &k)
   {
+    node_pointer root_node = root();
+    node_pointer ret = _end;
+
     while (root_node != nullptr) {
       if (_comp(k, root_node->data)) {
-        result = root_node;
+        ret = root_node;
         root_node = root_node->left;
       } else
         root_node = root_node->right;
     }
-    return iterator(result);
+    return iterator(ret);
   }
 
   template<class Key>
-  const_iterator upper_bound(const Key &k,
-                             node_pointer root_node, node_pointer result) const
+  const_iterator upper_bound(const Key &k) const
   {
+    node_pointer root_node = root();
+    node_pointer ret = _end;
+
     while (root_node != nullptr) {
       if (_comp(k, root_node->data)) {
-        result = root_node;
+        ret = root_node;
         root_node = root_node->left;
       } else
         root_node = root_node->right;
     }
-    return const_iterator(result);
+    return const_iterator(ret);
   }
 
   // * modifiers
@@ -580,13 +586,13 @@ class rb_tree
   template<class InputIterator>
   void insert(InputIterator first, InputIterator last)
   {
-    for (iterator it = end(); first != last; ++first)
-      insert(it, *first);
+    for (; first != last; ++first)
+      insert(*first);
   }
 
   void erase(iterator pos)
   {
-    remove_node_pointer(pos.get_node());
+    remove_node_pointer(pos._node);
   }
 
   void clear()

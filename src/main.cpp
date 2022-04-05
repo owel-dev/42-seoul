@@ -52,6 +52,7 @@ int main()
 //  map_rev_iter();
 //  map_big_oper();
 //  map_modifier_erase();
-    vector_size();
+//    vector_size();
+  copy_con();
 
 }

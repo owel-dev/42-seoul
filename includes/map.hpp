@@ -89,8 +89,8 @@ class map
     insert(first, last);
   }
 
-  map(const map &x) : _alloc(x._alloc),
-                      _comp(x._comp), _tree(x._tree) {}
+  map(const map &x) :
+          _comp(x._comp), _alloc(x._alloc), _tree(x._tree) {}
 
   ~map() {}
 
@@ -135,9 +135,9 @@ class map
   // * access
   mapped_type &operator[](const key_type &k)
   {
-    iterator target = find(k);
-    if (target != end())
-      return (*target).second;
+//    iterator target = find(k);
+//    if (target != end())
+//      return (*target).second;
     ft::pair<iterator, bool> p = insert(ft::make_pair(k, mapped_type()));
     return (p.first)->second;
   }
@@ -161,7 +161,7 @@ class map
 
   void erase(iterator position)
   {
-    _tree.erase(position.get_it());
+    _tree.erase(position._it);
   }
 
   size_type erase(const key_type &k)
@@ -246,6 +246,42 @@ class map
   // * allocator
   allocator_type get_allocator() const { return _alloc; }
 };
+
+template <class Key, class T, class Comp, class Allocator>
+bool operator==(const map<Key, T, Comp, Allocator> &x, const map<Key, T, Comp, Allocator> &y){
+  return x.size() == y.size() && ft::equal(x.begin(), x.end(), y.begin());
+}
+
+template <class Key, class T, class Comp, class Allocator>
+bool operator!=(const map<Key, T, Comp, Allocator> &x, const map<Key, T, Comp, Allocator> &y){
+  return !(x == y);
+}
+
+template <class Key, class T, class Comp, class Allocator>
+bool operator<(const map<Key, T, Comp, Allocator> &x, const map<Key, T, Comp, Allocator> &y){
+  return ft::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
+}
+
+template <class Key, class T, class Comp, class Allocator>
+bool operator>(const map<Key, T, Comp, Allocator> &x, const map<Key, T, Comp, Allocator> &y){
+  return y < x;
+}
+
+template <class Key, class T, class Comp, class Allocator>
+bool operator<=(const map<Key, T, Comp, Allocator> &x, const map<Key, T, Comp, Allocator> &y){
+  return !(y < x);
+}
+
+template <class Key, class T, class Comp, class Allocator>
+bool operator>=(const map<Key, T, Comp, Allocator> &x, const map<Key, T, Comp, Allocator> &y){
+  return !(x < y);
+}
+
+
+
 } // namespace ft
+
+
+
 
 #endif

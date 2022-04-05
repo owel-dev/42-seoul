@@ -39,13 +39,13 @@ class stack {
 
   void pop() { c.pop_back(); }
 
-  template <class T1, class Container1>
-  friend bool operator==(const stack<T1, Container1>& lhs,
-                         const stack<T1, Container1>& rhs);
+  template <class TT, class CC>
+  friend bool operator==(const stack<TT, CC>& lhs,
+                         const stack<TT, CC>& rhs);
 
-  template <class T1, class Container1>
-  friend bool operator<(const stack<T1, Container1>& lhs,
-                        const stack<T1, Container1>& rhs);
+  template <class TT, class CC>
+  friend bool operator<(const stack<TT, CC>& lhs,
+                        const stack<TT, CC>& rhs);
 };
 template <class T, class Container>
 bool operator==(const stack<T, Container>& lhs,

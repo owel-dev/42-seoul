@@ -27,9 +27,6 @@ class map_iterator
 
   ~map_iterator() {}
 
-  Iterator get_it(){
-    return _it;
-  }
 
   map_iterator &operator=(const map_iterator &x) {
     _it = x._it;
@@ -72,6 +69,7 @@ class map_iterator
     return this->_it != x._it;
   }
   template <class, class, class, class> friend class map;
+  template <class> friend class map_const_iterator;
 
 };
 
@@ -84,8 +82,10 @@ class map_const_iterator
   typedef typename Iterator::node_pointer node_pointer;
   typedef typename Iterator::difference_type difference_type;
   typedef typename Iterator::size_type size_type;
-  typedef value_type const *pointer;
+  typedef const value_type *pointer;
   typedef const value_type &reference;
+  typedef typename Iterator::iterator_category iterator_category;
+  typedef ft::map_iterator<typename  Iterator::non_const_iterator> non_const_iterator;
 
   private:
   Iterator _it;
@@ -94,6 +94,8 @@ class map_const_iterator
   map_const_iterator() {}
 
   map_const_iterator(const Iterator x) : _it(x) {}
+
+  map_const_iterator(non_const_iterator x) : _it(x._it) {}
 
   ~map_const_iterator() {}
 

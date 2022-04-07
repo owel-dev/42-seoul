@@ -6,8 +6,10 @@
 #include <stack>
 #include <utility>
 #include <vector>
+#include <set>
 
 #include "map.hpp"
+#include "set.hpp"
 #include "RBTree.hpp"
 #include "RBTree_test.cpp"
 #include "map_test.cpp"

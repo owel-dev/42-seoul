@@ -552,9 +552,11 @@ class rb_tree
     node_pointer Parent;
     node_pointer new_node = create_node(data);
     node_pointer &dest = find_pos(Parent, data);
+    node_pointer ret = dest;
     bool inserted = false;
     if (dest == nullptr) {
       dest = new_node;
+      ret = dest;
       dest->parent = Parent;
       if (_begin->left != nullptr)
         _begin = _begin->left;
@@ -563,7 +565,7 @@ class rb_tree
       ++_size;
     }
 //    node_pointer ret = reinterpret_cast<node_pointer>(dest);
-    return pair<iterator, bool>(iterator(dest), inserted);
+    return pair<iterator, bool>(iterator(ret), inserted);
   }
 
   iterator insert(iterator hint, const_reference data)
@@ -572,15 +574,18 @@ class rb_tree
     node_pointer new_node = create_node(data);
     node_pointer dummy;
     node_pointer &dest = find_pos(hint, Parent, dummy, data);
+    node_pointer ret = dest;
+
     if (dest == nullptr) {
       dest = new_node;
+      ret = dest;
       dest->parent = Parent;
       if (_begin->left != nullptr)
         _begin = _begin->left;
       rebuild_insert(new_node);
       ++_size;
     }
-    return iterator(dest);
+    return iterator(ret);
   }
 
   template<class InputIterator>

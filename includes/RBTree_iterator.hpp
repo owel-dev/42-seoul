@@ -6,6 +6,9 @@
 namespace ft
 {
 
+template <class T, class TTT>
+class rb_tree_const_iterator;
+
 template<class T, class NodePtr>
 class rb_tree_iterator
 {
@@ -18,6 +21,7 @@ class rb_tree_iterator
   typedef long difference_type;
   typedef unsigned long size_type;
   typedef std::bidirectional_iterator_tag iterator_category;
+  typedef ft::rb_tree_const_iterator<T, NodePtr> const_iterator;
 
   private:
   // * private member
@@ -30,6 +34,8 @@ class rb_tree_iterator
   rb_tree_iterator(const node_pointer x) : _node(x) {}
 
   rb_tree_iterator(const rb_tree_iterator &x) : _node(x._node) {}
+
+  rb_tree_iterator(const const_iterator &x) : _node(x._node) {}
 
   ~rb_tree_iterator() {}
 
@@ -103,6 +109,7 @@ class rb_tree_iterator
 
   template<class, class> friend class rb_tree_const_iterator;
   template<class, class> friend class rb_tree;
+  template<class, class, class> friend class set;
 };
 
 template<class T, class NodePtr>
@@ -206,6 +213,9 @@ class rb_tree_const_iterator
   bool tree_is_left_child() const {
     return _node == _node->parent->left;
   }
+
+  template<class, class> friend class rb_tree_iterator;
+
 };
 
 }; // namespace ft

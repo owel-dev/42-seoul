@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vector.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/08 20:51:52 by ulee              #+#    #+#             */
+/*   Updated: 2022/04/08 20:51:53 by ulee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
@@ -12,7 +24,7 @@
 namespace ft
 {
 
-template<class T, class Allocator = std::allocator<T> >
+template<class T, class Allocator = std::allocator <T> >
 class vector
 {
   public:
@@ -40,7 +52,7 @@ class vector
   pointer _end;
   pointer _end_cap;
 
-  public:
+  private:
   /*
    * 커스텀 함수
    */
@@ -50,7 +62,7 @@ class vector
     if (n > max_size())
       throw std::out_of_range("vector");
     _begin = _end = _alloc.allocate(n);
-    _end_cap = _begin + n;
+      _end_cap = _begin + n;
   }
 
   void vdeallocate()
@@ -83,19 +95,8 @@ class vector
       _alloc.destroy(--_end);
   }
 
-//  void append(size_type add_size)
-//  {
-//    size_type exrta_cap = _end_cap - _end;
-//    if (exrta_cap < add_size) {
-//      construct_at_end(_end + 1, value_type());
-//    }
-//    pointer new_end = _end + add_size;
-//    construct_at_end(new_end, value_type());
-//  }
-
   void append(size_type add_size, const value_type &val)
   {
-//    std::cout << "hello\n";
     size_type exrta_cap = _end_cap - _end;
     if (exrta_cap >= add_size) {
       construct_at_end(_end + add_size, val);
@@ -116,6 +117,7 @@ class vector
     return std::max(2 * cap, new_size);
   }
 
+  public:
   /*
    * 기본 생성자, 소멸자 등
    */
@@ -298,7 +300,8 @@ class vector
       this->reserve(recommand_cap(size() + 1));
     iterator new_position = _begin + dist;
     if (new_position != _end)
-      std::memmove(new_position + 1, new_position, sizeof(value_type) * (_end - new_position));
+      std::memmove(new_position + 1, new_position,
+                   sizeof(value_type) * (_end - new_position));
     _alloc.construct(new_position, val);
     ++_end;
     return position;
@@ -313,7 +316,8 @@ class vector
     if (new_position == _end) {
       construct_at_end(_end + n, val);
     } else {
-      std::memmove(new_position + n, new_position, sizeof(value_type) * (_end - new_position));
+      std::memmove(new_position + n, new_position,
+                   sizeof(value_type) * (_end - new_position));
       for (size_t i = 0; i < n; ++i) {
         _alloc.construct(new_position + i, val);
         ++_end;
@@ -336,7 +340,8 @@ class vector
     if (new_position == _end)
       construct_at_end(_end + n, first);
     else {
-      std::memmove(new_position + n, new_position, sizeof(value_type) * (_end - new_position));
+      std::memmove(new_position + n, new_position,
+                   sizeof(value_type) * (_end - new_position));
       for (size_type i = 0; i < n; ++i, ++first) {
         _alloc.construct(new_position + i, *first);
         ++_end;
@@ -370,7 +375,7 @@ class vector
 
   void swap(vector &x)
   {
-    if (*this == x)
+    if (this == &x)
       return;
     std::swap(this->_begin, x._begin);
     std::swap(this->_end, x._end);
@@ -396,7 +401,8 @@ bool operator!=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
 template<class T, class Alloc>
 bool operator<(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
 {
-  return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+  return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(),
+                                     rhs.end());
 }
 
 template<class T, class Alloc>

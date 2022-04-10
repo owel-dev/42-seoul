@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   RBTree_iterator.hpp                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/08 20:51:20 by ulee              #+#    #+#             */
+/*   Updated: 2022/04/08 20:51:21 by ulee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef RBTREE_ITERATOR_HPP
 #define RBTREE_ITERATOR_HPP
 
@@ -6,7 +18,7 @@
 namespace ft
 {
 
-template <class T, class TTT>
+template<class T, class TTT>
 class rb_tree_const_iterator;
 
 template<class T, class NodePtr>
@@ -33,31 +45,37 @@ class rb_tree_iterator
 
   rb_tree_iterator(const node_pointer x) : _node(x) {}
 
-  rb_tree_iterator(const rb_tree_iterator &x) : _node(x._node) {}
+  rb_tree_iterator(const rb_tree_iterator &x) : _node(x.base()) {}
 
-  rb_tree_iterator(const const_iterator &x) : _node(x._node) {}
+  rb_tree_iterator(const const_iterator &x) : _node(x.base()) {}
 
   ~rb_tree_iterator() {}
 
+  node_pointer base() const { return _node; }
+
   // * operations
-  void tree_min(node_pointer node) {
+  void tree_min(node_pointer node)
+  {
     while (node->left != nullptr)
       node = node->left;
     _node = node;
   }
 
-  void tree_max(node_pointer node) {
+  void tree_max(node_pointer node)
+  {
     while (node->right != nullptr)
       node = node->right;
     _node = node;
   }
 
-  rb_tree_iterator &operator=(const rb_tree_iterator &x) {
+  rb_tree_iterator &operator=(const rb_tree_iterator &x)
+  {
     _node = x._node;
     return (*this);
   }
 
-  rb_tree_iterator &operator++() {
+  rb_tree_iterator &operator++()
+  {
     if (_node->right != nullptr) {
       tree_min(_node->right);
       return *this;
@@ -68,13 +86,15 @@ class rb_tree_iterator
     return *this;
   }
 
-  rb_tree_iterator operator++(int) {
+  rb_tree_iterator operator++(int)
+  {
     rb_tree_iterator temp(*this);
     ++(*this);
     return temp;
   }
 
-  rb_tree_iterator &operator--() {
+  rb_tree_iterator &operator--()
+  {
     if (_node->left != nullptr) {
       tree_max(_node->left);
       return *this;
@@ -85,17 +105,20 @@ class rb_tree_iterator
     return *this;
   }
 
-  rb_tree_iterator operator--(int) {
+  rb_tree_iterator operator--(int)
+  {
     rb_tree_iterator temp(*this);
     --(*this);
     return temp;
   }
 
-  bool operator==(const rb_tree_iterator &x) const {
+  bool operator==(const rb_tree_iterator &x) const
+  {
     return this->_node == x._node;
   }
 
-  bool operator!=(const rb_tree_iterator &x) const {
+  bool operator!=(const rb_tree_iterator &x) const
+  {
     return this->_node != x._node;
   }
 
@@ -103,13 +126,7 @@ class rb_tree_iterator
 
   pointer operator->() const { return &_node->data; }
 
-  bool tree_is_left_child() const {
-    return _node == _node->parent->left;
-  }
-
-  template<class, class> friend class rb_tree_const_iterator;
-  template<class, class> friend class rb_tree;
-  template<class, class, class> friend class set;
+  bool tree_is_left_child() const { return _node == _node->parent->left; }
 };
 
 template<class T, class NodePtr>
@@ -136,35 +153,37 @@ class rb_tree_const_iterator
 
   rb_tree_const_iterator(const node_pointer x) : _node(x) {}
 
-  rb_tree_const_iterator(const rb_tree_const_iterator &x) : _node(x._node) {}
+  rb_tree_const_iterator(const rb_tree_const_iterator &x) : _node(x.base()) {}
 
-  rb_tree_const_iterator(non_const_iterator x) : _node(x._node) {}
+  rb_tree_const_iterator(non_const_iterator x) : _node(x.base()) {}
 
   ~rb_tree_const_iterator() {}
 
-  node_pointer get_node() {
-    return _node;
-  }
+  node_pointer base() const { return _node; }
 
   // * operations
-  void tree_min(node_pointer node) {
+  void tree_min(node_pointer node)
+  {
     while (node->left != nullptr)
       node = node->left;
     _node = node;
   }
 
-  void tree_max(node_pointer node) {
+  void tree_max(node_pointer node)
+  {
     while (node->right != nullptr)
       node = node->right;
     _node = node;
   }
 
-  rb_tree_const_iterator &operator=(const rb_tree_const_iterator &x) {
+  rb_tree_const_iterator &operator=(const rb_tree_const_iterator &x)
+  {
     _node = x._node;
     return (*this);
   }
 
-  rb_tree_const_iterator &operator++() {
+  rb_tree_const_iterator &operator++()
+  {
     if (_node->right != nullptr) {
       tree_min(_node->right);
       return *this;
@@ -175,13 +194,15 @@ class rb_tree_const_iterator
     return *this;
   }
 
-  rb_tree_const_iterator operator++(int) {
+  rb_tree_const_iterator operator++(int)
+  {
     rb_tree_const_iterator temp(*this);
     ++(*this);
     return temp;
   }
 
-  rb_tree_const_iterator &operator--() {
+  rb_tree_const_iterator &operator--()
+  {
     if (_node->left != nullptr) {
       tree_max(_node->left);
       return *this;
@@ -192,17 +213,20 @@ class rb_tree_const_iterator
     return *this;
   }
 
-  rb_tree_const_iterator operator--(int) {
+  rb_tree_const_iterator operator--(int)
+  {
     rb_tree_const_iterator temp(*this);
     --(*this);
     return temp;
   }
 
-  bool operator==(const rb_tree_const_iterator &x) const {
+  bool operator==(const rb_tree_const_iterator &x) const
+  {
     return this->_node == x._node;
   }
 
-  bool operator!=(const rb_tree_const_iterator &x) const {
+  bool operator!=(const rb_tree_const_iterator &x) const
+  {
     return this->_node != x._node;
   }
 
@@ -210,11 +234,7 @@ class rb_tree_const_iterator
 
   pointer operator->() const { return &_node->data; }
 
-  bool tree_is_left_child() const {
-    return _node == _node->parent->left;
-  }
-
-  template<class, class> friend class rb_tree_iterator;
+  bool tree_is_left_child() const { return _node == _node->parent->left; }
 
 };
 

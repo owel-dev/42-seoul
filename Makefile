@@ -1,14 +1,27 @@
-CLANG = clang++
-# CLANGFLAGS = -Wall -Wextra -Werror -std=c++98
-CLANGFLAGS = 
-NAME = out
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/04/08 20:52:05 by ulee              #+#    #+#              #
+#    Updated: 2022/04/08 20:52:06 by ulee             ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+CLANG = c++
+CLANGFLAGS = -Wall -Wextra -Werror -std=c++98
+#CLANGFLAGS+= -fsanitize=address -g3
+
+NAME = ft_containers
 RM = rm -rf
 
 OBJ_DIR = obj
 SRC_DIR = src
 INC_DIR = includes
 
-FILES = main \
+FILES = main
 
 ifeq ($(DEBUG),true)
 	CLANG += -g
@@ -34,10 +47,6 @@ clean:
 fclean: clean
 	@$(RM) $(NAME)
 
-re: fclean $(NAME)
-
-rb: 
-
-test: fclean all
+re: clean $(NAME)
 
 .PHONY: all clean fclean re test

@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   etc.hpp                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/08 20:50:11 by ulee              #+#    #+#             */
+/*   Updated: 2022/04/08 20:50:16 by ulee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
+#include <algorithm>
+#include <iomanip>
 #include <iostream>
 #include <memory>
 #include <utility>
-#include <iomanip>
-#include <algorithm>
 
 #define NC "\e[0m"
 #define RED_C "\e[31m"
@@ -30,8 +42,7 @@ template<class InputIterator1, class InputIterator2>
 bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
                              InputIterator2 first2, InputIterator2 last2)
 {
-  for (; first2 != last2; ++first1, ++first2)
-  {
+  for (; first2 != last2; ++first1, ++first2) {
     if (first1 == last1 || *first1 < *first2)
       return true;
     if (*first2 < *first1)
@@ -39,7 +50,6 @@ bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
   }
   return false;
 }
-
 
 // * binary_function
 
@@ -53,7 +63,7 @@ struct binary_function
 
 // * rb_node
 
-template<class T, class Alloc = std::allocator<T> >
+template<class T, class Alloc = std::allocator <T> >
 class rb_node
 {
   public:
@@ -96,7 +106,32 @@ class pair
   template<class U, class V>
   pair(const pair<U, V> &pr) : first(pr.first), second(pr.second) {}
 
-  pair(const first_type &a, const second_type &b) : first(a), second(b) {}
+  pair(first_type const &a, second_type const &b) : first(a), second(b) {}
+
+  pair &operator=(const pair &pr)
+  {
+    this->first = pr.first;
+    this->second = pr.second;
+    return (*this);
+  }
+};
+
+template<class T1, class T2>
+class pair<const T1, T2>
+{
+  public:
+  typedef T1 first_type;
+  typedef T2 second_type;
+
+  first_type first;
+  second_type second;
+
+  pair() : first(), second() {}
+
+  template<class U, class V>
+  pair(const ft::pair<U, V> &pr) : first(pr.first), second(pr.second) {}
+
+  pair(first_type const &a, second_type const &b) : first(a), second(b) {}
 
   pair &operator=(const pair &pr)
   {
@@ -272,10 +307,6 @@ template<>
 struct is_integral<unsigned long long>
 {
   static const bool value = true;
-};
-
-class random_access_iterator_tag
-{
 };
 
 } // namespace ft

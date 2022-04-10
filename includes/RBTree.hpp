@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   RBTree.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/08 20:51:23 by ulee              #+#    #+#             */
+/*   Updated: 2022/04/08 20:51:24 by ulee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef RBTREE_HPP
 #define RBTREE_HPP
 
@@ -20,7 +32,7 @@ class rb_tree
   typedef ft::rb_node<T> node_type;
   typedef node_type *node_pointer;
 
-  typedef std::allocator<node_type> allocator_type;
+  typedef std::allocator <node_type> allocator_type;
   typedef typename allocator_type::size_type size_type;
   typedef typename allocator_type::difference_type difference_type;
 
@@ -45,8 +57,7 @@ class rb_tree
     _begin = _end;
   }
 
-  rb_tree(const rb_tree &x)
-          : _size(0), _alloc(x._alloc), _comp(x._comp)
+  rb_tree(const rb_tree &x) : _size(0), _alloc(x._alloc), _comp(x._comp)
   {
     _end = _alloc.allocate(1);
     _alloc.construct(_end, node_type());
@@ -72,14 +83,15 @@ class rb_tree
     _alloc.deallocate(_end, 1);
   }
 
+  private:
   // * tree
-  node_pointer root() const{ return _end->left; }
+  node_pointer root() const { return _end->left; }
 
-  node_pointer *rootPtr() { return &_end->left; }
+  node_pointer *rootPtr() const { return &_end->left; }
 
-  bool is_left_child(node_pointer node) { return node == node->parent->left; }
+  bool is_left_child(node_pointer node) const { return node == node->parent->left; }
 
-  node_pointer min_node(node_pointer node)
+  node_pointer min_node(node_pointer node) const
   {
     node_pointer temp = node;
     while (temp->left != nullptr)
@@ -87,7 +99,7 @@ class rb_tree
     return temp;
   }
 
-  node_pointer max_node(node_pointer node)
+  node_pointer max_node(node_pointer node) const
   {
     node_pointer temp = node;
     while (temp->right != nullptr)
@@ -102,7 +114,7 @@ class rb_tree
     return temp;
   }
 
-  node_pointer next_node(node_pointer node)
+  node_pointer next_node(node_pointer node) const
   {
     if (node->right != nullptr)
       return min_node(node->right);
@@ -194,7 +206,7 @@ class rb_tree
     iterator it(node);
     ++it;
     if (node == _begin)
-      _begin = it._node;
+      _begin = it.base();
     remove_node(root(), node);
     --_size;
     return it;
@@ -368,12 +380,12 @@ class rb_tree
     if (hint == end() || _comp(data, *hint)) {
       iterator prev = hint;
       if (hint == begin() || _comp(*--prev, data)) {
-        if (hint._node->left == nullptr) {
-          parent = hint._node;
+        if (hint.base()->left == nullptr) {
+          parent = hint.base();
           return parent->left;
         } else {
-          parent = prev._node;
-          return prev._node->right;
+          parent = prev.base();
+          return prev.base()->right;
         }
       }
       return find_pos(parent, data);
@@ -381,18 +393,18 @@ class rb_tree
       iterator next = hint;
       ++next;
       if (next == end() || _comp(data, *next)) {
-        if (hint._node->right == nullptr) {
-          parent = hint._node;
-          return hint._node->right;
+        if (hint.base()->right == nullptr) {
+          parent = hint.base();
+          return hint.base()->right;
         } else {
-          parent = next._node;
+          parent = next.base();
           return parent->left;
         }
       }
       return find_pos(parent, data);
     }
-    parent = hint._node;
-    dummy = hint._node;
+    parent = hint.base();
+    dummy = hint.base();
     return dummy;
   }
 
@@ -422,7 +434,7 @@ class rb_tree
 
   void print_tree() const
   {
-    std::queue<node_pointer> q;
+    std::queue <node_pointer> q;
     if (_end->left)
       q.push(_end->left);
     while (!q.empty()) {
@@ -436,6 +448,7 @@ class rb_tree
     }
   }
 
+  public:
   // * map
 
   // * iterator
@@ -564,7 +577,7 @@ class rb_tree
       inserted = true;
       ++_size;
     }
-//    node_pointer ret = reinterpret_cast<node_pointer>(dest);
+    //    node_pointer ret = reinterpret_cast<node_pointer>(dest);
     return pair<iterator, bool>(iterator(ret), inserted);
   }
 
@@ -595,10 +608,7 @@ class rb_tree
       insert(*first);
   }
 
-  void erase(iterator pos)
-  {
-    remove_node_pointer(pos._node);
-  }
+  void erase(iterator pos) { remove_node_pointer(pos.base()); }
 
   void clear()
   {

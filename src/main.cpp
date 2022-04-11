@@ -6,16 +6,15 @@
 /*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 20:51:57 by ulee              #+#    #+#             */
-/*   Updated: 2022/04/08 20:51:58 by ulee             ###   ########.fr       */
+/*   Updated: 2022/04/11 13:12:54 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <deque>
 #include <iostream>
 #include <string>
-#include <time.h>
 
-#if 0// CREATE A REAL STL EXAMPLE
+#if 0 // CREATE A REAL STL EXAMPLE
 #include <map>
 #include <stack>
 #include <vector>
@@ -30,24 +29,20 @@ namespace ft = std;
 
 #define MAX_RAM 4294967296
 #define BUFFER_SIZE 4096
-struct Buffer
-{
+struct Buffer {
   int idx;
   char buff[BUFFER_SIZE];
 };
 
 #define COUNT (MAX_RAM / (int)sizeof(Buffer))
 
-template<typename T>
-class MutantStack : public ft::stack<T>
-{
-  public:
+template <typename T> class MutantStack : public ft::stack<T> {
+public:
   MutantStack() {}
 
   MutantStack(const MutantStack<T> &src) { *this = src; }
 
-  MutantStack<T> &operator=(const MutantStack<T> &rhs)
-  {
+  MutantStack<T> &operator=(const MutantStack<T> &rhs) {
     this->c = rhs.c;
     return *this;
   }
@@ -61,8 +56,7 @@ class MutantStack : public ft::stack<T>
   iterator end() { return this->c.end(); }
 };
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
   if (argc != 2) {
     std::cerr << "Usage: ./test seed" << std::endl;
     std::cerr << "Provide a seed please" << std::endl;
@@ -70,19 +64,15 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  // * 시간 측정 시작
-  clock_t start, finish;
-  double duration;
-  start = clock();
-
   const int seed = atoi(argv[1]);
   srand(seed);
-
-  ft::vector <std::string> vector_str;
+  std::cout << "rand(): " << rand() << std::endl;
+  std::cout << "count: " << COUNT << std::endl;
+  ft::vector<std::string> vector_str;
   ft::vector<int> vector_int;
   ft::stack<int> stack_int;
-  ft::vector <Buffer> vector_buffer;
-  ft::stack <Buffer, std::deque<Buffer> > stack_deq_buffer;
+  ft::vector<Buffer> vector_buffer;
+  ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
   ft::map<int, int> map_int;
 
   for (int i = 0; i < COUNT; i++) {
@@ -103,6 +93,7 @@ int main(int argc, char **argv)
     }
   } catch (const std::exception &e) {
     // NORMAL ! :P
+    std::cout << "at exception " << e.what() << std::endl;
   }
 
   for (int i = 0; i < COUNT; ++i) {
@@ -125,13 +116,6 @@ int main(int argc, char **argv)
     std::cout << *it;
   }
   std::cout << std::endl;
-
-  // * 시간 측정 끝
-  finish = clock();
-  duration = (double) (finish - start) / CLOCKS_PER_SEC;
-  std::cout << "시간 측정: " << duration << std::endl;
-
-  while(true){;}
 
   return (0);
 }

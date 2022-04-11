@@ -6,7 +6,7 @@
 /*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 20:51:23 by ulee              #+#    #+#             */
-/*   Updated: 2022/04/08 20:51:24 by ulee             ###   ########.fr       */
+/*   Updated: 2022/04/10 22:34:05 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,11 @@
 
 #include "RBTree_iterator.hpp"
 #include "etc.hpp"
-#include <queue>
 
-namespace ft
-{
+namespace ft {
 
-template<class T, class Compare>
-class rb_tree
-{
-  public:
+template <class T, class Compare> class rb_tree {
+public:
   // * typedef
   typedef T value_type;
   typedef T &reference;
@@ -32,14 +28,14 @@ class rb_tree
   typedef ft::rb_node<T> node_type;
   typedef node_type *node_pointer;
 
-  typedef std::allocator <node_type> allocator_type;
+  typedef std::allocator<node_type> allocator_type;
   typedef typename allocator_type::size_type size_type;
   typedef typename allocator_type::difference_type difference_type;
 
   typedef ft::rb_tree_iterator<value_type, node_pointer> iterator;
   typedef ft::rb_tree_const_iterator<value_type, node_pointer> const_iterator;
 
-  private:
+private:
   // * private member
   node_pointer _begin;
   node_pointer _end;
@@ -47,26 +43,23 @@ class rb_tree
   allocator_type _alloc;
   compare_type _comp;
 
-  public:
+public:
   // * constructor
   rb_tree(const compare_type &comp = compare_type())
-          : _size(0), _alloc(allocator_type()), _comp(comp)
-  {
+      : _size(0), _alloc(allocator_type()), _comp(comp) {
     _end = _alloc.allocate(1);
     _alloc.construct(_end, node_type());
     _begin = _end;
   }
 
-  rb_tree(const rb_tree &x) : _size(0), _alloc(x._alloc), _comp(x._comp)
-  {
+  rb_tree(const rb_tree &x) : _size(0), _alloc(x._alloc), _comp(x._comp) {
     _end = _alloc.allocate(1);
     _alloc.construct(_end, node_type());
     _begin = _end;
     *this = x;
   }
 
-  rb_tree &operator=(const rb_tree &x)
-  {
+  rb_tree &operator=(const rb_tree &x) {
     if (this != &x) {
       clear();
       _alloc = x._alloc;
@@ -76,58 +69,54 @@ class rb_tree
     return (*this);
   }
 
-  ~rb_tree()
-  {
+  ~rb_tree() {
     clear();
     _alloc.destroy(_end);
     _alloc.deallocate(_end, 1);
   }
 
-  private:
+private:
   // * tree
   node_pointer root() const { return _end->left; }
 
   node_pointer *rootPtr() const { return &_end->left; }
 
-  bool is_left_child(node_pointer node) const { return node == node->parent->left; }
+  bool is_left_child(node_pointer node) const {
+    return node == node->parent->left;
+  }
 
-  node_pointer min_node(node_pointer node) const
-  {
+  node_pointer min_node(node_pointer node) const {
     node_pointer temp = node;
-    while (temp->left != nullptr)
+    while (temp->left != u_nullptr)
       temp = temp->left;
     return temp;
   }
 
-  node_pointer max_node(node_pointer node) const
-  {
+  node_pointer max_node(node_pointer node) const {
     node_pointer temp = node;
-    while (temp->right != nullptr)
+    while (temp->right != u_nullptr)
       temp = temp->right;
     return temp;
   }
 
-  node_pointer create_node(const_reference data)
-  {
+  node_pointer create_node(const_reference data) {
     node_pointer temp = _alloc.allocate(1);
     _alloc.construct(temp, node_type(data));
     return temp;
   }
 
-  node_pointer next_node(node_pointer node) const
-  {
-    if (node->right != nullptr)
+  node_pointer next_node(node_pointer node) const {
+    if (node->right != u_nullptr)
       return min_node(node->right);
     while (!is_left_child(node))
       node = node->parent;
     return node->parent;
   }
 
-  void rotate_right(node_pointer node)
-  {
+  void rotate_right(node_pointer node) {
     node_pointer left_child = node->left;
     node->left = left_child->right;
-    if (node->left != nullptr)
+    if (node->left != u_nullptr)
       node->left->parent = node;
     left_child->parent = node->parent;
     if (is_left_child(node))
@@ -138,11 +127,10 @@ class rb_tree
     node->parent = left_child;
   }
 
-  void rotate_left(node_pointer node)
-  {
+  void rotate_left(node_pointer node) {
     node_pointer right_child = node->right;
     node->right = right_child->left;
-    if (node->right != nullptr)
+    if (node->right != u_nullptr)
       node->right->parent = node;
     right_child->parent = node->parent;
     if (is_left_child(node))
@@ -153,13 +141,12 @@ class rb_tree
     node->parent = right_child;
   }
 
-  void rebuild_insert(node_pointer new_node)
-  {
+  void rebuild_insert(node_pointer new_node) {
     new_node->is_black = new_node == root();
     while (new_node != root() && !new_node->parent->is_black) {
       if (is_left_child(new_node->parent)) {
         node_pointer uncle = new_node->parent->parent->right;
-        if (uncle != nullptr && !uncle->is_black) {
+        if (uncle != u_nullptr && !uncle->is_black) {
           new_node = new_node->parent;
           new_node->is_black = true;
           new_node = new_node->parent;
@@ -179,7 +166,7 @@ class rb_tree
         }
       } else {
         node_pointer uncle = new_node->parent->parent->left;
-        if (uncle != nullptr && !uncle->is_black) {
+        if (uncle != u_nullptr && !uncle->is_black) {
           new_node = new_node->parent;
           new_node->is_black = true;
           new_node = new_node->parent;
@@ -201,8 +188,7 @@ class rb_tree
     }
   }
 
-  iterator remove_node_pointer(node_pointer node)
-  {
+  iterator remove_node_pointer(node_pointer node) {
     iterator it(node);
     ++it;
     if (node == _begin)
@@ -212,15 +198,14 @@ class rb_tree
     return it;
   }
 
-  void remove_node(node_pointer root, node_pointer node)
-  {
-    node_pointer remove = (node->left == nullptr || node->right == nullptr)
-                          ? node
-                          : next_node(node);
+  void remove_node(node_pointer root, node_pointer node) {
+    node_pointer remove = (node->left == u_nullptr || node->right == u_nullptr)
+                              ? node
+                              : next_node(node);
     node_pointer succesor =
-            remove->left != nullptr ? remove->left : remove->right;
-    node_pointer sibling = nullptr;
-    if (succesor != nullptr)
+        remove->left != u_nullptr ? remove->left : remove->right;
+    node_pointer sibling = u_nullptr;
+    if (succesor != u_nullptr)
       succesor->parent = remove->parent;
     if (is_left_child(remove)) {
       remove->parent->left = succesor;
@@ -242,14 +227,14 @@ class rb_tree
       remove->left = node->left;
       remove->left->parent = remove;
       remove->right = node->right;
-      if (remove->right != nullptr)
+      if (remove->right != u_nullptr)
         remove->right->parent = remove;
       remove->is_black = node->is_black;
       if (root == node)
         root = remove;
     }
-    if (removed_black && root != nullptr) {
-      if (succesor != nullptr)
+    if (removed_black && root != u_nullptr) {
+      if (succesor != u_nullptr)
         succesor->is_black = true;
       else {
         while (true) {
@@ -262,8 +247,8 @@ class rb_tree
                 root = sibling;
               sibling = sibling->left->right;
             }
-            if ((sibling->left == nullptr || sibling->left->is_black) &&
-                (sibling->right == nullptr || sibling->right->is_black)) {
+            if ((sibling->left == u_nullptr || sibling->left->is_black) &&
+                (sibling->right == u_nullptr || sibling->right->is_black)) {
               sibling->is_black = false;
               succesor = sibling->parent;
               if (succesor == root || !succesor->is_black) {
@@ -273,7 +258,7 @@ class rb_tree
               sibling = is_left_child(succesor) ? succesor->parent->right
                                                 : succesor->parent->left;
             } else {
-              if (sibling->right == nullptr || sibling->right->is_black) {
+              if (sibling->right == u_nullptr || sibling->right->is_black) {
                 sibling->left->is_black = true;
                 sibling->is_black = false;
                 rotate_right(sibling);
@@ -294,8 +279,8 @@ class rb_tree
                 root = sibling;
               sibling = sibling->right->left;
             }
-            if ((sibling->left == nullptr || sibling->left->is_black) &&
-                (sibling->right == nullptr || sibling->right->is_black)) {
+            if ((sibling->left == u_nullptr || sibling->left->is_black) &&
+                (sibling->right == u_nullptr || sibling->right->is_black)) {
               sibling->is_black = false;
               succesor = sibling->parent;
               if (!succesor->is_black || succesor == root) {
@@ -305,7 +290,7 @@ class rb_tree
               sibling = is_left_child(succesor) ? succesor->parent->right
                                                 : succesor->parent->left;
             } else {
-              if (sibling->left == nullptr || sibling->left->is_black) {
+              if (sibling->left == u_nullptr || sibling->left->is_black) {
                 sibling->right->is_black = true;
                 sibling->is_black = false;
                 rotate_left(sibling);
@@ -323,17 +308,15 @@ class rb_tree
     }
   }
 
-  void delete_node(const_reference value)
-  {
+  void delete_node(const_reference value) {
     node_pointer remove = find_pos(remove, value);
-    if (remove != nullptr)
+    if (remove != u_nullptr)
       remove_node(root(), remove);
     --_size;
   }
 
-  void delete_tree(node_pointer node)
-  {
-    if (node != nullptr) {
+  void delete_tree(node_pointer node) {
+    if (node != u_nullptr) {
       delete_tree(node->left);
       delete_tree(node->right);
       _alloc.destroy(node);
@@ -341,15 +324,14 @@ class rb_tree
     }
   }
 
-  node_pointer &find_pos(node_pointer &parent, const_reference data)
-  {
+  node_pointer &find_pos(node_pointer &parent, const_reference data) {
     node_pointer node = root();
     node_pointer *p_node = rootPtr();
 
-    if (node != nullptr) {
+    if (node != u_nullptr) {
       while (true) {
         if (_comp(data, node->data)) {
-          if (node->left != nullptr) {
+          if (node->left != u_nullptr) {
             p_node = &(node->left);
             node = node->left;
           } else {
@@ -357,7 +339,7 @@ class rb_tree
             return parent->left;
           }
         } else if (_comp(node->data, data)) {
-          if (node->right != nullptr) {
+          if (node->right != u_nullptr) {
             p_node = &node->right;
             node = node->right;
           } else {
@@ -375,12 +357,11 @@ class rb_tree
   }
 
   node_pointer &find_pos(iterator hint, node_pointer &parent,
-                         node_pointer &dummy, const_reference data)
-  {
+                         node_pointer &dummy, const_reference data) {
     if (hint == end() || _comp(data, *hint)) {
       iterator prev = hint;
       if (hint == begin() || _comp(*--prev, data)) {
-        if (hint.base()->left == nullptr) {
+        if (hint.base()->left == u_nullptr) {
           parent = hint.base();
           return parent->left;
         } else {
@@ -393,7 +374,7 @@ class rb_tree
       iterator next = hint;
       ++next;
       if (next == end() || _comp(data, *next)) {
-        if (hint.base()->right == nullptr) {
+        if (hint.base()->right == u_nullptr) {
           parent = hint.base();
           return hint.base()->right;
         } else {
@@ -408,47 +389,7 @@ class rb_tree
     return dummy;
   }
 
-  void node_info(node_pointer node) const
-  {
-    if (node == nullptr)
-      return;
-    std::cout << "node:" << std::setw(3) << node->data << BLUE "|" NC;
-    if (!node->is_black)
-      std::cout << std::setw(15) << RED_C "RED" NC << BLUE "|" NC;
-    else if (node->is_black)
-      std::cout << std::setw(15) << BLACK_C "BLACK" NC << BLUE "|" NC;
-    if (node->left) {
-      std::cout << "left_node:" << std::setw(4) << node->left->data
-                << BLUE "|" NC;
-    } else {
-      std::cout << "left_node:" << std::setw(4) << " " << BLUE "|" NC;
-    }
-    if (node->right) {
-      std::cout << "right_node:" << std::setw(4) << node->right->data
-                << BLUE "|" NC;
-    } else {
-      std::cout << "right_node:" << std::setw(4) << " " << BLUE "|" NC;
-    }
-    std::cout << std::endl;
-  }
-
-  void print_tree() const
-  {
-    std::queue <node_pointer> q;
-    if (_end->left)
-      q.push(_end->left);
-    while (!q.empty()) {
-      node_pointer node = q.front();
-      q.pop();
-      node_info(node);
-      if (node->left)
-        q.push(node->left);
-      if (node->right)
-        q.push(node->right);
-    }
-  }
-
-  public:
+public:
   // * map
 
   // * iterator
@@ -463,37 +404,30 @@ class rb_tree
   // * capacity
   size_type size() const { return _size; }
 
-  size_type max_size() const
-  {
+  size_type max_size() const {
     return std::min<size_type>(_alloc.max_size(),
                                std::numeric_limits<difference_type>::max());
   }
 
   // * opearations
-  template<class Key>
-  iterator find(const Key &k)
-  {
+  template <class Key> iterator find(const Key &k) {
     iterator it = lower_bound(k);
     if (it != end() && !_comp(k, *it))
       return it;
     return end();
   }
 
-  template<class Key>
-  const_iterator find(const Key &k) const
-  {
+  template <class Key> const_iterator find(const Key &k) const {
     const_iterator it = lower_bound(k);
     if (it != end() && !_comp(k, *it))
       return it;
     return end();
   }
 
-  template<class Key>
-  iterator lower_bound(const Key &k)
-  {
+  template <class Key> iterator lower_bound(const Key &k) {
     node_pointer root_node = root();
     node_pointer ret = _end;
-    while (root_node != nullptr) {
+    while (root_node != u_nullptr) {
       if (!_comp(root_node->data, k)) {
         ret = root_node;
         root_node = root_node->left;
@@ -503,12 +437,10 @@ class rb_tree
     return iterator(ret);
   }
 
-  template<class Key>
-  const_iterator lower_bound(const Key &k) const
-  {
+  template <class Key> const_iterator lower_bound(const Key &k) const {
     node_pointer root_node = root();
     node_pointer ret = _end;
-    while (root_node != nullptr) {
+    while (root_node != u_nullptr) {
       if (!_comp(root_node->data, k)) {
         ret = root_node;
         root_node = root_node->left;
@@ -518,13 +450,11 @@ class rb_tree
     return const_iterator(ret);
   }
 
-  template<class Key>
-  iterator upper_bound(const Key &k)
-  {
+  template <class Key> iterator upper_bound(const Key &k) {
     node_pointer root_node = root();
     node_pointer ret = _end;
 
-    while (root_node != nullptr) {
+    while (root_node != u_nullptr) {
       if (_comp(k, root_node->data)) {
         ret = root_node;
         root_node = root_node->left;
@@ -534,13 +464,11 @@ class rb_tree
     return iterator(ret);
   }
 
-  template<class Key>
-  const_iterator upper_bound(const Key &k) const
-  {
+  template <class Key> const_iterator upper_bound(const Key &k) const {
     node_pointer root_node = root();
     node_pointer ret = _end;
 
-    while (root_node != nullptr) {
+    while (root_node != u_nullptr) {
       if (_comp(k, root_node->data)) {
         ret = root_node;
         root_node = root_node->left;
@@ -551,8 +479,7 @@ class rb_tree
   }
 
   // * modifiers
-  void swap(rb_tree &x)
-  {
+  void swap(rb_tree &x) {
     std::swap(_end, x._end);
     std::swap(_begin, x._begin);
     std::swap(_comp, x._comp);
@@ -560,18 +487,17 @@ class rb_tree
     std::swap(_size, x._size);
   }
 
-  pair<iterator, bool> insert(const_reference data)
-  {
+  pair<iterator, bool> insert(const_reference data) {
     node_pointer Parent;
     node_pointer new_node = create_node(data);
     node_pointer &dest = find_pos(Parent, data);
     node_pointer ret = dest;
     bool inserted = false;
-    if (dest == nullptr) {
+    if (dest == u_nullptr) {
       dest = new_node;
       ret = dest;
       dest->parent = Parent;
-      if (_begin->left != nullptr)
+      if (_begin->left != u_nullptr)
         _begin = _begin->left;
       rebuild_insert(new_node);
       inserted = true;
@@ -581,19 +507,18 @@ class rb_tree
     return pair<iterator, bool>(iterator(ret), inserted);
   }
 
-  iterator insert(iterator hint, const_reference data)
-  {
+  iterator insert(iterator hint, const_reference data) {
     node_pointer Parent;
     node_pointer new_node = create_node(data);
     node_pointer dummy;
     node_pointer &dest = find_pos(hint, Parent, dummy, data);
     node_pointer ret = dest;
 
-    if (dest == nullptr) {
+    if (dest == u_nullptr) {
       dest = new_node;
       ret = dest;
       dest->parent = Parent;
-      if (_begin->left != nullptr)
+      if (_begin->left != u_nullptr)
         _begin = _begin->left;
       rebuild_insert(new_node);
       ++_size;
@@ -601,24 +526,22 @@ class rb_tree
     return iterator(ret);
   }
 
-  template<class InputIterator>
-  void insert(InputIterator first, InputIterator last)
-  {
+  template <class InputIterator>
+  void insert(InputIterator first, InputIterator last) {
     for (; first != last; ++first)
       insert(*first);
   }
 
   void erase(iterator pos) { remove_node_pointer(pos.base()); }
 
-  void clear()
-  {
+  void clear() {
     delete_tree(root());
     _begin = _end;
     _size = 0;
-    _end->left = nullptr;
+    _end->left = u_nullptr;
   }
 };
 
-}; // namespace ft
+} // namespace ft
 
 #endif

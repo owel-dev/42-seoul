@@ -6,13 +6,12 @@
 #    By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/08 20:52:05 by ulee              #+#    #+#              #
-#    Updated: 2022/04/08 20:52:06 by ulee             ###   ########.fr        #
+#    Updated: 2022/04/11 13:24:50 by ulee             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CLANG = c++
 CLANGFLAGS = -Wall -Wextra -Werror -std=c++98
-#CLANGFLAGS+= -fsanitize=address -g3
 
 NAME = ft_containers
 RM = rm -rf

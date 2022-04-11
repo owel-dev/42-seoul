@@ -6,7 +6,7 @@
 /*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 20:50:34 by ulee              #+#    #+#             */
-/*   Updated: 2022/04/08 20:50:35 by ulee             ###   ########.fr       */
+/*   Updated: 2022/04/10 23:00:26 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,12 @@
 #include "map_iterator.hpp"
 #include "reverse_iterator.hpp"
 
-namespace ft
-{
+namespace ft {
 
-template<class Key, class T, class Compare = std::less <Key>,
-        class Alloc = std::allocator <ft::pair<const Key, T> > >
-class map
-{
-  public:
+template <class Key, class T, class Compare = std::less<Key>,
+          class Alloc = std::allocator<ft::pair<const Key, T> > >
+class map {
+public:
   // * typedef
   typedef Key key_type;
   typedef T mapped_type;
@@ -42,28 +40,24 @@ class map
 
   // * value_compare class
   class value_compare
-          : public ft::binary_function<value_type, value_type, bool>
-  {
+      : public ft::binary_function<value_type, value_type, bool> {
     friend class map;
 
-    protected:
+  protected:
     key_compare comp;
 
     value_compare(key_compare c) : comp(c) {}
 
-    public:
-    bool operator()(const value_type &x, const value_type &y) const
-    {
+  public:
+    bool operator()(const value_type &x, const value_type &y) const {
       return comp(x.first, y.first);
     }
 
-    bool operator()(const value_type &x, const key_type &y) const
-    {
+    bool operator()(const value_type &x, const key_type &y) const {
       return comp(x.first, y);
     }
 
-    bool operator()(const key_type &x, const value_type &y) const
-    {
+    bool operator()(const key_type &x, const value_type &y) const {
       return comp(x, y.first);
     }
   };
@@ -71,28 +65,27 @@ class map
   typedef ft::rb_tree<value_type, value_compare> tree_type;
   typedef ft::map_iterator<typename tree_type::iterator> iterator;
   typedef ft::map_const_iterator<typename tree_type::const_iterator>
-          const_iterator;
+      const_iterator;
   typedef ft::reverse_iterator<iterator> reverse_iterator;
   typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
-  private:
+private:
   // * private member
   key_compare _comp;
   allocator_type _alloc;
   tree_type _tree;
 
-  public:
+public:
   // * constructor
-  map(const key_compare &comp = key_compare(),
-      const allocator_type &alloc = allocator_type())
-          : _comp(comp), _alloc(alloc), _tree(value_compare(comp)) {}
+  explicit map(const key_compare &comp = key_compare(),
+               const allocator_type &alloc = allocator_type())
+      : _comp(comp), _alloc(alloc), _tree(value_compare(comp)) {}
 
-  template<class InputIterator>
+  template <class InputIterator>
   map(InputIterator first, InputIterator last,
       const key_compare &comp = key_compare(),
       const allocator_type &alloc = allocator_type())
-          : _comp(comp), _alloc(alloc), _tree(value_compare(_comp))
-  {
+      : _comp(comp), _alloc(alloc), _tree(value_compare(_comp)) {
     insert(first, last);
   }
 
@@ -100,8 +93,7 @@ class map
 
   ~map() {}
 
-  map &operator=(const map &x)
-  {
+  map &operator=(const map &x) {
     if (this != &x) {
       this->clear();
       _alloc = x._alloc;
@@ -122,15 +114,13 @@ class map
 
   reverse_iterator rbegin() { return reverse_iterator(_tree.end()); }
 
-  const_reverse_iterator rbegin() const
-  {
+  const_reverse_iterator rbegin() const {
     return reverse_iterator(_tree.end());
   }
 
   reverse_iterator rend() { return reverse_iterator(_tree.begin()); }
 
-  const_reverse_iterator rend() const
-  {
+  const_reverse_iterator rend() const {
     return reverse_iterator(_tree.begin());
   }
 
@@ -142,8 +132,7 @@ class map
   size_type max_size() const { return _tree.max_size(); }
 
   // * access
-  mapped_type &operator[](const key_type &k)
-  {
+  mapped_type &operator[](const key_type &k) {
     //    iterator target = find(k);
     //    if (target != end())
     //      return (*target).second;
@@ -152,26 +141,22 @@ class map
   }
 
   // * modifiers
-  ft::pair<iterator, bool> insert(const value_type &val)
-  {
+  ft::pair<iterator, bool> insert(const value_type &val) {
     return _tree.insert(val);
   }
 
-  iterator insert(iterator position, const value_type &val)
-  {
-    return _tree.insert(position._it, val);
+  iterator insert(iterator position, const value_type &val) {
+    return _tree.insert(position.base(), val);
   }
 
-  template<class InputIterator>
-  void insert(InputIterator first, InputIterator last)
-  {
+  template <class InputIterator>
+  void insert(InputIterator first, InputIterator last) {
     _tree.insert(first, last);
   }
 
-  void erase(iterator position) { _tree.erase(position._it); }
+  void erase(iterator position) { _tree.erase(position.base()); }
 
-  size_type erase(const key_type &k)
-  {
+  size_type erase(const key_type &k) {
     iterator target = find(k);
     if (target != end()) {
       erase(target);
@@ -180,14 +165,12 @@ class map
     return 0;
   }
 
-  void erase(iterator first, iterator last)
-  {
+  void erase(iterator first, iterator last) {
     while (first != last)
       erase(first++);
   }
 
-  void swap(map &x)
-  {
+  void swap(map &x) {
     _tree.swap(x._tree);
     std::swap(_comp, x._comp);
     std::swap(_alloc, x._alloc);
@@ -209,25 +192,21 @@ class map
 
   iterator lower_bound(const key_type &k) { return _tree.lower_bound(k); }
 
-  const_iterator lower_bound(const key_type &k) const
-  {
+  const_iterator lower_bound(const key_type &k) const {
     return _tree.lower_bound(k);
   }
 
   iterator upper_bound(const key_type &k) { return _tree.upper_bound(k); }
 
-  const_iterator upper_bound(const key_type &k) const
-  {
+  const_iterator upper_bound(const key_type &k) const {
     return _tree.upper_bound(k);
   }
 
-  pair<iterator, iterator> equal_range(const key_type &k)
-  {
+  pair<iterator, iterator> equal_range(const key_type &k) {
     return pair<iterator, iterator>(lower_bound(k), upper_bound(k));
   }
 
-  pair<const_iterator, const_iterator> equal_range(const key_type &k) const
-  {
+  pair<const_iterator, const_iterator> equal_range(const key_type &k) const {
     return pair<const_iterator, const_iterator>(lower_bound(k), upper_bound(k));
   }
 
@@ -235,45 +214,39 @@ class map
   allocator_type get_allocator() const { return _alloc; }
 };
 
-template<class Key, class T, class Comp, class Allocator>
+template <class Key, class T, class Comp, class Allocator>
 bool operator==(const map<Key, T, Comp, Allocator> &x,
-                const map<Key, T, Comp, Allocator> &y)
-{
+                const map<Key, T, Comp, Allocator> &y) {
   return x.size() == y.size() && ft::equal(x.begin(), x.end(), y.begin());
 }
 
-template<class Key, class T, class Comp, class Allocator>
+template <class Key, class T, class Comp, class Allocator>
 bool operator!=(const map<Key, T, Comp, Allocator> &x,
-                const map<Key, T, Comp, Allocator> &y)
-{
+                const map<Key, T, Comp, Allocator> &y) {
   return !(x == y);
 }
 
-template<class Key, class T, class Comp, class Allocator>
+template <class Key, class T, class Comp, class Allocator>
 bool operator<(const map<Key, T, Comp, Allocator> &x,
-               const map<Key, T, Comp, Allocator> &y)
-{
+               const map<Key, T, Comp, Allocator> &y) {
   return ft::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
 }
 
-template<class Key, class T, class Comp, class Allocator>
+template <class Key, class T, class Comp, class Allocator>
 bool operator>(const map<Key, T, Comp, Allocator> &x,
-               const map<Key, T, Comp, Allocator> &y)
-{
+               const map<Key, T, Comp, Allocator> &y) {
   return y < x;
 }
 
-template<class Key, class T, class Comp, class Allocator>
+template <class Key, class T, class Comp, class Allocator>
 bool operator<=(const map<Key, T, Comp, Allocator> &x,
-                const map<Key, T, Comp, Allocator> &y)
-{
+                const map<Key, T, Comp, Allocator> &y) {
   return !(y < x);
 }
 
-template<class Key, class T, class Comp, class Allocator>
+template <class Key, class T, class Comp, class Allocator>
 bool operator>=(const map<Key, T, Comp, Allocator> &x,
-                const map<Key, T, Comp, Allocator> &y)
-{
+                const map<Key, T, Comp, Allocator> &y) {
   return !(x < y);
 }
 

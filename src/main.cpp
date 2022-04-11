@@ -6,7 +6,7 @@
 /*   By: ulee <ulee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 20:51:57 by ulee              #+#    #+#             */
-/*   Updated: 2022/04/11 13:12:54 by ulee             ###   ########.fr       */
+/*   Updated: 2022/04/11 20:04:27 by ulee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int main(int argc, char **argv) {
     }
   } catch (const std::exception &e) {
     // NORMAL ! :P
-    std::cout << "at exception " << e.what() << std::endl;
+    std::cout << e.what() << std::endl;
   }
 
   for (int i = 0; i < COUNT; ++i) {

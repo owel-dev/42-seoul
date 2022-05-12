@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
   char message[30];
   int str_len;
 
-  if (argc != 4) {
+  if (argc < 3) {
     cout << "Usage : " << argv[0] << " <port>" << endl;
     exit(1);
   }
@@ -40,12 +40,21 @@ int main(int argc, char *argv[])
 
   if (connect(sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) == -1)
     error_handling("connect error()");
-  char *msg = argv[3];
-  write(sock, msg, sizeof(msg));
-  str_len = read(sock, message, sizeof(message) - 1);
-  if (str_len == -1)
-    error_handling("read() error");
-  cout << "message from server : " << message << endl;
+  while (1) {
+    if (argc == 4) {
+      send(sock, argv[3], sizeof(argv[3]), 0);
+    }
+    str_len = recv(sock, message, sizeof(message) - 1, 0);
+    if (str_len == -1)
+      error_handling("read() error");
+    cout << "message from server : " << message << endl;
+  }
+  // char *msg = argv[3];
+  // send(sock, msg, sizeof(msg), 0);
+  // str_len = recv(sock, message, sizeof(message) - 1, 0);
+  // if (str_len == -1)
+  //   error_handling("read() error");
+  // cout << "message from server : " << message << endl;
   close(sock);
   return 0;
 }

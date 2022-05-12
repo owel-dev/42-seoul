@@ -49,13 +49,13 @@ int main(int argc, char *argv[])
     error_handling("bind() error");
 
   // 수신 대기
-  if (listen(serv_sock, 3) == -1)
+  if (listen(serv_sock, 2) == -1)
     error_handling("listen() error");
   clnt_addr_size = sizeof(clnt_addr);
 
   vector<int> sockets;
 
-  for (int i = 0; i < 3; ++i) {
+  for (int i = 0; i < 2; ++i) {
     clnt_sock = accept(serv_sock, (struct sockaddr *) &clnt_addr, &clnt_addr_size);
     if (clnt_sock == -1) {
       error_handling("accept() error");
@@ -66,7 +66,9 @@ int main(int argc, char *argv[])
   }
   for (vector<int>::iterator it = sockets.begin(); it != sockets.end(); ++it)
   {
-    write(*it, message, sizeof(message));
+    char msg[30];
+    read(*it, msg, sizeof(msg) - 1);
+    write(*it, msg, sizeof(msg));
   }
 
   close(clnt_sock);

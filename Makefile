@@ -3,4 +3,4 @@ all: c s
 c:
 	c++ client.cpp -o client
 s:
-	c++ server.cpp -o server
+	c++ kqueue_server.cpp -o server

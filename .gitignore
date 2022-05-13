@@ -1,3 +1,7 @@
 cmake*
 *.out
 CMAKE*
+.DS_Store
+client
+server
+.idea

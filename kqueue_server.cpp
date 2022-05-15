@@ -7,10 +7,27 @@
 #include <vector>
 #include <fcntl.h>
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
 #define BUF_SIZE 1000
+
+struct User {
+  std::string nick; 
+  std::string user;
+  std::string password;
+
+  User(){
+    nick = "";
+    user = "";
+    password = "";
+  }
+};
+
+struct User user;
+
+int serverPassword;
 
 int ListenServerSocket(int portNumber)
 {
@@ -52,19 +69,54 @@ void AcceptClientSocket(int serverSocket, vector<struct kevent> &watchList)
     cout << "Connect user. socket number: " << clientSocket << endl;
 }
 
+bool isChecked() {
+  if (user.nick != "" && user.user != "" && user.password != "")
+    return true;
+  return false;
+}
+
 void RecieveAndSend(int servSock, struct kevent event, vector<struct kevent> &watchList)
 {
     char buf[BUF_SIZE];
     int str_len = read(event.ident, buf, BUF_SIZE);
     buf[str_len] = 0;
-    cout << "Recieve " << buf << endl;
+    cout << "Recieve: " << endl;
+    cout << buf << endl;
+
+    std::vector<std::string> command;
+    command.push_back(strtok(buf, " ")); // 명령어
+    command.push_back(strtok(NULL, " ")); // 인자
+    
+    if (command[0] == "NICK"){
+      user.nick = command[1];
+      std::cout << "nick" << std::endl;
+    } 
+    else if (command[0] == "USER") {
+      user.user = command[1];
+      std::cout << "user" << std::endl;
+
+    } 
+    else if (command[0] == "PASS") {
+      std::cout << "pass" << std::endl;
+      if (std::stoi(command[1]) == serverPassword) {
+        user.password = command[1];
+      }
+    }
+
+    if (!isChecked()) {
+      std::cout << "check error" << std::endl;
+      return;
+    }
 
     for (vector<struct kevent>::iterator it = watchList.begin(); it != watchList.end(); ++it) {
         if (it->ident != servSock) {
-            send(it->ident, buf, strlen(buf), 0);
-            cout << "send " << buf << endl;
+            char *str2 = ":ft_irc.com 001 hayelee :Welcome!!!\r\n";
+            send(it->ident, str2, strlen(str2), 0);
+            // send(it->ident, buf, strlen(buf), 0);
+            // cout << "send: " << endl;
+            // cout << buf << endl;
         }
-    }
+    } 
 }
 
 int main(int argc, char *argv[])
@@ -72,10 +124,10 @@ int main(int argc, char *argv[])
     int serverSocket;
 
     try {
-        if (argc != 2)
+        if (argc != 3)
             throw "arg error";
         serverSocket = ListenServerSocket(atoi(argv[1]));
-
+        serverPassword = atoi(argv[2]);
         int kq;
         if ((kq = kqueue()) == -1)
             throw "kqueue error";

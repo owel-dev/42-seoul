@@ -54,6 +54,7 @@ Server::Server(int portNum, string password)
 {
     m_portNum = portNum;
     m_password = password;
+    cout << "m_password: " << m_password <<endl;
     if ((m_serverSocket = socket(PF_INET, SOCK_STREAM, 0)) == -1)
         throw "socket() error";
     struct sockaddr_in serverAddr;
@@ -117,9 +118,7 @@ void Server::AcceptClientSocket()
 }
 
 bool isChecked() {
-  if (user.nick != "" && user.user != "" && user.password != "")
-    return true;
-  return false;
+  return (user.nick != "" && user.user != "" && user.password != "");
 }
 
 void Server::RecieveAndSend(struct kevent event)
@@ -129,10 +128,10 @@ void Server::RecieveAndSend(struct kevent event)
     buf[str_len] = 0;
     cout << "Recieve: " << endl;
     cout << buf << endl;
-
+    // cout << "hello" << endl;
     std::vector<std::string> command;
     command.push_back(strtok(buf, " ")); // 명령어
-    command.push_back(strtok(NULL, " ")); // 인자
+    command.push_back(strtok(NULL, "\r\n")); // 인자
     
     if (command[0] == "NICK"){
       user.nick = command[1];
@@ -146,18 +145,20 @@ void Server::RecieveAndSend(struct kevent event)
     else if (command[0] == "PASS") {
       std::cout << "pass" << std::endl;
       if (command[1] == m_password) {
+      std::cout << "pass: " << command[1] << std::endl;
         user.password = command[1];
       }
     }
 
     if (!isChecked()) {
       std::cout << "check error" << std::endl;
+    cout << "nick: " << user.nick  << ", user: " << user.user << ", password: " << user.password << endl;
       return;
     }
 
     for (vector<struct kevent>::iterator it = m_watchList.begin(); it != m_watchList.end(); ++it) {
         if (it->ident != m_serverSocket) {
-            char *str2 = ":ft_irc.com 001 hayelee :Welcome!!!\r\n";
+            char *str2 = ":ft_irc.com 001 hayelee :Welcome!!\r\n";
             send(it->ident, str2, strlen(str2), 0);
             // send(it->ident, buf, strlen(buf), 0);
             // cout << "send: " << endl;

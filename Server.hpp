@@ -1,6 +1,7 @@
 #include <vector>
 #include <map>
 #include <unistd.h>
+#include <utility>
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -10,26 +11,11 @@
 #include <fcntl.h>
 #include <iostream>
 #include <sstream>
+#include "User.hpp"
 
 using namespace std;
 #define BUF_SIZE 1000
 #define EVENT_SIZE 100
-
-struct User
-{
-  std::string nick;
-  std::string user;
-  std::string password;
-
-  User()
-  {
-      nick = "";
-      user = "";
-      password = "";
-  }
-};
-
-struct User user;
 
 class Server
 {
@@ -40,6 +26,7 @@ class Server
   int m_portNum;
   int m_serverSocket;
   struct kevent m_eventList[EVENT_SIZE];
+  map<int, User> m_userList;
 
   public:
   Server(int portNum, string password);
@@ -123,14 +110,17 @@ void Server::acceptClientSocket()
     clientSocket = accept(m_serverSocket, (struct sockaddr *) &clientAddr, &adr_sz);
     EV_SET(&tempEvent, clientSocket, EVFILT_READ, EV_ADD | EV_ENABLE, 0, 0, NULL);
     m_watchList.push_back(tempEvent);
-
+    cout << "previous insert" << endl;
+    m_userList.insert(make_pair(clientSocket, User(clientSocket)));
+    cout << "after insert" << endl;
     cout << "Connect user. socket number: " << clientSocket << endl;
 }
 
-bool isChecked()
-{
-    return (user.nick != "" && user.user != "" && user.password != "");
-}
+
+//bool isChecked(User &user)
+//{
+//    return (user.m_nick != "" && user.userInfo != "" && user.password != "");
+//}
 
 void Server::clientEventHandler(struct kevent event)
 {
@@ -140,27 +130,31 @@ void Server::clientEventHandler(struct kevent event)
     cout << "Recieve: " << endl;
     cout << buf << endl;
     std::vector<std::string> command;
-//    command.push_back(strtok(buf, " ")); // 명령어'
-//    command.push_back(strtok(NULL, "\r\n")); // 인자
+    char *temp;
+    command.push_back(strtok(buf, " \r\n"));
+    if ((temp = strtok(NULL, " \r\n")))
+        command.push_back(temp);
+    if ((temp = strtok(NULL, "\r\n")))
+        command.push_back(temp);
 
-//    if (strtok(buf, " "))
-
-//    strtok(NULL, "\r\n");
-    if (isChecked()) {
-        //
+//    User &user = m_userList[event.ident];
+    if (m_userList[event.ident].isChecked()) {
+        if (command[0] == "JOIN") {
+            m_userList[event.ident].set_channelName(command[1]);
+            std::cout << "nick" << std::endl;
+        }
     } else {
-//        command.push_back(strtok(NULL, "\r\n")); // 인자
         if (command[0] == "NICK") {
-            user.nick = command[1];
+            m_userList[event.ident].set_nick(command[1]);
             std::cout << "nick" << std::endl;
         } else if (command[0] == "USER") {
-            user.user = command[1];
+            m_userList[event.ident].set_userInfo(command[1]);
             std::cout << "user" << std::endl;
         } else if (command[0] == "PASS") {
             std::cout << "pass" << std::endl;
             if (command[1] == m_password) {
                 std::cout << "======pass: " << command[1] << std::endl;
-                user.password = command[1];
+                m_userList[event.ident].set_password(command[1]);
             }
         }
     }

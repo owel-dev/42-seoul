@@ -9,22 +9,20 @@
 #include <iostream>
 #include <sstream>
 #include "Server.hpp"
+#include <signal.h>
 
 int main(int argc, char *argv[])
 {
-    int serverSocket;
-
     try {
         
         if (argc != 3)
             throw "arg error";
         
         Server server(atoi(argv[1]), argv[2]);
-        server.watchSocket();
-        
+        server.WatchEvents();
+
     } catch (const char *str) {
         cerr << str << endl;
     }
-    close(serverSocket);
     return 0;
 }

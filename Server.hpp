@@ -13,16 +13,19 @@
 
 using namespace std;
 #define BUF_SIZE 1000
+#define EVENT_SIZE 100
 
-struct User {
-  std::string nick; 
+struct User
+{
+  std::string nick;
   std::string user;
   std::string password;
 
-  User(){
-    nick = "";
-    user = "";
-    password = "";
+  User()
+  {
+      nick = "";
+      user = "";
+      password = "";
   }
 };
 
@@ -30,33 +33,35 @@ struct User user;
 
 class Server
 {
-private:
-    // string name;
-    string m_password;
-    // vector<int> m_watchList;
-    // map<int, User> m_userList;
-    // map<string, Channel> m_channelList;
+  private:
+//    string name;
+  string m_password;
+  vector<struct kevent> m_watchList;
+  int m_portNum;
+  int m_serverSocket;
+  struct kevent m_eventList[EVENT_SIZE];
 
-    vector<struct kevent> m_watchList;
+  public:
+  Server(int portNum, string password);
 
-    int m_portNum;
-    int m_serverSocket;
+  ~Server();
 
-public:
-    Server(int portNum, string password);
-    ~Server();
-    void watchSocket();
-    void AcceptClientSocket();
-    void RecieveAndSend(struct kevent event);
+  void WatchEvents();
+
+  private:
+  void eventHandler(int eventCount);
+
+  void acceptClientSocket();
+
+  void clientEventHandler(struct kevent event);
+
 };
 
-Server::Server(int portNum, string password)
+Server::Server(int portNum, string password) : m_portNum(portNum), m_password(password)
 {
-    m_portNum = portNum;
-    m_password = password;
-    cout << "m_password: " << m_password <<endl;
     if ((m_serverSocket = socket(PF_INET, SOCK_STREAM, 0)) == -1)
         throw "socket() error";
+
     struct sockaddr_in serverAddr;
     memset(&serverAddr, 0, sizeof(serverAddr));
     serverAddr.sin_family = AF_INET;
@@ -71,38 +76,43 @@ Server::Server(int portNum, string password)
 
 Server::~Server()
 {
+    close(m_serverSocket);
 }
 
-void Server::watchSocket()
+void Server::WatchEvents()
 {
     int kq;
-        
+
     if ((kq = kqueue()) == -1)
         throw "kqueue error";
-    
+
     struct kevent tempEvent;
     EV_SET(&tempEvent, m_serverSocket, EVFILT_READ, EV_ADD | EV_ENABLE, 0, 0, NULL);
     m_watchList.push_back(tempEvent);
 
-    struct kevent eventList[100];
     while (true) {
-        int eventCount = kevent(kq, &m_watchList[0], m_watchList.size(), eventList, 100, NULL);
+        int eventCount = kevent(kq, &m_watchList[0], m_watchList.size(), m_eventList, EVENT_SIZE, NULL);
         if (eventCount == -1)
             throw "kevent error";
-        for (int i = 0; i < eventCount; i++) {
-            if (eventList[i].flags & EV_ERROR)
-                throw "EV error";
-            if (eventList[i].filter == EVFILT_READ) {
-                if (eventList[i].ident == m_serverSocket)
-                    AcceptClientSocket();
-                else
-                    RecieveAndSend(eventList[i]);
-            }
+        eventHandler(eventCount);
+    }
+}
+
+void Server::eventHandler(int eventCount)
+{
+    for (int i = 0; i < eventCount; i++) {
+        if (m_eventList[i].flags & EV_ERROR)
+            throw "EV error";
+        if (m_eventList[i].filter == EVFILT_READ) {
+            if (m_eventList[i].ident == m_serverSocket)
+                acceptClientSocket();
+            else
+                clientEventHandler(m_eventList[i]);
         }
     }
 }
 
-void Server::AcceptClientSocket()
+void Server::acceptClientSocket()
 {
     struct sockaddr_in clientAddr;
     int clientSocket;
@@ -117,43 +127,42 @@ void Server::AcceptClientSocket()
     cout << "Connect user. socket number: " << clientSocket << endl;
 }
 
-bool isChecked() {
-  return (user.nick != "" && user.user != "" && user.password != "");
+bool isChecked()
+{
+    return (user.nick != "" && user.user != "" && user.password != "");
 }
 
-void Server::RecieveAndSend(struct kevent event)
+void Server::clientEventHandler(struct kevent event)
 {
     char buf[BUF_SIZE];
     int str_len = read(event.ident, buf, BUF_SIZE);
     buf[str_len] = 0;
     cout << "Recieve: " << endl;
     cout << buf << endl;
-    // cout << "hello" << endl;
     std::vector<std::string> command;
-    command.push_back(strtok(buf, " ")); // 명령어
-    command.push_back(strtok(NULL, "\r\n")); // 인자
-    
-    if (command[0] == "NICK"){
-      user.nick = command[1];
-      std::cout << "nick" << std::endl;
-    } 
-    else if (command[0] == "USER") {
-      user.user = command[1];
-      std::cout << "user" << std::endl;
+//    command.push_back(strtok(buf, " ")); // 명령어'
+//    command.push_back(strtok(NULL, "\r\n")); // 인자
 
-    } 
-    else if (command[0] == "PASS") {
-      std::cout << "pass" << std::endl;
-      if (command[1] == m_password) {
-      std::cout << "pass: " << command[1] << std::endl;
-        user.password = command[1];
-      }
-    }
+//    if (strtok(buf, " "))
 
-    if (!isChecked()) {
-      std::cout << "check error" << std::endl;
-    cout << "nick: " << user.nick  << ", user: " << user.user << ", password: " << user.password << endl;
-      return;
+//    strtok(NULL, "\r\n");
+    if (isChecked()) {
+        //
+    } else {
+//        command.push_back(strtok(NULL, "\r\n")); // 인자
+        if (command[0] == "NICK") {
+            user.nick = command[1];
+            std::cout << "nick" << std::endl;
+        } else if (command[0] == "USER") {
+            user.user = command[1];
+            std::cout << "user" << std::endl;
+        } else if (command[0] == "PASS") {
+            std::cout << "pass" << std::endl;
+            if (command[1] == m_password) {
+                std::cout << "======pass: " << command[1] << std::endl;
+                user.password = command[1];
+            }
+        }
     }
 
     for (vector<struct kevent>::iterator it = m_watchList.begin(); it != m_watchList.end(); ++it) {
@@ -164,5 +173,5 @@ void Server::RecieveAndSend(struct kevent event)
             // cout << "send: " << endl;
             // cout << buf << endl;
         }
-    } 
+    }
 }

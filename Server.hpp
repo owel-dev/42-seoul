@@ -1,4 +1,3 @@
-#include <vector>
 #include <map>
 #include <unistd.h>
 #include <utility>
@@ -11,7 +10,9 @@
 #include <fcntl.h>
 #include <iostream>
 #include <sstream>
+#include <queue>
 #include "User.hpp"
+#include "Channel.hpp"
 
 using namespace std;
 #define BUF_SIZE 1000
@@ -27,6 +28,7 @@ class Server
   int m_serverSocket;
   struct kevent m_eventList[EVENT_SIZE];
   map<int, User> m_userList;
+  map<string, Channel> m_channelList;
 
   public:
   Server(int portNum, string password);
@@ -129,43 +131,78 @@ void Server::clientEventHandler(struct kevent event)
     buf[str_len] = 0;
     cout << "Recieve: " << endl;
     cout << buf << endl;
-    std::vector<std::string> command;
     char *temp;
-    command.push_back(strtok(buf, " \r\n"));
-    if ((temp = strtok(NULL, " \r\n")))
-        command.push_back(temp);
-    if ((temp = strtok(NULL, "\r\n")))
-        command.push_back(temp);
+    char *tmp;
+    std::queue<char *> message;
+    std::vector<std::string> command;
+    message.push(strtok(buf, "\n"));
+    while (temp = strtok(NULL, "\n")) {
+        message.push(temp);
+    }
 
-//    User &user = m_userList[event.ident];
-    if (m_userList[event.ident].isChecked()) {
-        if (command[0] == "JOIN") {
-            m_userList[event.ident].set_channelName(command[1]);
-            std::cout << "nick" << std::endl;
+    while (message.size() > 0) {
+        cout << message.front() << endl;
+        tmp = message.front();
+        message.pop();
+        command.push_back(strtok(tmp, " \r\n"));
+        if (temp = strtok(NULL, " \r\n")) {
+            command.push_back(temp);
         }
-    } else {
-        if (command[0] == "NICK") {
-            m_userList[event.ident].set_nick(command[1]);
-            std::cout << "nick" << std::endl;
-        } else if (command[0] == "USER") {
-            m_userList[event.ident].set_userInfo(command[1]);
-            std::cout << "user" << std::endl;
-        } else if (command[0] == "PASS") {
-            std::cout << "pass" << std::endl;
-            if (command[1] == m_password) {
-                std::cout << "======pass: " << command[1] << std::endl;
+
+        if (m_userList[event.ident].isChecked()) {
+            if (command[0] == "JOIN") {
+                if (!m_channelList.count(command[1])) {
+                    m_channelList.insert(make_pair(command[1], Channel()));
+                    m_channelList[command[1]].setName(command[1]);    
+                }      
+                m_channelList[command[1]].addUser(event.ident);
+                char *str0 = ":hayelee!hayelee@127.0.0.1 JOIN #hello\r\n";
+                send(event.ident, str0, strlen(str0), 0);
+                char *str1 = ":ft_irc.com 332 hayelee hayelee #hello :332 RPL_TOPIC\r\n";
+                send(event.ident, str1, strlen(str1), 0);
+                char *str2 = ":ft_irc.com 353 hayelee hayelee= #hello :@hayelee\r\n";
+                send(event.ident, str2, strlen(str2), 0);
+                char *str3 = ":ft_irc.com 366 hayelee hayelee #hello :End of NAMES list\r\n";
+                send(event.ident, str3, strlen(str3), 0);
+                cout << "##" << m_channelList[command[1]].m_name << " is " <<  m_channelList[command[1]].m_userList[0] << endl;
+            } else {
+                cout << "|" << command[0] << "|" << endl;
+            }
+        } else {
+            if (command[0] == "PASS" && command[1] == m_password) {
                 m_userList[event.ident].set_password(command[1]);
+            cout << "===============" << endl;
+
+            }
+            else if (command[0] == "NICK") {
+                m_userList[event.ident].set_nick(command[1]);
+            cout << "===============" << endl;
+
+            } 
+            else if (command[0] == "USER") {
+                m_userList[event.ident].set_userInfo(command[1]);
+            cout << "===============" << endl;
+
+            }
+            if (m_userList[event.ident].isChecked()) {
+                cout << "line 177" << endl;
+                char *str1 = ":ft_irc.com 001 hayelee :Welcome!!\r\n";
+                send(event.ident, str1, strlen(str1), 0);
             }
         }
     }
 
-    for (vector<struct kevent>::iterator it = m_watchList.begin(); it != m_watchList.end(); ++it) {
-        if (it->ident != m_serverSocket) {
-            char *str2 = ":ft_irc.com 001 hayelee :Welcome!!\r\n";
-            send(it->ident, str2, strlen(str2), 0);
-            // send(it->ident, buf, strlen(buf), 0);
-            // cout << "send: " << endl;
-            // cout << buf << endl;
-        }
-    }
+    // for (vector<struct kevent>::iterator it = m_watchList.begin(); it != m_watchList.end(); ++it) {
+    //     if (it->ident == event.ident && command[0] == "USER") {
+    //         char *str1 = ":ft_irc.com 001 hayelee :Welcome!!\r\n";
+    //         send(it->ident, str1, strlen(str1), 0);
+    //     } else if (it->ident == event.ident && command[0] == "JOIN") {
+    //         cout << 
+    //         // char *str2 = ":ft_irc.com 001 hayelee :Welcome!!\r\n";
+    //         // send(it->ident, str2, strlen(str2), 0);
+    //     }
+    // }
 }
+
+
+//10.19.248.56

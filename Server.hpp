@@ -18,6 +18,8 @@ using namespace std;
 #define BUF_SIZE 1000
 #define EVENT_SIZE 100
 
+int messagecount = 0;
+
 class Server
 {
   private:
@@ -29,6 +31,7 @@ class Server
   struct kevent m_eventList[EVENT_SIZE];
   map<int, User> m_userList;
   map<string, Channel> m_channelList;
+  int first_fd = 0;
 
   public:
   Server(int portNum, string password);
@@ -81,6 +84,7 @@ void Server::WatchEvents()
 
     while (true) {
         int eventCount = kevent(kq, &m_watchList[0], m_watchList.size(), m_eventList, EVENT_SIZE, NULL);
+        cout << "eventCount line 86: " << eventCount << endl;
         if (eventCount == -1)
             throw "kevent error";
         eventHandler(eventCount);
@@ -90,9 +94,28 @@ void Server::WatchEvents()
 void Server::eventHandler(int eventCount)
 {
     for (int i = 0; i < eventCount; i++) {
+
+        cout << "flag: " << m_eventList[i].flags << endl;
+        cout << "eventCount : " << eventCount << endl;
         if (m_eventList[i].flags & EV_ERROR)
-            throw "EV error";
-        if (m_eventList[i].filter == EVFILT_READ) {
+        {
+            cout << "line 101" << endl;
+            vector<struct kevent>::iterator it = m_watchList.begin();
+            for (;it != m_watchList.end(); ++it)
+            {
+                cout << "line 105" << endl;
+                if (it->ident == m_eventList[i].ident) {
+                    m_watchList.erase(it);
+                    break;
+                }
+            }
+            cout << "line 109" << endl;
+            m_userList.erase(m_eventList[i].ident);
+            cout << "line 111" << endl;
+            close(m_eventList[i].ident);
+            return;
+        }
+        else if (m_eventList[i].filter == EVFILT_READ) {
             if (m_eventList[i].ident == m_serverSocket)
                 acceptClientSocket();
             else
@@ -121,13 +144,18 @@ void Server::acceptClientSocket()
 
 //bool isChecked(User &user)
 //{
-//    return (user.m_nick != "" && user.userInfo != "" && user.password != "");
+//    return (user.m_nickName != "" && user.userInfo != "" && user.password != "");
 //}
 
 void Server::clientEventHandler(struct kevent event)
 {
     char buf[BUF_SIZE];
+    // memset(buf, 0, sizeof(buf));
     int str_len = read(event.ident, buf, BUF_SIZE);
+    if (str_len == 0) {
+        close(event.ident); 
+        return;
+    }
     buf[str_len] = 0;
     cout << "Recieve: " << endl;
     cout << buf << endl;
@@ -150,20 +178,56 @@ void Server::clientEventHandler(struct kevent event)
         }
 
         if (m_userList[event.ident].isChecked()) {
-            if (command[0] == "JOIN") {
+            if (command[0] == "QUIT") { 
+                close(event.ident);
+                cout << "Quit Check" << endl;
+            }
+            else if (command[0] == "JOIN") {
                 if (!m_channelList.count(command[1])) {
                     m_channelList.insert(make_pair(command[1], Channel()));
                     m_channelList[command[1]].setName(command[1]);    
                 }      
                 m_channelList[command[1]].addUser(event.ident);
-                char *str0 = ":hayelee!hayelee@127.0.0.1 JOIN #hello\r\n";
-                send(event.ident, str0, strlen(str0), 0);
-                char *str1 = ":ft_irc.com 332 hayelee hayelee #hello :332 RPL_TOPIC\r\n";
-                send(event.ident, str1, strlen(str1), 0);
-                char *str2 = ":ft_irc.com 353 hayelee hayelee= #hello :@hayelee\r\n";
-                send(event.ident, str2, strlen(str2), 0);
-                char *str3 = ":ft_irc.com 366 hayelee hayelee #hello :End of NAMES list\r\n";
-                send(event.ident, str3, strlen(str3), 0);
+                if (messagecount == 0) {
+                    char *str0 = ":hayelee!hayelee@127.0.0.1 JOIN #hello\r\n";
+                    send(event.ident, str0, strlen(str0), 0);
+                    char *str1 = ":ft_irc.com 332 hayelee hayelee #hello :332 RPL_TOPIC\r\n";
+                    send(event.ident, str1, strlen(str1), 0);
+                    char *str2 = ":ft_irc.com 353 hayelee hayelee= #hello :@hayelee\r\n";
+                    send(event.ident, str2, strlen(str2), 0);
+                    char *str3 = ":ft_irc.com 366 hayelee hayelee #hello :End of NAMES list\r\n";
+                    send(event.ident, str3, strlen(str3), 0);
+                    messagecount += 1;
+                    first_fd = event.ident;
+                } else if (messagecount == 1) {
+                    char *str0 = ":ulee!ulee@10.19.226.233 JOIN #hello\r\n";
+                    // send(event.ident, str0, strlen(str0), 0);
+                    char *str1 = ":ulee!ulee@10.19.226.233 JOIN #hello\r\n:ft_irc.com 332 ulee ulee #hello :332 RPL_TOPIC\r\n:ft_irc.com 353 ulee ulee= #hello :@hayelee\r\n:ft_irc.com 366 ulee ulee #hello :End of NAMES list\r\n";
+                    send(event.ident, str1, strlen(str1), 0);
+                    if (first_fd != 0)
+                    {
+                        cout << "send 5: " << str0 << endl;
+                        send(first_fd, str0, strlen(str0), 0);
+                    }
+                    // char *str1 = ":ft_irc.com 332 ulee ulee #hello :332 RPL_TOPIC\r\n";
+                    // send(event.ident, str1, strlen(str1), 0);
+                    // char *str2 = ":ft_irc.com 353 ulee ulee= #hello :@hayelee\r\n";
+                    // send(event.ident, str2, strlen(str2), 0);
+                    // char *str3 = ":ft_irc.com 366 ulee ulee #hello :End of NAMES list\r\n";
+                    // send(event.ident, str3, strlen(str3), 0);
+                    messagecount += 1;
+                }
+                // } else if (messagecount == 2) {
+                //     char *str0 = ":samin!samin@127.0.0.1 JOIN #hello\r\n";
+                //     send(event.ident, str0, strlen(str0), 0);
+                //     char *str1 = ":ft_irc.com 332 samin samin #hello :332 RPL_TOPIC\r\n";
+                //     send(event.ident, str1, strlen(str1), 0);
+                //     char *str2 = ":ft_irc.com 353 samin samin= #hello :@hayelee ulee samin\r\n";
+                //     send(event.ident, str2, strlen(str2), 0);
+                //     char *str3 = ":ft_irc.com 366 samin samin #hello :End of NAMES list\r\n";
+                //     send(event.ident, str3, strlen(str3), 0);
+                //     messagecount += 1;
+                // }
                 cout << "##" << m_channelList[command[1]].m_name << " is " <<  m_channelList[command[1]].m_userList[0] << endl;
             } else {
                 cout << "|" << command[0] << "|" << endl;
@@ -180,7 +244,7 @@ void Server::clientEventHandler(struct kevent event)
 
             } 
             else if (command[0] == "USER") {
-                m_userList[event.ident].set_userInfo(command[1]);
+                m_userList[event.ident].set_loginName(command[1]);
             cout << "===============" << endl;
 
             }

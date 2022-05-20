@@ -8,44 +8,41 @@ class User
 
   public:
   int m_fd;
-  string m_nick;
-  string m_userInfo;
+  string m_nickName; // nickName으로 
+  string m_loginName;
+  string m_realName;
   string m_password;
   string m_channelName;
 
   public:
-  User(int fd = 0) : m_fd(fd), m_nick(""), m_userInfo(""), m_password("")
+  User(int fd = 0) : m_fd(fd), m_nickName(""), m_loginName(""), m_password("")
   {
 
   }
 
-//  User(const User& x) : m_fd(x.m_fd), m_nick(x.m_nick), m_userInfo(x.m_userInfo), m_password(x.m_password) {
-//
-//  }
-
   bool isChecked()
   {
-      return (m_nick != "" && m_userInfo != "" && m_password != "");
+      return (m_nickName != "" && m_loginName != "" && m_password != "");
   }
 
   string get_nick()
   {
-      return m_nick;
+      return m_nickName;
   }
 
   void set_nick(string nick)
   {
-      m_nick = nick;
+      m_nickName = nick;
   }
 
   string get_userInfo()
   {
-      return m_userInfo;
+      return m_loginName;
   }
 
-  void set_userInfo(string userInfo)
+  void set_loginName(string userInfo)
   {
-      m_userInfo = userInfo;
+      m_loginName = userInfo;
   }
 
   string get_password()

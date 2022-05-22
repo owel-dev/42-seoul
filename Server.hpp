@@ -11,6 +11,7 @@
 #include <sys/event.h>
 #include <sys/time.h>
 #include <vector>
+#include <string>
 #include <fcntl.h>
 #include <iostream>
 #include <sstream>
@@ -56,6 +57,7 @@ class Server
     string serverMessage(int code, string nickName, string loginName, string channelName, string message);
 
   string prefixMessage(string nickName, string loginName, string hostName, string command, string message);
+  vector<string> split(string str, string delim);
 
 
 };
@@ -170,25 +172,12 @@ void Server::clientEventHandler(struct kevent event)
     buf[str_len] = 0;
     cout << "Recieve: " << endl;
     cout << buf << endl;
-    char *temp;
-    char *tmp;
-    std::queue<char *> message;
-    std::vector<std::string> command;
-    message.push(strtok(buf, "\r\n"));
-    while (temp = strtok(NULL, "\r\n")) {
-        message.push(temp);
-    }
+    std::vector<string> message = split(buf, "\r\n");
 
-    while (message.size() > 0) {
-        tmp = message.front();
-        message.pop();
-        command.push_back(strtok(tmp, " \r"));
-        while (temp = strtok(NULL, " \r")) {
-            command.push_back(temp);
-        }
-        if (temp = strtok(NULL, "\r\n")) {
-            command.push_back(temp);
-        }
+    vector<string>::iterator it = message.begin();
+    for (;it != message.end(); ++it) {
+        std::vector<string> command = split(*it, " ");
+
         if (m_userList[event.ident].isChecked()) {
             if (command[0] == "QUIT") { 
                 close(event.ident);
@@ -200,8 +189,16 @@ void Server::clientEventHandler(struct kevent event)
                 if (command[1].substr(0, 1) == "#") // 채널 메시지
                 {
                     cout << "------------CHANNEL MESSAGE-------------" << endl;
-                    cout << "command[1]: " << command[1] << endl;
-                    cout << "command[2]: " << command[2] << endl;
+                    // 해당 채널의 유저 목록을 돌면서 메시지 전송
+                    map<int, User>::iterator it = m_channelList[command[1]].m_userList.begin();
+                    User &sender = m_userList[event.ident];
+                    string message = "" + command[1] + " " + command[2];
+                    for (;it != m_channelList[command[1]].m_userList.end(); ++it)
+                    {
+                        User &receiver = it->second;
+                        if (receiver.getFd() != sender.getFd())
+                            m_userList[receiver.getFd()].setWriteBuffer(prefixMessage(sender.get_nick(), sender.get_userInfo(), sender.getHostName(), "privmsg", message));
+                    }
                 }
                 else 
                 {
@@ -226,12 +223,15 @@ void Server::clientEventHandler(struct kevent event)
         } else {
             if (command[0] == "PASS" && command[1] == m_password) {
                 m_userList[event.ident].set_password(command[1]);
+                cout << "line 224" << endl;
             }
             else if (command[0] == "NICK") {
                 m_userList[event.ident].set_nick(command[1]);
+                cout << "line 228" << endl;
             } 
             else if (command[0] == "USER") {
                 m_userList[event.ident].set_loginName(command[1]);
+                cout << "line 232" << endl;
             }
             if (m_userList[event.ident].isChecked()) {
                 User &user = m_userList[event.ident];
@@ -304,5 +304,42 @@ string Server::prefixMessage(string nickName, string loginName, string hostName,
     return result;
 }
 //10.19.248.56
+
+
+// vector<string> Server::split(string str, char Delimiter) {
+//     istringstream iss(str);             // istringstream에 str을 담는다.
+//     string buffer;                      // 구분자를 기준으로 절삭된 문자열이 담겨지는 버퍼
+ 
+//     vector<string> result;
+ 
+//     // istringstream은 istream을 상속받으므로 getline을 사용할 수 있다.
+//     while (getline(iss, buffer, Delimiter)) {
+//         result.push_back(buffer);               // 절삭된 문자열을 vector에 저장
+//     }
+ 
+//     return result;
+// }
+
+vector<string> Server::split(string str, string delim)
+{
+    vector<string> ret;
+    int delim_len = delim.size();
+    size_t cut;
+    while ((cut = str.find(delim)) != string::npos)
+    {
+        string word = str.substr(0, cut);
+        ret.push_back(word);
+        str = str.substr(cut + delim_len);
+        // std::cout << "hello" << std::endl;
+    }
+    // std::cout << str << std::endl;
+    if (str != "")
+        ret.push_back(str);
+    return ret;
+}
+
+
+
+
 
 #endif

@@ -53,6 +53,8 @@ class Server
 
     void join(string channelName, struct kevent event);
 
+    void privmsg(std::vector<string> command, struct kevent event);
+
     string serverMessage(int code, string nickName, string loginName, string channelName, string message);
 
     string prefixMessage(string nickName, string loginName, string hostName, string command, string message);

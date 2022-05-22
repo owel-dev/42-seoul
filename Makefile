@@ -1,6 +1,4 @@
-all: c s
+all: s
 
-c:
-	c++ client.cpp -o client
 s:
-	c++ main.cpp -o server
+	c++ User.cpp Channel.cpp Server.cpp main.cpp -o server

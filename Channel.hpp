@@ -4,43 +4,28 @@
 #include <utility>
 #include <iostream>
 #include <vector>
-#include "Server.hpp"
+#include <map>
+#include "User.hpp"
+
 
 using namespace std;
 
-
 class Channel
 {
-    public:    
-        map<int, User> m_userList;
-        string m_name;
-        int m_admin;
-        
-        void addUser(User user) {
-            m_userList.insert(make_pair(user.m_fd, user));
-        }
+public:
+    Channel();
 
-        void setName(string name) {
-            m_name = name;
-        }
+    map<int, User> m_userList;
+    string m_name;
+    int m_admin;
 
-        void setAdmin(int fd) {
-            m_admin = fd;
-        }
+    void addUser(User user);
 
-        string getUserList(int newUserFd) {
-            string userList = "@";
-            userList += m_userList[m_admin].get_nick();
+    void setName(string name);
 
-            map<int, User>::iterator it = m_userList.begin();
-            for (;it != m_userList.end(); ++it) {
-                if (it->first != newUserFd && it->first != m_admin) {
-                    userList += " ";
-                    userList += it->second.get_nick();
-                }
-            }
-            return userList;
-        }
+    void setAdmin(int fd);
+
+    string getUserList(int newUserFd);
 };
 
 #endif

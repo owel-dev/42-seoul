@@ -7,8 +7,6 @@ using namespace std;
 
 class User
 {
-  private:
-
   public:
   int m_fd;
   string m_nickName;
@@ -19,90 +17,39 @@ class User
   string m_writeBuffer;
 
   public:
-  User(int fd = 0) : m_fd(fd), m_nickName(""), m_loginName(""), m_hostName(""), m_password(""), m_writeBuffer("")
-  {
+  User(int fd = 0);
 
-  }
+  bool isChecked();
 
-  bool isChecked()
-  {
-      return (m_nickName != "" && m_loginName != "" && m_password != "");
-  }
+  int getFd();
 
-  int getFd()
-  {
-      return m_fd;
-  }
+  void setFd(int fd);
 
-  void setFd(int fd)
-  {
-      m_fd = fd;
-  }
+  string getNick();
 
-  string get_nick()
-  {
-      return m_nickName;
-  }
+  void setNick(string nick);
 
-  void set_nick(string nick)
-  {
-      m_nickName = nick;
-  }
+  string getUserInfo();
 
-  string get_userInfo()
-  {
-      return m_loginName;
-  }
+  void setLoginName(string userInfo);
 
-  void set_loginName(string userInfo)
-  {
-      m_loginName = userInfo;
-  }
+  string getPassword();
 
-  string get_password()
-  {
-      return m_password;
-  }
+  void setPassword(string password);
 
-  void set_password(string password)
-  {
-      m_password = password;
-  }
+  string getChannelName();
 
-  string get_channelName()
-  {
-      return m_channelName;
-  }
+  void setChannelName(string channelName);
 
-  void set_channelName(string channelName)
-  {
-      m_channelName = channelName;
-  }
+  string getWriteBuffer();
 
-  string getWriteBuffer()
-  {
-      return m_writeBuffer;
-  }
+  void setWriteBuffer(string newString);
 
-  void setWriteBuffer(string newString)
-  {
-    m_writeBuffer += newString;
-  }
+  void clearWriteBuffer();
 
-  void clearWriteBuffer()
-  {
-      m_writeBuffer = "";
-  }
+  string getHostName();
 
-  string getHostName()
-  {
-      return m_hostName;
-  }
-
-  void setHostName(string hostName)
-  {
-      m_hostName = hostName;
-  }
+  void setHostName(string hostName);
 };
 
 #endif

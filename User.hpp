@@ -1,3 +1,6 @@
+#ifndef USER_HPP
+#define USER_HPP
+
 #include <iostream>
 
 using namespace std;
@@ -8,14 +11,15 @@ class User
 
   public:
   int m_fd;
-  string m_nickName; // nickName으로 
+  string m_nickName;
   string m_loginName;
-  string m_realName;
+  string m_hostName;
   string m_password;
   string m_channelName;
+  string m_writeBuffer;
 
   public:
-  User(int fd = 0) : m_fd(fd), m_nickName(""), m_loginName(""), m_password("")
+  User(int fd = 0) : m_fd(fd), m_nickName(""), m_loginName(""), m_hostName(""), m_password(""), m_writeBuffer("")
   {
 
   }
@@ -23,6 +27,16 @@ class User
   bool isChecked()
   {
       return (m_nickName != "" && m_loginName != "" && m_password != "");
+  }
+
+  int getFd()
+  {
+      return m_fd;
+  }
+
+  void setFd(int fd)
+  {
+      m_fd = fd;
   }
 
   string get_nick()
@@ -65,4 +79,30 @@ class User
       m_channelName = channelName;
   }
 
+  string getWriteBuffer()
+  {
+      return m_writeBuffer;
+  }
+
+  void setWriteBuffer(string newString)
+  {
+    m_writeBuffer += newString;
+  }
+
+  void clearWriteBuffer()
+  {
+      m_writeBuffer = "";
+  }
+
+  string getHostName()
+  {
+      return m_hostName;
+  }
+
+  void setHostName(string hostName)
+  {
+      m_hostName = hostName;
+  }
 };
+
+#endif

@@ -1,3 +1,7 @@
+#ifndef SERVER_HPP
+#define SERVER_HPP
+
+
 #include <map>
 #include <unistd.h>
 #include <utility>
@@ -47,6 +51,13 @@ class Server
 
   void clientEventHandler(struct kevent event);
 
+  void join(string channelName, struct kevent event);
+
+    string serverMessage(int code, string nickName, string loginName, string channelName, string message);
+
+  string prefixMessage(string nickName, string loginName, string hostName, string command, string message);
+
+
 };
 
 Server::Server(int portNum, string password) : m_portNum(portNum), m_password(password)
@@ -64,6 +75,7 @@ Server::Server(int portNum, string password) : m_portNum(portNum), m_password(pa
         throw "bind() error";
     if (listen(m_serverSocket, 10) == -1)
         throw "listen() error";
+    // fcntl(m_serverSocket, F_SETFL, O_NONBLOCK);
 }
 
 Server::~Server()
@@ -84,7 +96,6 @@ void Server::WatchEvents()
 
     while (true) {
         int eventCount = kevent(kq, &m_watchList[0], m_watchList.size(), m_eventList, EVENT_SIZE, NULL);
-        cout << "eventCount line 86: " << eventCount << endl;
         if (eventCount == -1)
             throw "kevent error";
         eventHandler(eventCount);
@@ -95,23 +106,17 @@ void Server::eventHandler(int eventCount)
 {
     for (int i = 0; i < eventCount; i++) {
 
-        cout << "flag: " << m_eventList[i].flags << endl;
-        cout << "eventCount : " << eventCount << endl;
         if (m_eventList[i].flags & EV_ERROR)
         {
-            cout << "line 101" << endl;
             vector<struct kevent>::iterator it = m_watchList.begin();
             for (;it != m_watchList.end(); ++it)
             {
-                cout << "line 105" << endl;
                 if (it->ident == m_eventList[i].ident) {
                     m_watchList.erase(it);
                     break;
                 }
             }
-            cout << "line 109" << endl;
             m_userList.erase(m_eventList[i].ident);
-            cout << "line 111" << endl;
             close(m_eventList[i].ident);
             return;
         }
@@ -120,6 +125,16 @@ void Server::eventHandler(int eventCount)
                 acceptClientSocket();
             else
                 clientEventHandler(m_eventList[i]);
+        } else if (m_eventList[i].filter == EVFILT_WRITE) {
+            map<int, User>::iterator it = m_userList.begin();
+            for (;it != m_userList.end(); ++it) {
+                User &user = it->second;
+                if (user.getWriteBuffer() == "")
+                    continue;
+                send(user.m_fd, user.getWriteBuffer().c_str(), user.getWriteBuffer().size(), 0);
+                cout << "######send to " << user.get_nick() << ":\n" << user.getWriteBuffer() << std::endl;
+                user.clearWriteBuffer();
+            }
         }
     }
 }
@@ -132,20 +147,16 @@ void Server::acceptClientSocket()
     socklen_t adr_sz = sizeof(clientAddr);
     struct kevent tempEvent;
 
+    // fcntl(clientSocket, F_SETFL, O_NONBLOCK);
     clientSocket = accept(m_serverSocket, (struct sockaddr *) &clientAddr, &adr_sz);
     EV_SET(&tempEvent, clientSocket, EVFILT_READ, EV_ADD | EV_ENABLE, 0, 0, NULL);
     m_watchList.push_back(tempEvent);
-    cout << "previous insert" << endl;
+	EV_SET(&tempEvent, clientSocket, EVFILT_WRITE, EV_ADD | EV_ENABLE, 0, 0, NULL);
+    m_watchList.push_back(tempEvent);
     m_userList.insert(make_pair(clientSocket, User(clientSocket)));
-    cout << "after insert" << endl;
-    cout << "Connect user. socket number: " << clientSocket << endl;
+    m_userList[clientSocket].setHostName(inet_ntoa(clientAddr.sin_addr));
+    cout << "-----Connect user. socket number: " << clientSocket << "------" << endl;
 }
-
-
-//bool isChecked(User &user)
-//{
-//    return (user.m_nickName != "" && user.userInfo != "" && user.password != "");
-//}
 
 void Server::clientEventHandler(struct kevent event)
 {
@@ -163,110 +174,135 @@ void Server::clientEventHandler(struct kevent event)
     char *tmp;
     std::queue<char *> message;
     std::vector<std::string> command;
-    message.push(strtok(buf, "\n"));
-    while (temp = strtok(NULL, "\n")) {
+    message.push(strtok(buf, "\r\n"));
+    while (temp = strtok(NULL, "\r\n")) {
         message.push(temp);
     }
 
     while (message.size() > 0) {
-        cout << message.front() << endl;
         tmp = message.front();
         message.pop();
-        command.push_back(strtok(tmp, " \r\n"));
-        if (temp = strtok(NULL, " \r\n")) {
+        command.push_back(strtok(tmp, " \r"));
+        while (temp = strtok(NULL, " \r")) {
             command.push_back(temp);
         }
-
+        if (temp = strtok(NULL, "\r\n")) {
+            command.push_back(temp);
+        }
         if (m_userList[event.ident].isChecked()) {
             if (command[0] == "QUIT") { 
                 close(event.ident);
                 cout << "Quit Check" << endl;
             }
             else if (command[0] == "JOIN") {
-                if (!m_channelList.count(command[1])) {
-                    m_channelList.insert(make_pair(command[1], Channel()));
-                    m_channelList[command[1]].setName(command[1]);    
-                }      
-                m_channelList[command[1]].addUser(event.ident);
-                if (messagecount == 0) {
-                    char *str0 = ":hayelee!hayelee@127.0.0.1 JOIN #hello\r\n";
-                    send(event.ident, str0, strlen(str0), 0);
-                    char *str1 = ":ft_irc.com 332 hayelee hayelee #hello :332 RPL_TOPIC\r\n";
-                    send(event.ident, str1, strlen(str1), 0);
-                    char *str2 = ":ft_irc.com 353 hayelee hayelee= #hello :@hayelee\r\n";
-                    send(event.ident, str2, strlen(str2), 0);
-                    char *str3 = ":ft_irc.com 366 hayelee hayelee #hello :End of NAMES list\r\n";
-                    send(event.ident, str3, strlen(str3), 0);
-                    messagecount += 1;
-                    first_fd = event.ident;
-                } else if (messagecount == 1) {
-                    char *str0 = ":ulee!ulee@10.19.226.233 JOIN #hello\r\n";
-                    // send(event.ident, str0, strlen(str0), 0);
-                    char *str1 = ":ulee!ulee@10.19.226.233 JOIN #hello\r\n:ft_irc.com 332 ulee ulee #hello :332 RPL_TOPIC\r\n:ft_irc.com 353 ulee ulee= #hello :@hayelee\r\n:ft_irc.com 366 ulee ulee #hello :End of NAMES list\r\n";
-                    send(event.ident, str1, strlen(str1), 0);
-                    if (first_fd != 0)
-                    {
-                        cout << "send 5: " << str0 << endl;
-                        send(first_fd, str0, strlen(str0), 0);
-                    }
-                    // char *str1 = ":ft_irc.com 332 ulee ulee #hello :332 RPL_TOPIC\r\n";
-                    // send(event.ident, str1, strlen(str1), 0);
-                    // char *str2 = ":ft_irc.com 353 ulee ulee= #hello :@hayelee\r\n";
-                    // send(event.ident, str2, strlen(str2), 0);
-                    // char *str3 = ":ft_irc.com 366 ulee ulee #hello :End of NAMES list\r\n";
-                    // send(event.ident, str3, strlen(str3), 0);
-                    messagecount += 1;
+                join(command[1], event);
+            } else if (command[0] == "PRIVMSG") {
+                if (command[1].substr(0, 1) == "#") // 채널 메시지
+                {
+                    cout << "------------CHANNEL MESSAGE-------------" << endl;
+                    cout << "command[1]: " << command[1] << endl;
+                    cout << "command[2]: " << command[2] << endl;
                 }
-                // } else if (messagecount == 2) {
-                //     char *str0 = ":samin!samin@127.0.0.1 JOIN #hello\r\n";
-                //     send(event.ident, str0, strlen(str0), 0);
-                //     char *str1 = ":ft_irc.com 332 samin samin #hello :332 RPL_TOPIC\r\n";
-                //     send(event.ident, str1, strlen(str1), 0);
-                //     char *str2 = ":ft_irc.com 353 samin samin= #hello :@hayelee ulee samin\r\n";
-                //     send(event.ident, str2, strlen(str2), 0);
-                //     char *str3 = ":ft_irc.com 366 samin samin #hello :End of NAMES list\r\n";
-                //     send(event.ident, str3, strlen(str3), 0);
-                //     messagecount += 1;
-                // }
-                cout << "##" << m_channelList[command[1]].m_name << " is " <<  m_channelList[command[1]].m_userList[0] << endl;
-            } else {
+                else 
+                {
+                    cout << "------------DIRECT MESSAGE-------------" << endl;
+                    map<int, User>::iterator it = m_userList.begin();
+                    for (;it != m_userList.end(); ++it) 
+                    {
+                        if (it->second.get_nick() == command[1]) {
+                            break;
+                        }
+                    }
+                    User &sender = m_userList[event.ident];
+                    User &receiver = it->second;
+                    string message = "" + receiver.get_nick() + " " + command[2];
+
+                    m_userList[receiver.getFd()].setWriteBuffer(prefixMessage(sender.get_nick(), sender.get_userInfo(), sender.getHostName(), "privmsg", message));
+                }
+            } 
+            else {
                 cout << "|" << command[0] << "|" << endl;
             }
         } else {
             if (command[0] == "PASS" && command[1] == m_password) {
                 m_userList[event.ident].set_password(command[1]);
-            cout << "===============" << endl;
-
             }
             else if (command[0] == "NICK") {
                 m_userList[event.ident].set_nick(command[1]);
-            cout << "===============" << endl;
-
             } 
             else if (command[0] == "USER") {
                 m_userList[event.ident].set_loginName(command[1]);
-            cout << "===============" << endl;
-
             }
             if (m_userList[event.ident].isChecked()) {
-                cout << "line 177" << endl;
-                char *str1 = ":ft_irc.com 001 hayelee :Welcome!!\r\n";
-                send(event.ident, str1, strlen(str1), 0);
+                User &user = m_userList[event.ident];
+                user.setWriteBuffer(":ft_irc.com 001 " + user.get_nick() + " :Welcome!!\r\n");
             }
         }
     }
-
-    // for (vector<struct kevent>::iterator it = m_watchList.begin(); it != m_watchList.end(); ++it) {
-    //     if (it->ident == event.ident && command[0] == "USER") {
-    //         char *str1 = ":ft_irc.com 001 hayelee :Welcome!!\r\n";
-    //         send(it->ident, str1, strlen(str1), 0);
-    //     } else if (it->ident == event.ident && command[0] == "JOIN") {
-    //         cout << 
-    //         // char *str2 = ":ft_irc.com 001 hayelee :Welcome!!\r\n";
-    //         // send(it->ident, str2, strlen(str2), 0);
-    //     }
-    // }
 }
 
+void Server::join(string channelName, struct kevent event)
+{
+    int newFd = event.ident;
+    if (!m_channelList.count(channelName)) { // 채널리스트에 채널 추가
+        m_channelList.insert(make_pair(channelName, Channel()));
+        m_channelList[channelName].setName(channelName);
+        m_channelList[channelName].setAdmin(event.ident);    
+    }      
+    m_channelList[channelName].addUser(m_userList[event.ident]); // 채널에 유저 추가
+    // 채널의 유저리스트를 돌면서 방금 join한 유저를 제외한 다른 유저들에게 메시지 전송
+    Channel &channel = m_channelList[channelName];
+    map<int, User> channelUserList = channel.m_userList;
+    map<int, User>::iterator it = channelUserList.begin();
+    for (;it != channelUserList.end(); ++it) {
+        string newUserNickName = m_userList[newFd].get_nick();
+        string newUserLoginName = m_userList[newFd].get_userInfo();
+        string newUserHostName = m_userList[newFd].getHostName();
+        m_userList[it->second.getFd()].setWriteBuffer(prefixMessage(newUserNickName, newUserLoginName, newUserHostName, "JOIN", channelName));
+        if (it->second.m_fd == newFd) { // 방금 join한 유저에게 메시지 전송
+            m_userList[newFd].setWriteBuffer(serverMessage(332, newUserNickName, newUserLoginName, channelName, "A timey-wimey channel"));
+            m_userList[newFd].setWriteBuffer(serverMessage(353, newUserNickName, newUserLoginName, channelName, channel.getUserList(newFd)));
+            m_userList[newFd].setWriteBuffer(serverMessage(366, newUserNickName, newUserLoginName, channelName, "End of NAMES list"));
+        }
+    }
+}
 
+string Server::serverMessage(int code, string nickName, string loginName, string channelName, string message)
+{
+    string result = "";
+    result += ":ft_irc.com ";
+    result += to_string(code);
+    result += " ";
+    result += nickName;
+    result += " ";
+    result += loginName;
+    if (code == 332 || code == 366) {
+        result += " ";
+    } else {
+        result += "= ";
+    }
+    result += channelName;
+    result += " :";
+    result += message;
+    result += "\r\n";
+    return result;
+}
+
+string Server::prefixMessage(string nickName, string loginName, string hostName, string command, string message)
+{
+    string result = ":";
+    result += nickName;
+    result += "!";
+    result += loginName;
+    result += "@";
+    result += hostName;
+    result += " ";
+    result += command;
+    result += " ";
+    result += message;
+    result += "\r\n";
+    return result;
+}
 //10.19.248.56
+
+#endif

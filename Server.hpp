@@ -15,7 +15,7 @@
 #include <iostream>
 #include <sstream>
 #include <queue>
-// #include "User.hpp"
+#include "User.hpp"
 #include "Channel.hpp"
 
 using namespace std;
@@ -35,7 +35,6 @@ class Server
     struct kevent m_eventList[EVENT_SIZE];
     map<int, User> m_userList;
     map<string, Channel> m_channelList;
-    int first_fd = 0;
 
     public:
     Server(int portNum, string password);

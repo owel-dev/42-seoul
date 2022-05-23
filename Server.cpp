@@ -71,6 +71,7 @@ void Server::eventHandler(int eventCount)
                 if (user.getWriteBuffer() == "")
                     continue;
                 send(user.m_fd, user.getWriteBuffer().c_str(), user.getWriteBuffer().size(), 0);
+                cout << "send to " << user.getNick() << ": " << user.getWriteBuffer() << endl;
                 user.clearWriteBuffer();
             }
         }
@@ -172,6 +173,7 @@ void Server::join(string channelName, struct kevent event)
 
 void Server::privmsg(std::vector<string> command, struct kevent event)
 {
+    cout << "message: |" << command[2] << "|" << endl;
     if (command[1].substr(0, 1) == "#") // 채널 메시지
     {
         // 해당 채널의 유저 목록을 돌면서 메시지 전송
@@ -193,6 +195,9 @@ void Server::privmsg(std::vector<string> command, struct kevent event)
             if (it->second.getNick() == command[1]) {
                 break;
             }
+        }
+        if (it == m_userList.end()) {
+            return;
         }
         User &sender = m_userList[event.ident];
         User &receiver = it->second;
@@ -239,13 +244,16 @@ string Server::prefixMessage(string nickName, string loginName, string hostName,
     return result;
 }
 
-vector<string> Server::split(string str, string delim)
+vector<string> Server::split(string str, string delim) // ""
 {
     vector<string> ret;
     int delim_len = delim.size();
     size_t cut;
     while ((cut = str.find(delim)) != string::npos)
     {
+        if (str[0] == ':') {
+            break;
+        }
         string word = str.substr(0, cut);
         ret.push_back(word);
         str = str.substr(cut + delim_len);

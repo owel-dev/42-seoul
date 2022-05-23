@@ -3,12 +3,15 @@
 
 #include <iostream>
 
+#define QUIT -1
+
 using namespace std;
 
 class User
 {
   public:
   int m_fd;
+  int m_status;
   string m_nickName;
   string m_loginName;
   string m_hostName;
@@ -50,6 +53,10 @@ class User
   string getHostName();
 
   void setHostName(string hostName);
+
+  int getStatus();
+
+  void setStatus(int status);
 };
 
 #endif

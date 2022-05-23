@@ -51,7 +51,8 @@ class Server
     void clientEventHandler(struct kevent event);
 
     void join(string channelName, struct kevent event);
-
+    void quit(std::vector<string> command, struct kevent event);
+    void deleteUser(int i);
     void privmsg(std::vector<string> command, struct kevent event);
     void part(std::vector<string> command, struct kevent event);
 

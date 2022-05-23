@@ -43,20 +43,11 @@ void Server::WatchEvents()
 
 void Server::eventHandler(int eventCount)
 {
-    for (int i = 0; i < eventCount; i++) {
-
+    for (int i = 0; i < eventCount; i++) 
+    {
         if (m_eventList[i].flags & EV_ERROR)
         {
-            vector<struct kevent>::iterator it = m_watchList.begin();
-            for (;it != m_watchList.end(); ++it)
-            {
-                if (it->ident == m_eventList[i].ident) {
-                    m_watchList.erase(it);
-                    break;
-                }
-            }
-            m_userList.erase(m_eventList[i].ident);
-            close(m_eventList[i].ident);
+            deleteUser(i);
             return;
         }
         else if (m_eventList[i].filter == EVFILT_READ) {
@@ -73,6 +64,10 @@ void Server::eventHandler(int eventCount)
                 send(user.m_fd, user.getWriteBuffer().c_str(), user.getWriteBuffer().size(), 0);
                 cout << "send to " << user.getNick() << ": " << user.getWriteBuffer() << endl;
                 user.clearWriteBuffer();
+                if (user.getStatus() == QUIT) {
+                    deleteUser(i);
+                    return;
+                }
             }
         }
     }
@@ -117,8 +112,7 @@ void Server::clientEventHandler(struct kevent event)
 
         if (m_userList[event.ident].isChecked()) {
             if (command[0] == "QUIT") { 
-                close(event.ident);
-                // quit(command, event);
+                quit(command, event);
             }
             else if (command[0] == "JOIN") {
                 join(command[1], event);

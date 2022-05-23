@@ -1,6 +1,6 @@
 #include "User.hpp"
 
-User::User(int fd) : m_fd(fd), m_nickName(""), m_loginName(""), m_hostName(""), m_password(""), m_writeBuffer("")
+User::User(int fd) : m_fd(fd), m_status(0), m_nickName(""), m_loginName(""), m_hostName(""), m_password(""), m_writeBuffer("")
 {
 }
 
@@ -82,4 +82,14 @@ string User::getHostName()
 void User::setHostName(string hostName)
 {
     m_hostName = hostName;
+}
+
+int User::getStatus()
+{
+    return m_status; 
+}
+
+void User::setStatus(int status)
+{
+    m_status = status;
 }

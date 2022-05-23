@@ -123,7 +123,9 @@ void Server::clientEventHandler(struct kevent event)
                 join(command[1], event);
             } else if (command[0] == "PRIVMSG") {
                 privmsg(command, event);
-            } 
+            } else if (command[0] == "PART") {
+                part(command, event);
+            }
             else {
                 cout << "|" << command[0] << "|" << endl;
             }
@@ -206,6 +208,24 @@ void Server::privmsg(std::vector<string> command, struct kevent event)
         m_userList[receiver.getFd()].setWriteBuffer(prefixMessage(sender.getNick(), sender.getUserInfo(), sender.getHostName(), "privmsg", message));
     }
 }
+
+void Server::part(std::vector<string> command, struct kevent event)
+{
+    
+    // 해당 채널의 유저 목록을 돌면서 메시지 전송
+    string channelName = command[1];
+    string message = command[2];
+    map<int, User>::iterator it = m_channelList[channelName].m_userList.begin();
+    User &sender = m_userList[event.ident];
+    string msg = channelName + " " + message;
+    for (;it != m_channelList[channelName].m_userList.end(); ++it)
+    {
+        User &receiver = it->second;
+        m_userList[receiver.getFd()].setWriteBuffer(prefixMessage(sender.getNick(), sender.getUserInfo(), sender.getHostName(), "part", msg));
+    }
+    m_channelList[channelName].m_userList.erase(event.ident);
+}
+
 
 string Server::serverMessage(int code, string nickName, string loginName, string channelName, string message)
 {

@@ -118,6 +118,7 @@ void Server::clientEventHandler(struct kevent event)
         if (m_userList[event.ident].isChecked()) {
             if (command[0] == "QUIT") { 
                 close(event.ident);
+                // quit(command, event);
             }
             else if (command[0] == "JOIN") {
                 join(command[1], event);
@@ -125,6 +126,12 @@ void Server::clientEventHandler(struct kevent event)
                 privmsg(command, event);
             } else if (command[0] == "PART") {
                 part(command, event);
+            } else if (command[0] == "NICK") {
+                // nick(command, event);
+            } else if (command[0] == "USER") {
+                // user(command, event);
+            } else if (command[0] == "KICK") {
+                // kick(command, event);
             }
             else {
                 cout << "|" << command[0] << "|" << endl;
@@ -147,84 +154,6 @@ void Server::clientEventHandler(struct kevent event)
     }
 }
 
-void Server::join(string channelName, struct kevent event)
-{
-    int newFd = event.ident;
-    if (!m_channelList.count(channelName)) { // 채널리스트에 채널 추가
-        m_channelList.insert(make_pair(channelName, Channel()));
-        m_channelList[channelName].setName(channelName);
-        m_channelList[channelName].setAdmin(event.ident);    
-    }      
-    m_channelList[channelName].addUser(m_userList[event.ident]); // 채널에 유저 추가
-    // 채널의 유저리스트를 돌면서 방금 join한 유저를 제외한 다른 유저들에게 메시지 전송
-    Channel &channel = m_channelList[channelName];
-    map<int, User> channelUserList = channel.m_userList;
-    map<int, User>::iterator it = channelUserList.begin();
-    for (;it != channelUserList.end(); ++it) {
-        string newUserNickName = m_userList[newFd].getNick();
-        string newUserLoginName = m_userList[newFd].getUserInfo();
-        string newUserHostName = m_userList[newFd].getHostName();
-        m_userList[it->second.getFd()].setWriteBuffer(prefixMessage(newUserNickName, newUserLoginName, newUserHostName, "JOIN", channelName));
-        if (it->second.m_fd == newFd) { // 방금 join한 유저에게 메시지 전송
-            m_userList[newFd].setWriteBuffer(serverMessage(332, newUserNickName, newUserLoginName, channelName, "A timey-wimey channel"));
-            m_userList[newFd].setWriteBuffer(serverMessage(353, newUserNickName, newUserLoginName, channelName, channel.getUserList(newFd)));
-            m_userList[newFd].setWriteBuffer(serverMessage(366, newUserNickName, newUserLoginName, channelName, "End of NAMES list"));
-        }
-    }
-}
-
-void Server::privmsg(std::vector<string> command, struct kevent event)
-{
-    cout << "message: |" << command[2] << "|" << endl;
-    if (command[1].substr(0, 1) == "#") // 채널 메시지
-    {
-        // 해당 채널의 유저 목록을 돌면서 메시지 전송
-        map<int, User>::iterator it = m_channelList[command[1]].m_userList.begin();
-        User &sender = m_userList[event.ident];
-        string message = "" + command[1] + " " + command[2];
-        for (;it != m_channelList[command[1]].m_userList.end(); ++it)
-        {
-            User &receiver = it->second;
-            if (receiver.getFd() != sender.getFd())
-                m_userList[receiver.getFd()].setWriteBuffer(prefixMessage(sender.getNick(), sender.getUserInfo(), sender.getHostName(), "privmsg", message));
-        }
-    }
-    else 
-    {
-        map<int, User>::iterator it = m_userList.begin();
-        for (;it != m_userList.end(); ++it) 
-        {
-            if (it->second.getNick() == command[1]) {
-                break;
-            }
-        }
-        if (it == m_userList.end()) {
-            return;
-        }
-        User &sender = m_userList[event.ident];
-        User &receiver = it->second;
-        string message = "" + receiver.getNick() + " " + command[2];
-
-        m_userList[receiver.getFd()].setWriteBuffer(prefixMessage(sender.getNick(), sender.getUserInfo(), sender.getHostName(), "privmsg", message));
-    }
-}
-
-void Server::part(std::vector<string> command, struct kevent event)
-{
-    
-    // 해당 채널의 유저 목록을 돌면서 메시지 전송
-    string channelName = command[1];
-    string message = command[2];
-    map<int, User>::iterator it = m_channelList[channelName].m_userList.begin();
-    User &sender = m_userList[event.ident];
-    string msg = channelName + " " + message;
-    for (;it != m_channelList[channelName].m_userList.end(); ++it)
-    {
-        User &receiver = it->second;
-        m_userList[receiver.getFd()].setWriteBuffer(prefixMessage(sender.getNick(), sender.getUserInfo(), sender.getHostName(), "part", msg));
-    }
-    m_channelList[channelName].m_userList.erase(event.ident);
-}
 
 
 string Server::serverMessage(int code, string nickName, string loginName, string channelName, string message)

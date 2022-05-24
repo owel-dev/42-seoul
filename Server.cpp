@@ -121,7 +121,7 @@ void Server::clientEventHandler(struct kevent event)
             } else if (command[0] == "PART") {
                 part(command, event);
             } else if (command[0] == "NICK") {
-                // nick(command, event);
+                nick(command, event);
             } else if (command[0] == "USER") {
                 // user(command, event);
             } else if (command[0] == "KICK") {

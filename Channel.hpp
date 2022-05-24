@@ -15,11 +15,11 @@ class Channel
 public:
     Channel();
 
-    map<int, User> m_userList;
+    map<int, User&> m_userList;
     string m_name;
     int m_admin;
 
-    void addUser(User user);
+    void addUser(User &user);
 
     void setName(string name);
 

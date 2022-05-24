@@ -10,7 +10,6 @@ int main(int argc, char *argv[])
         
         Server server(atoi(argv[1]), argv[2]);
         server.WatchEvents();
-
     } catch (const char *str) {
         cerr << str << endl;
     }

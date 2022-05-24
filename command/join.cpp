@@ -11,8 +11,8 @@ void Server::join(string channelName, struct kevent event)
     m_channelList[channelName].addUser(m_userList[event.ident]); // 채널에 유저 추가
     // 채널의 유저리스트를 돌면서 방금 join한 유저를 제외한 다른 유저들에게 메시지 전송
     Channel &channel = m_channelList[channelName];
-    map<int, User> channelUserList = channel.m_userList;
-    map<int, User>::iterator it = channelUserList.begin();
+    map<int, User&> channelUserList = channel.m_userList;
+    map<int, User&>::iterator it = channelUserList.begin();
     for (;it != channelUserList.end(); ++it) {
         string newUserNickName = m_userList[newFd].getNick();
         string newUserLoginName = m_userList[newFd].getUserInfo();

@@ -2,9 +2,9 @@
 
 Channel::Channel(){};
 
-void Channel::addUser(User user)
+void Channel::addUser(User &user)
 {
-    m_userList.insert(make_pair(user.m_fd, user));
+    m_userList.insert(pair<int, User&>(user.m_fd, user));
 }
 
 void Channel::setName(string name)
@@ -22,7 +22,7 @@ string Channel::getUserList(int newUserFd)
     string userList = "@";
     userList += m_userList[m_admin].getNick();
 
-    map<int, User>::iterator it = m_userList.begin();
+    map<int, User&>::iterator it = m_userList.begin();
     for (; it != m_userList.end(); ++it)
     {
         if (it->first != newUserFd && it->first != m_admin)

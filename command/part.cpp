@@ -7,7 +7,7 @@ void Server::part(std::vector<string> command, struct kevent event)
     string channelName = command[1];
     string message = command[2];
     Channel &channel = m_channelList[channelName];
-    map<int, User>::iterator it = channel.m_userList.begin();
+    map<int, User&>::iterator it = channel.m_userList.begin();
     User &sender = m_userList[event.ident];
     string msg = channelName + " " + message;
     for (;it != channel.m_userList.end(); ++it)

@@ -121,11 +121,11 @@ void Server::clientEventHandler(struct kevent event)
             } else if (command[0] == "PART") {
                 part(command, event);
             } else if (command[0] == "NICK") {
-                // nick(command, event);
+                kick(command, event);
             } else if (command[0] == "USER") {
                 // user(command, event);
             } else if (command[0] == "KICK") {
-                // kick(command, event);
+                 kick(command, event);
             }
             else {
                 cout << "|" << command[0] << "|" << endl;
@@ -148,7 +148,18 @@ void Server::clientEventHandler(struct kevent event)
     }
 }
 
-
+string Server::serverMessage(int code, string nickName, string message)
+{
+    string result = "";
+    result += ":ft_irc.com ";
+    result += to_string(code);
+    result += " ";
+    result += nickName;
+    result += " ";
+    result += message;
+    result += "\r\n";
+    return result;
+}
 
 string Server::serverMessage(int code, string nickName, string loginName, string channelName, string message)
 {
@@ -181,6 +192,26 @@ string Server::prefixMessage(string nickName, string loginName, string hostName,
     result += hostName;
     result += " ";
     result += command;
+    result += " ";
+    result += message;
+    result += "\r\n";
+    return result;
+}
+
+string Server::prefixMessage(string nickName, string loginName, string hostName, string command, string channel, string target, string message)
+{
+    string result = ":";
+    result += nickName;
+    result += "!";
+    result += loginName;
+    result += "@";
+    result += hostName;
+    result += " ";
+    result += command;
+    result += " ";
+    result += channel;
+    result += " ";
+    result += target;
     result += " ";
     result += message;
     result += "\r\n";

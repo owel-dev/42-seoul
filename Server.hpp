@@ -55,10 +55,13 @@ class Server
     void deleteUser(int i);
     void privmsg(std::vector<string> command, struct kevent event);
     void part(std::vector<string> command, struct kevent event);
+    void kick(std::vector<string> command, struct kevent event);
 
+    string serverMessage(int code, string nickName, string message);
     string serverMessage(int code, string nickName, string loginName, string channelName, string message);
 
     string prefixMessage(string nickName, string loginName, string hostName, string command, string message);
+    string prefixMessage(string nickName, string loginName, string hostName, string command, string channel, string target, string message);
     vector<string> split(string str, string delim);
 };
 

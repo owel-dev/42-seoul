@@ -55,6 +55,7 @@ void part(User &user, Channel &channel, vector<string> command, int fd){
     user.deleteChannel(fd, channelName);
 
     vector<int> userList =  channel.getUserList_vec(channelName);
+
     for (int i = 0; i < userList.size(); ++i)
     {
         int currentUser = userList[i];
@@ -126,6 +127,7 @@ void quit(User &user, Channel &channel, string message, int fd){
 
     for (; it != channelList.end(); ++it){
         vector<string> command;
+        command.push_back("PART");
         command.push_back(*it);
         command.push_back(message);
         part(user, channel, command, fd);

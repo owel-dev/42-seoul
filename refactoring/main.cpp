@@ -34,22 +34,28 @@ int main(int argc, char *argv[])
     int portNumb = atoi(argv[1]);
     string password = argv[2];
     
-    server.createServerSocket(password);
-    server.bindServerSocket(AF_INET, INADDR_ANY, portNumb);
-    server.listenServerSocket(10);
-
-    server.addServerSocketEvent();
+    try
+    {
+        server.createServerSocket(password);
+        server.bindServerSocket(AF_INET, INADDR_ANY, portNumb);
+        server.listenServerSocket(10);
+        server.addServerSocketEvent();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
     while (42)
     {
         vector<struct kevent> eventList = server.watchEvents(100, NULL);
+
         for (int i = 0; i < eventList.size(); ++i)
         {
             struct kevent currentEvent = eventList[i];
             int currentFd = currentEvent.ident;
-            if (currentEvent.flags & EV_ERROR)
-            {
+            if (currentEvent.flags & EV_ERROR){
                 user.deleteUser(currentFd);
-                break;
             }
             else if (currentEvent.filter == EVFILT_READ)
             {
@@ -130,9 +136,7 @@ int main(int argc, char *argv[])
                 }
 
                 if (user.getStatus(currentFd) == QUIT)
-                {
                     user.deleteUser(currentFd);
-                }
             }
         }
     }

@@ -13,6 +13,8 @@ void User::setHostName(int fd, string hostname){
 }
 
 void User::setNickName(int fd, string nickName){
+    m_userList_string.erase(m_userList_int[fd].nickName);
+    addUserListString(fd, nickName);
     m_userList_int[fd].nickName = nickName;
 }
 

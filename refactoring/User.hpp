@@ -31,7 +31,8 @@ class User {
 
     
     public:
-        void addUser(int fd);
+        void addUserListInt(int fd);
+        void addUserListString(int fd, string nickName);
         string getNickName(int fd);
         void setNickName(int fd, string nickName);
         void setLoginName(int fd, string loginName);
@@ -44,6 +45,9 @@ class User {
         string getHostName(int fd);
         string getPassword(int fd);
         string getLoginName(int fd);
+        int getUserFd(string nickName);
+        bool isExistUser(string nickName);
+        void setBroadCastMessageToAllUser(User &user, string command);
 };      
 
 #endif

@@ -1,4 +1,4 @@
 all: s
 
 s:
-	c++ User.cpp Server.cpp main.cpp  -o server
+	c++ User.cpp Server.cpp Channel.cpp main.cpp command.cpp -o server

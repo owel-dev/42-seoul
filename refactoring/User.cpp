@@ -1,7 +1,11 @@
 #include "User.hpp"
 
-void User::addUser(int fd){
+void User::addUserListInt(int fd){
     m_userList_int.insert(make_pair(fd, userInfo()));
+}
+
+void User::addUserListString(int fd, string nickName){
+    m_userList_string.insert(make_pair(nickName, fd));
 }
 
 void User::setHostName(int fd, string hostname){
@@ -63,4 +67,20 @@ string User::getPassword(int fd){
 
 string User::getLoginName(int fd){
     return m_userList_int[fd].loginName;
+}
+
+int User::getUserFd(string nickName){
+    return m_userList_string[nickName];
+}
+
+bool User::isExistUser(string nickName){
+    return(m_userList_string.count(nickName));
+}
+
+void User::setBroadCastMessageToAllUser(User &user, string message){
+    map<int, struct userInfo>::iterator it = m_userList_int.begin();
+
+    for (; it != m_userList_int.end(); ++it){
+        user.setWriteBuffer(it->first, message);
+    }
 }

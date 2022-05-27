@@ -49,14 +49,13 @@ int main(int argc, char *argv[])
     while (42)
     {
         vector<struct kevent> eventList = server.watchEvents(100, NULL);
+
         for (int i = 0; i < eventList.size(); ++i)
         {
             struct kevent currentEvent = eventList[i];
             int currentFd = currentEvent.ident;
-            if (currentEvent.flags & EV_ERROR)
-            {
+            if (currentEvent.flags & EV_ERROR){
                 user.deleteUser(currentFd);
-                break;
             }
             else if (currentEvent.filter == EVFILT_READ)
             {
@@ -137,9 +136,7 @@ int main(int argc, char *argv[])
                 }
 
                 if (user.getStatus(currentFd) == QUIT)
-                {
                     user.deleteUser(currentFd);
-                }
             }
         }
     }

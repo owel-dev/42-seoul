@@ -34,11 +34,18 @@ int main(int argc, char *argv[])
     int portNumb = atoi(argv[1]);
     string password = argv[2];
     
-    server.createServerSocket(password);
-    server.bindServerSocket(AF_INET, INADDR_ANY, portNumb);
-    server.listenServerSocket(10);
-
-    server.addServerSocketEvent();
+    try
+    {
+        server.createServerSocket(password);
+        server.bindServerSocket(AF_INET, INADDR_ANY, portNumb);
+        server.listenServerSocket(10);
+        server.addServerSocketEvent();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
     while (42)
     {
         vector<struct kevent> eventList = server.watchEvents(100, NULL);

@@ -63,3 +63,16 @@ vector<int> Channel::getUserList_vec(string channelName){
 bool Channel::isAdmin(string channelName, int fd){
     return (m_channelList_string[channelName].front() == fd);
 }
+
+bool Channel::hasUser(string channelName, int fd){
+
+    vector<int> channel = m_channelList_string[channelName];
+    for (int i = 0; i < channel.size(); i++)
+    {
+        if (channel[i] == fd) {
+            return true;
+        }
+    }
+    
+    return false;
+}

@@ -1,25 +1,34 @@
 #include "command.hpp"
 #include <iostream>
 
-void join(User &user, Channel &channel, string channelName, int fd){
+void join(User &user, Channel &channel, string target, int fd){
 
-    if (!channel.isValidChannel(channelName)) {
-        channel.addChannel(channelName);
-    } 
+    vector<string> channelNames = split(target, ","); // 채널이 a,b,c,d로 들어온 경우 처리
 
-    channel.addUser(channelName, fd);
-    user.addChannel(fd, channelName);
+    for (int i = 0; i < channelNames.size(); ++i)
+    {
+        string channelName = i == 0 ? channelNames[i] : "#" + channelNames[i];
 
-    string nickName = user.getNickName(fd);
-    string loginName = user.getLoginName(fd);
-    string hostName = user.getHostName(fd);
-    string message = prefixMessage(nickName, loginName, hostName, "JOIN", channelName);
-    
-    channel.setBroadCastMessage(channelName, 0, message, user);
-    user.setWriteBuffer(fd, serverMessage(332, nickName, loginName, channelName, "A timey-wimey channel"));
-    user.setWriteBuffer(fd, serverMessage(353, nickName, loginName, channelName, \
-        channel.getUserList(user, channelName, fd)));
-    user.setWriteBuffer(fd, serverMessage(366, nickName, loginName, channelName, "End of NAMES list"));
+        if (!channel.isValidChannel(channelName))
+            channel.addChannel(channelName);
+
+        if (channel.hasUser(channelName, fd)) // 채널에 이미 가입해 있는 경우는 거름
+            continue;
+        
+        channel.addUser(channelName, fd);
+        user.addChannel(fd, channelName);
+
+        string nickName = user.getNickName(fd);
+        string loginName = user.getLoginName(fd);
+        string hostName = user.getHostName(fd);
+        string message = prefixMessage(nickName, loginName, hostName, "JOIN", channelName);
+        
+        channel.setBroadCastMessage(channelName, 0, message, user);
+        user.setWriteBuffer(fd, serverMessage(332, nickName, loginName, channelName, "A timey-wimey channel"));
+        user.setWriteBuffer(fd, serverMessage(353, nickName, loginName, channelName, \
+            channel.getUserList(user, channelName, fd)));
+        user.setWriteBuffer(fd, serverMessage(366, nickName, loginName, channelName, "End of NAMES list"));
+    }
 }
 
 void privmsg(User &user, Channel &channel, vector<string> command, int fd){
@@ -159,4 +168,24 @@ string serverMessage(int code, string nickName, string loginName, string channel
     result += message;
     result += "\r\n";
     return result;
+}
+
+vector<string> split(string str, string delim) // ""
+{
+    vector<string> ret;
+    int delim_len = delim.size();
+    size_t cut;
+    while ((cut = str.find(delim)) != string::npos)
+    {
+        if (str[0] == ':')
+        {
+            break;
+        }
+        string word = str.substr(0, cut);
+        ret.push_back(word);
+        str = str.substr(cut + delim_len);
+    }
+    if (str != "")
+        ret.push_back(str);
+    return ret;
 }

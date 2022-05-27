@@ -90,18 +90,32 @@ void kick(User &user, Channel &channel, vector<string> command, int fd)
     string clientNickName = user.getNickName(fd);
     string clientLoginName = user.getLoginName(fd);
     string clientHostName = user.getHostName(fd);
-    if (channel.isAdmin(channelName, fd))
+    string message;
+
+    if (channel.isAdmin(channelName, fd) && user.isExistUser(target))
     {
-        string message = prefixMessage(clientNickName, clientLoginName, clientHostName, "kick", channelName + " " + target + " :" + shortMessage);
+        message = prefixMessage(clientNickName, clientLoginName, clientHostName, "kick", channelName + " " + target + " " + shortMessage);
         channel.setBroadCastMessage(channelName, 0, message, user);
         channel.deleteUser(channelName, user.getUserFd(target));
         user.deleteChannel(user.getUserFd(target), channelName);
+        if (user.getUserFd(target) == fd)
+        {
+            vector<int> userList =  channel.getUserList_vec(channelName);
+            for (int i = 0; i < userList.size(); ++i)
+            {
+                int currentUser = userList[i];
+                string fullDiffMessage = serverMessage(353, user.getNickName(currentUser), user.getLoginName(currentUser), \
+                    channelName, channel.getUserList(user, channelName, currentUser));
+                user.setWriteBuffer(currentUser, fullDiffMessage);
+            }
+        }
+        return ;
     }
+    if (channel.isAdmin(channelName, fd))
+        message = serverMessage(401, clientNickName, clientLoginName, "" , "No such nick/channel");
     else
-    {
-        string message = serverMessage(481, clientNickName, clientLoginName, "" , "Permission Denied- You're not an IRC operator");
-        user.setWriteBuffer(fd, message);
-    }
+        message = serverMessage(481, clientNickName, clientLoginName, "" , "Permission Denied- You're not an IRC operator");
+    user.setWriteBuffer(fd, message);
 }
 
 void quit(User &user, Channel &channel, string message, int fd){

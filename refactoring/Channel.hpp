@@ -14,6 +14,7 @@ class Channel {
         map<string, vector<int> > m_channelList_string;
     public:
         bool isValidChannel(string channelName);
+        bool hasUser(string channelName, int fd);
         void addChannel(string channelName);
         void addUser(string channelName, int fd);
         void deleteUser(string channelName, int fd);

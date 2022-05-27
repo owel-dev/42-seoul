@@ -5,26 +5,6 @@
 
 #define BUF_SIZE 1000
 
-vector<string> split(string str, string delim) // ""
-{
-    vector<string> ret;
-    int delim_len = delim.size();
-    size_t cut;
-    while ((cut = str.find(delim)) != string::npos)
-    {
-        if (str[0] == ':')
-        {
-            break;
-        }
-        string word = str.substr(0, cut);
-        ret.push_back(word);
-        str = str.substr(cut + delim_len);
-    }
-    if (str != "")
-        ret.push_back(str);
-    return ret;
-}
-
 int main(int argc, char *argv[])
 {
     Server server;

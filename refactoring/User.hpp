@@ -3,6 +3,10 @@
 
 #include <string>
 #include <map>
+#include <vector>
+#include <unistd.h>
+
+#define QUIT 1
 
 using namespace std;
 
@@ -16,6 +20,8 @@ class User {
             string hostName;
             string password;
             string writeBuffer;
+            int status;
+            vector<string> channelList;
 
             userInfo()
             {
@@ -24,6 +30,7 @@ class User {
                 hostName = "";
                 password = "";
                 writeBuffer = "";
+                status = 0;
             }
         };        
         map<int, struct userInfo> m_userList_int;
@@ -33,6 +40,7 @@ class User {
     public:
         void addUserListInt(int fd);
         void addUserListString(int fd, string nickName);
+        void addChannel(int fd, string channelName);
         string getNickName(int fd);
         void setNickName(int fd, string nickName);
         void setLoginName(int fd, string loginName);
@@ -48,6 +56,11 @@ class User {
         int getUserFd(string nickName);
         bool isExistUser(string nickName);
         void setBroadCastMessageToAllUser(User &user, string command);
+        vector<string> getChannelList(int fd);
+        void deleteChannel(int fd, string channelName);
+        void deleteUser(int fd);
+        int getStatus(int fd);
+        void setStatus(int fd, int status);
 };      
 
 #endif

@@ -20,6 +20,7 @@ class Channel {
         void setBroadCastMessage(string channelName, int sender, string message, User &user);
         string getUserList(User &user, string channelName, int fd);
         vector<int> getUserList_vec(string channelName);
+        bool isAdmin(string channelName, int fd);
 };
 
 

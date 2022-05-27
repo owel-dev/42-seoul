@@ -8,6 +8,7 @@ void join(User &user, Channel &channel, string channelName, int fd){
     } 
 
     channel.addUser(channelName, fd);
+    user.addChannel(fd, channelName);
 
     string nickName = user.getNickName(fd);
     string loginName = user.getLoginName(fd);
@@ -51,6 +52,7 @@ void part(User &user, Channel &channel, vector<string> command, int fd){
     channel.setBroadCastMessage(channelName, 0, fullMessage, user);
     
     channel.deleteUser(channelName, fd);
+    user.deleteChannel(fd, channelName);
 
     vector<int> userList =  channel.getUserList_vec(channelName);
     for (int i = 0; i < userList.size(); ++i)
@@ -79,6 +81,45 @@ void nick(User &user, string newNickName, int fd){
     user.setNickName(fd, newNickName);
 }
 
+void kick(User &user, Channel &channel, vector<string> command, int fd)
+{
+    string channelName = command[1];
+    string target = command[2];
+    string shortMessage = command.size() == 4 ? command[3] : "";
+
+    string clientNickName = user.getNickName(fd);
+    string clientLoginName = user.getLoginName(fd);
+    string clientHostName = user.getHostName(fd);
+    if (channel.isAdmin(channelName, fd))
+    {
+        string message = prefixMessage(clientNickName, clientLoginName, clientHostName, "kick", channelName + " " + target + " :" + shortMessage);
+        channel.setBroadCastMessage(channelName, 0, message, user);
+        channel.deleteUser(channelName, user.getUserFd(target));
+        user.deleteChannel(user.getUserFd(target), channelName);
+    }
+    else
+    {
+        string message = serverMessage(481, clientNickName, clientLoginName, "" , "Permission Denied- You're not an IRC operator");
+        user.setWriteBuffer(fd, message);
+    }
+}
+
+void quit(User &user, Channel &channel, string message, int fd){
+    
+    string fullMessage = prefixMessage(user.getNickName(fd), user.getLoginName(fd), user.getHostName(fd), "quit", message);
+    vector<string> channelList = user.getChannelList(fd);
+    vector<string>::iterator it = channelList.begin();
+
+    for (; it != channelList.end(); ++it){
+        vector<string> command;
+        command.push_back(*it);
+        command.push_back(message);
+        part(user, channel, command, fd);
+    }
+
+    user.setStatus(fd, QUIT);
+    user.setWriteBuffer(fd, fullMessage);
+}
 
 
 string prefixMessage(string nickName, string loginName, string hostName, string command, string message)

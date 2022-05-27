@@ -27,6 +27,7 @@ void User::setLoginName(int fd, string loginName){
 string User::getNickName(int fd){
     return m_userList_int[fd].nickName;
 }
+
 // map<int, struct userInfo> getUserList(int fd)
 // {
     
@@ -83,4 +84,43 @@ void User::setBroadCastMessageToAllUser(User &user, string message){
     for (; it != m_userList_int.end(); ++it){
         user.setWriteBuffer(it->first, message);
     }
+}
+
+void User::addChannel(int fd, string channelName){
+    m_userList_int[fd].channelList.push_back(channelName);
+}
+
+vector<string> User::getChannelList(int fd){
+    return m_userList_int[fd].channelList;
+}
+
+void User::deleteChannel(int fd, string channelName){
+    
+    vector<string> &channelList = m_userList_int[fd].channelList;
+    vector<string>::iterator it = channelList.begin();
+    
+    for (; it != channelList.end(); ++it){
+        if (*it == channelName){
+            channelList.erase(it);
+            break;
+        }
+    }
+}
+
+void User::deleteUser(int fd)
+{
+    string nickName = getNickName(fd);
+    m_userList_int.erase(fd);
+    m_userList_string.erase(nickName);
+    close(fd);
+}
+
+int User::getStatus(int fd)
+{
+    return m_userList_int[fd].status;
+}
+
+void User::setStatus(int fd, int status)
+{
+    m_userList_int[fd].status = status;
 }

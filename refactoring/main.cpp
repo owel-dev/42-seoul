@@ -5,7 +5,6 @@
 
 #define BUF_SIZE 1000
 
-
 vector<string> split(string str, string delim) // ""
 {
     vector<string> ret;
@@ -13,7 +12,8 @@ vector<string> split(string str, string delim) // ""
     size_t cut;
     while ((cut = str.find(delim)) != string::npos)
     {
-        if (str[0] == ':') {
+        if (str[0] == ':')
+        {
             break;
         }
         string word = str.substr(0, cut);
@@ -25,8 +25,6 @@ vector<string> split(string str, string delim) // ""
     return ret;
 }
 
-
-
 int main(int argc, char *argv[])
 {
     Server server;
@@ -35,7 +33,7 @@ int main(int argc, char *argv[])
 
     int portNumb = atoi(argv[1]);
     string password = argv[2];
-
+    
     server.createServerSocket(password);
     server.bindServerSocket(AF_INET, INADDR_ANY, portNumb);
     server.listenServerSocket(10);
@@ -50,7 +48,7 @@ int main(int argc, char *argv[])
             int currentFd = currentEvent.ident;
             if (currentEvent.flags & EV_ERROR)
             {
-                // deleteUser(i);
+                user.deleteUser(currentFd);
                 break;
             }
             else if (currentEvent.filter == EVFILT_READ)
@@ -83,9 +81,7 @@ int main(int argc, char *argv[])
                         if (user.isLogin(currentFd))
                         {
                             if (command[0] == "QUIT")
-                            {
-                                // quit(command, currentFd);
-                            }
+                                quit(user, channel, command[1], currentFd);
                             else if (command[0] == "JOIN")
                                 join(user, channel, command[1], currentFd);
                             else if (command[0] == "PRIVMSG")
@@ -95,11 +91,7 @@ int main(int argc, char *argv[])
                             else if (command[0] == "NICK")
                                 nick(user, command[1], currentFd);
                             else if (command[0] == "KICK")
-                                kick(command, currentFd);
-                            // else
-                            // {
-                            //     cout << "|" << command[0] << "|" << endl;
-                            // }
+                                kick(user, channel, command, currentFd);
                         }
                         else
                         {
@@ -121,7 +113,7 @@ int main(int argc, char *argv[])
                                 string message = ":ft_irc.com 001 " + user.getNickName(currentFd) + " :Welcome!!\r\n";
                                 user.setWriteBuffer(currentFd, message);
                                 string message1 = user.getWriteBuffer(currentFd);
-                                std::cout << "message: |" << message << "|" << std::endl;                
+                                std::cout << "message: |" << message << "|" << std::endl;
                             }
                         }
                     }
@@ -130,17 +122,17 @@ int main(int argc, char *argv[])
             else if (eventList[i].filter == EVFILT_WRITE)
             {
                 string message = user.getWriteBuffer(currentFd);
-                if (message != "") 
+                if (message != "")
                 {
                     send(currentFd, message.c_str(), message.size(), 0);
                     std::cout << "send to " << user.getNickName(currentFd) << ": " << message << std::endl;
                     user.clearWriteBuffer(currentFd);
                 }
 
-                //     if (user.getStatus() == QUIT) {
-                //         deleteUser(i);
-                // return 0;
-                //     }
+                if (user.getStatus(currentFd) == QUIT)
+                {
+                    user.deleteUser(currentFd);
+                }
             }
         }
     }

@@ -87,7 +87,7 @@ void nick(User &user, string newNickName, int fd){
         return;
     }
     
-    user.setBroadCastMessageToAllUser(user, fullMessage);
+    user.setBroadCastMessageToAllUser(fullMessage);
     user.setNickName(fd, newNickName);
 }
 

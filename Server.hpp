@@ -16,6 +16,8 @@
 #include <sstream>
 #include <queue>
 
+#include "User.hpp"
+
 #define EVENT_SIZE 100
 using namespace std;
 
@@ -36,6 +38,7 @@ class Server {
         int getServerSocket();
         string getPassword();
         pair<int, string> acceptClientSocket();
+        void closeAll(User &user);
 };       
 
 #endif

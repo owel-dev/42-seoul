@@ -77,3 +77,14 @@ pair<int, string> Server::acceptClientSocket()
 string Server::getPassword(){
     return m_password;
 }
+
+void Server::closeAll(User &user)
+{
+    close(m_socket); 
+    map<string, int> userList = user.getUserListString();
+    map<string, int>::iterator it = userList.begin();
+
+    for(; it != userList.end(); ++it){
+        close(it->second);
+    }
+}

@@ -11,7 +11,6 @@
 using namespace std;
 
 
-
 class User {
     private:
         struct userInfo {
@@ -55,12 +54,13 @@ class User {
         string getLoginName(int fd);
         int getUserFd(string nickName);
         bool isExistUser(string nickName);
-        void setBroadCastMessageToAllUser(User &user, string command);
+        void setBroadCastMessageToAllUser(string command);
         vector<string> getChannelList(int fd);
         void deleteChannel(int fd, string channelName);
         void deleteUser(int fd);
         int getStatus(int fd);
         void setStatus(int fd, int status);
+        map<string, int> getUserListString();
 };      
 
 #endif

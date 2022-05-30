@@ -80,11 +80,11 @@ bool User::isExistUser(string nickName){
     return(m_userList_string.count(nickName));
 }
 
-void User::setBroadCastMessageToAllUser(User &user, string message){
+void User::setBroadCastMessageToAllUser(string message){
     map<int, struct userInfo>::iterator it = m_userList_int.begin();
 
     for (; it != m_userList_int.end(); ++it){
-        user.setWriteBuffer(it->first, message);
+        setWriteBuffer(it->first, message);
     }
 }
 
@@ -125,4 +125,9 @@ int User::getStatus(int fd)
 void User::setStatus(int fd, int status)
 {
     m_userList_int[fd].status = status;
+}
+
+map<string, int> User::getUserListString()
+{
+    return m_userList_string;
 }

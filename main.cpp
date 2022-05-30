@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
                                 if (command[0] == "PASS" && command[1] == server.getPassword())
                                     user.setPassword(currentFd, command[1]);
                                 else if (command[0] == "NICK")
-                                    user.setNickName(currentFd, command[1]);
+                                    nick(user, command[1], currentFd);
                                 else if (command[0] == "USER")
                                     user.setLoginName(currentFd, command[1]);
                                 if (user.isLogin(currentFd))

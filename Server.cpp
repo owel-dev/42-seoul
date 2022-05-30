@@ -2,7 +2,7 @@
 
 void Server::createServerSocket(string password)
 {
-    if ((m_socket = socket(PF_INET, SOCK_STREAM, 0)) == -1)
+    if ((m_socket = socket(AF_INET, SOCK_STREAM, 0)) == -1)
         throw "socket() error";
     m_password = password;
 }
@@ -41,6 +41,7 @@ vector<struct kevent> Server::watchEvents(int eventSize, const timespec *timeout
     struct kevent eventList[eventSize];
 
     int eventCount = kevent(m_kq, &m_watchList[0], m_watchList.size(), eventList, eventSize, timeout);
+    std::cout << "--------------------" << std::endl;
     if (eventCount == -1)
         throw "kevent error";
     m_watchList.clear();
@@ -79,6 +80,7 @@ string Server::getPassword(){
 void Server::closeAll(User &user)
 {
     close(m_socket); 
+    close(m_kq);
     map<string, int> userList = user.getUserListString();
     map<string, int>::iterator it = userList.begin();
 

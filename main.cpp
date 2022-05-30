@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
         server.addServerSocketEvent();
         while (!stop)
         {
-            vector<struct kevent> eventList = server.watchEvents(100, NULL);
+            vector<struct kevent> eventList = server.watchEvents(10, NULL);
 
             for (size_t i = 0; i < eventList.size(); ++i)
             {
@@ -63,14 +63,11 @@ int main(int argc, char *argv[])
                     else
                     {
                         char buf[BUF_SIZE];
-                        int str_len = read(currentFd, buf, BUF_SIZE);
+                        int str_len = recv(currentFd, &buf, BUF_SIZE, 0);                
                         if (str_len == 0)
-                        {
-                            close(currentFd);
-                            return 0;
-                        }
+                            continue;
                         buf[str_len] = 0;
-                        // cout << "Recieve: " << buf << endl;
+                        cout << "Recieve: " << buf << endl;
                         std::vector<string> message = split(buf, "\r\n");
                         vector<string>::iterator it = message.begin();
                         for (; it != message.end(); ++it)
@@ -121,7 +118,7 @@ int main(int argc, char *argv[])
                     if (message != "")
                     {
                         send(currentFd, message.c_str(), message.size(), 0);
-                        // std::cout << "send to " << user.getNickName(currentFd) << ": " << message << std::endl;
+                        std::cout << "send to " << user.getNickName(currentFd) << ": " << message << std::endl;
                         user.clearWriteBuffer(currentFd);
                     }
 

@@ -2,6 +2,7 @@
 #include "User.hpp"
 #include "Channel.hpp"
 #include "command.hpp"
+#include "ctime"
 
 #define BUF_SIZE 1000
 
@@ -89,11 +90,15 @@ int main(int argc, char *argv[])
                                     user.setLoginName(currentFd, command[1]);
                                 if (user.isLogin(currentFd))
                                 {
+                                    time_t now = time(0);
+                                    char* dt = ctime(&now);
                                     user.addUserListString(currentFd, user.getNickName(currentFd));
-                                    string message = ":ft_irc.com 001 " + user.getNickName(currentFd) + " :Welcome!!\r\n";
-                                    user.setWriteBuffer(currentFd, message);
-                                    string message1 = user.getWriteBuffer(currentFd);
-                                    std::cout << "message: |" << message << "|" << std::endl;
+                                    user.setWriteBuffer(currentFd, ":ft_irc.com 001 " + user.getNickName(currentFd) + " :Welcome to the Internet Relay Network\r\n");
+                                    user.setWriteBuffer(currentFd, ":ft_irc.com 002 " + user.getNickName(currentFd) + " :Your host is ft_irc, running version 1.0\r\n");
+                                    user.setWriteBuffer(currentFd, ":ft_irc.com 003 " + user.getNickName(currentFd) + " :This server was created" + dt + "\r\n");
+                                    user.setWriteBuffer(currentFd, ":ft_irc.com 004 " + user.getNickName(currentFd) + " :ft_irc.com v:0.42\r\n");
+                                    // string message = user.getWriteBuffer(currentFd);
+                                    // std::cout << "message: |" << message << "|" << std::endl;
                                 }
                             }
                         }
@@ -105,7 +110,7 @@ int main(int argc, char *argv[])
                     if (message != "")
                     {
                         send(currentFd, message.c_str(), message.size(), 0);
-                        std::cout << "send to " << user.getNickName(currentFd) << ": " << message << std::endl;
+                        // std::cout << "send to " << user.getNickName(currentFd) << ": " << message << std::endl;
                         user.clearWriteBuffer(currentFd);
                     }
 

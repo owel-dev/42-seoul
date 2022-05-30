@@ -41,7 +41,6 @@ vector<struct kevent> Server::watchEvents(int eventSize, const timespec *timeout
     struct kevent eventList[eventSize];
 
     int eventCount = kevent(m_kq, &m_watchList[0], m_watchList.size(), eventList, eventSize, timeout);
-    std::cout << "--------------------" << std::endl;
     if (eventCount == -1)
         throw "kevent error";
     m_watchList.clear();

@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
                                     quit(user, channel, command[1], currentFd);
                                 else if (command[0] == "JOIN")
                                     join(user, channel, command[1], currentFd);
-                                else if (command[0] == "PRIVMSG")
+                                else if (command[0] == "PRIVMSG" || command[0] == "NOTICE")
                                     privmsg(user, channel, command, currentFd);
                                 else if (command[0] == "PART")
                                     part(user, channel, command, currentFd);

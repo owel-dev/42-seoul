@@ -38,7 +38,7 @@ void privmsg(User &user, Channel &channel, vector<string> command, int fd){
     string senderNickName = user.getNickName(fd);
     string senderLoginName = user.getLoginName(fd);
     string senderHostName = user.getHostName(fd);
-    string fullMessage = prefixMessage(senderNickName, senderLoginName, senderHostName, "privmsg", target + " " + message);
+    string fullMessage = prefixMessage(senderNickName, senderLoginName, senderHostName, command[0], target + " " + message);
     
     if (target[0] == '#'){
         channel.setBroadCastMessage(target, fd, fullMessage, user);

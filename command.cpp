@@ -5,7 +5,7 @@ void join(User &user, Channel &channel, string target, int fd){
 
     vector<string> channelNames = split(target, ","); // 채널이 a,b,c,d로 들어온 경우 처리
 
-    for (int i = 0; i < channelNames.size(); ++i)
+    for (size_t i = 0; i < channelNames.size(); ++i)
     {
         string channelName = i == 0 ? channelNames[i] : "#" + channelNames[i];
 
@@ -65,7 +65,7 @@ void part(User &user, Channel &channel, vector<string> command, int fd){
 
     vector<int> userList =  channel.getUserList_vec(channelName);
 
-    for (int i = 0; i < userList.size(); ++i)
+    for (size_t i = 0; i < userList.size(); ++i)
     {
         int currentUser = userList[i];
         string fullDiffMessage = serverMessage(353, user.getNickName(currentUser), user.getLoginName(currentUser), \
@@ -111,7 +111,7 @@ void kick(User &user, Channel &channel, vector<string> command, int fd)
         if (user.getUserFd(target) == fd)
         {
             vector<int> userList =  channel.getUserList_vec(channelName);
-            for (int i = 0; i < userList.size(); ++i)
+            for (size_t i = 0; i < userList.size(); ++i)
             {
                 int currentUser = userList[i];
                 string fullDiffMessage = serverMessage(353, user.getNickName(currentUser), user.getLoginName(currentUser), \

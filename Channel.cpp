@@ -67,7 +67,7 @@ bool Channel::isAdmin(string channelName, int fd){
 bool Channel::hasUser(string channelName, int fd){
 
     vector<int> channel = m_channelList_string[channelName];
-    for (int i = 0; i < channel.size(); i++)
+    for (size_t i = 0; i < channel.size(); i++)
     {
         if (channel[i] == fd) {
             return true;

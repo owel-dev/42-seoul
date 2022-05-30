@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
         {
             vector<struct kevent> eventList = server.watchEvents(100, NULL);
 
-            for (int i = 0; i < eventList.size(); ++i)
+            for (size_t i = 0; i < eventList.size(); ++i)
             {
                 struct kevent currentEvent = eventList[i];
                 int currentFd = currentEvent.ident;
@@ -82,17 +82,11 @@ int main(int argc, char *argv[])
                             else
                             {
                                 if (command[0] == "PASS" && command[1] == server.getPassword())
-                                {
                                     user.setPassword(currentFd, command[1]);
-                                }
                                 else if (command[0] == "NICK")
-                                {
                                     user.setNickName(currentFd, command[1]);
-                                }
                                 else if (command[0] == "USER")
-                                {
                                     user.setLoginName(currentFd, command[1]);
-                                }
                                 if (user.isLogin(currentFd))
                                 {
                                     user.addUserListString(currentFd, user.getNickName(currentFd));

@@ -101,12 +101,19 @@ int main(int argc, char *argv[])
                                 if (user.isLogin(currentFd))
                                 {
                                     time_t now = time(0);
-                                    char* dt = ctime(&now);
+                                    string date = ctime(&now);
+                                    string nickName = user.getNickName(currentFd);
+                                    string serverName = user.getHostName(currentFd);
                                     user.addUserListString(currentFd, user.getNickName(currentFd));
-                                    user.setWriteBuffer(currentFd, ":ft_irc.com 001 " + user.getNickName(currentFd) + " :Welcome to the Internet Relay Network\r\n");
-                                    user.setWriteBuffer(currentFd, ":ft_irc.com 002 " + user.getNickName(currentFd) + " :Your host is " + user.getHostName(currentFd) + ", running v:1.0\r\n");
-                                    user.setWriteBuffer(currentFd, ":ft_irc.com 003 " + user.getNickName(currentFd) + " :This server was created" + dt + "\r\n");
-                                    user.setWriteBuffer(currentFd, ":ft_irc.com 004 " + user.getNickName(currentFd) + " :" + user.getHostName(currentFd) + " v:1.0\r\n");
+                                    user.setWriteBuffer(currentFd, serverMessage(RPL_WELCOME, nickName, "", "", "Welcome to the Internet Relay Network"));
+                                    user.setWriteBuffer(currentFd, serverMessage(RPL_YOURHOST, nickName, "", "", "Your host is " + serverName + ", running v:1.0"));
+                                    user.setWriteBuffer(currentFd, serverMessage(RPL_CREATED, nickName, "", "", "This server was created" + date));
+                                    user.setWriteBuffer(currentFd, serverMessage(RPL_MYINFO, nickName, "", "", serverName + " v:1.0"));
+                    
+                                    // user.setWriteBuffer(currentFd, ":ft_irc.com 001 " + user.getNickName(currentFd) + " :Welcome to the Internet Relay Network\r\n");
+                                    // user.setWriteBuffer(currentFd, ":ft_irc.com 002 " + user.getNickName(currentFd) + " :Your host is " + user.getHostName(currentFd) + ", running v:1.0\r\n");
+                                    // user.setWriteBuffer(currentFd, ":ft_irc.com 003 " + user.getNickName(currentFd) + " :This server was created" + dt + "\r\n");
+                                    // user.setWriteBuffer(currentFd, ":ft_irc.com 004 " + user.getNickName(currentFd) + " :" + user.getHostName(currentFd) + " v:1.0\r\n");
                                 }
                             }
                         }

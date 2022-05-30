@@ -172,10 +172,10 @@ string serverMessage(int code, string nickName, string loginName, string channel
     result += nickName;
     result += " ";
     result += loginName;
-    if (code == 332 || code == 366) {
-        result += " ";
-    } else {
+    if (code == 353) {
         result += "= ";
+    } else {
+        result += " ";
     }
     result += channelName;
     result += " :";

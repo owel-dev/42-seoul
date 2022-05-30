@@ -15,7 +15,7 @@
 #include <iostream>
 #include <sstream>
 #include <queue>
-
+#include "define.hpp"
 #include "User.hpp"
 
 #define EVENT_SIZE 100

@@ -70,9 +70,8 @@ int main(int argc, char *argv[])
                             return 0;
                         }
                         buf[str_len] = 0;
-                        cout << "Recieve: " << buf << endl;
+                        // cout << "Recieve: " << buf << endl;
                         std::vector<string> message = split(buf, "\r\n");
-
                         vector<string>::iterator it = message.begin();
                         for (; it != message.end(); ++it)
                         {
@@ -92,7 +91,7 @@ int main(int argc, char *argv[])
                                 else if (command[0] == "KICK")
                                     kick(user, channel, command, currentFd);
                                 else if (command[0] == "PONG")
-                                    user.setWriteBuffer(currentFd, "PING :ft_irc.com\r\n");
+                                    user.setWriteBuffer(currentFd, "PING :" + user.getHostName(currentFd) + "\r\n");
                             }
                             else
                             {
@@ -108,9 +107,9 @@ int main(int argc, char *argv[])
                                     char* dt = ctime(&now);
                                     user.addUserListString(currentFd, user.getNickName(currentFd));
                                     user.setWriteBuffer(currentFd, ":ft_irc.com 001 " + user.getNickName(currentFd) + " :Welcome to the Internet Relay Network\r\n");
-                                    user.setWriteBuffer(currentFd, ":ft_irc.com 002 " + user.getNickName(currentFd) + " :Your host is ft_irc, running version 1.0\r\n");
+                                    user.setWriteBuffer(currentFd, ":ft_irc.com 002 " + user.getNickName(currentFd) + " :Your host is " + user.getHostName(currentFd) + ", running v:1.0\r\n");
                                     user.setWriteBuffer(currentFd, ":ft_irc.com 003 " + user.getNickName(currentFd) + " :This server was created" + dt + "\r\n");
-                                    user.setWriteBuffer(currentFd, ":ft_irc.com 004 " + user.getNickName(currentFd) + " :ft_irc.com v:0.42\r\n");
+                                    user.setWriteBuffer(currentFd, ":ft_irc.com 004 " + user.getNickName(currentFd) + " :" + user.getHostName(currentFd) + " v:1.0\r\n");
                                 }
                             }
                         }
@@ -122,7 +121,7 @@ int main(int argc, char *argv[])
                     if (message != "")
                     {
                         send(currentFd, message.c_str(), message.size(), 0);
-                        std::cout << "send to " << user.getNickName(currentFd) << ": " << message << std::endl;
+                        // std::cout << "send to " << user.getNickName(currentFd) << ": " << message << std::endl;
                         user.clearWriteBuffer(currentFd);
                     }
 

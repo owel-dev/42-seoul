@@ -61,15 +61,13 @@ pair<int, string> Server::acceptClientSocket()
     socklen_t adr_sz = sizeof(clientAddr);
     struct kevent tempEvent;
 
-
-    // fcntl(clientSocket, F_SETFL, O_NONBLOCK);
     clientSocket = accept(m_socket, (struct sockaddr *) &clientAddr, &adr_sz);
     EV_SET(&tempEvent, clientSocket, EVFILT_READ, EV_ADD | EV_ENABLE, 0, 0, NULL);
     m_watchList.push_back(tempEvent);
 	EV_SET(&tempEvent, clientSocket, EVFILT_WRITE, EV_ADD | EV_ENABLE, 0, 0, NULL);
     m_watchList.push_back(tempEvent);
     string hostName = inet_ntoa(clientAddr.sin_addr);
-    cout << "-----Connect user. socket number: " << clientSocket << "------" << endl;
+    // cout << "-----Connect user. socket number: " << clientSocket << "------" << endl;
      
     return (make_pair(clientSocket, hostName));
 }

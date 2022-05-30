@@ -1,62 +1,66 @@
 #ifndef USER_HPP
 #define USER_HPP
 
-#include <iostream>
+#include <string>
+#include <map>
+#include <vector>
+#include <unistd.h>
 
-#define QUIT -1
+#define QUIT 1
 
 using namespace std;
 
-class User
-{
-  public:
-  int m_fd;
-  int m_status;
-  string m_nickName;
-  string m_loginName;
-  string m_hostName;
-  string m_password;
-  string m_channelName;
-  string m_writeBuffer;
 
-  public:
-  User(int fd = 0);
 
-  bool isChecked();
+class User {
+    private:
+        struct userInfo {
+            string nickName;
+            string loginName;
+            string hostName;
+            string password;
+            string writeBuffer;
+            int status;
+            vector<string> channelList;
 
-  int getFd();
+            userInfo()
+            {
+                nickName = "";
+                loginName = "";
+                hostName = "";
+                password = "";
+                writeBuffer = "";
+                status = 0;
+            }
+        };        
+        map<int, struct userInfo> m_userList_int;
+        map<string, int> m_userList_string;
 
-  void setFd(int fd);
-
-  string getNick();
-
-  void setNick(string nick);
-
-  string getUserInfo();
-
-  void setLoginName(string userInfo);
-
-  string getPassword();
-
-  void setPassword(string password);
-
-  string getChannelName();
-
-  void setChannelName(string channelName);
-
-  string getWriteBuffer();
-
-  void setWriteBuffer(string newString);
-
-  void clearWriteBuffer();
-
-  string getHostName();
-
-  void setHostName(string hostName);
-
-  int getStatus();
-
-  void setStatus(int status);
-};
+    
+    public:
+        void addUserListInt(int fd);
+        void addUserListString(int fd, string nickName);
+        void addChannel(int fd, string channelName);
+        string getNickName(int fd);
+        void setNickName(int fd, string nickName);
+        void setLoginName(int fd, string loginName);
+        void setHostName(int fd, string hostname);
+        void setPassword(int fd, string password);
+        bool isLogin(int fd);
+        void setWriteBuffer(int fd, string newString);
+        string getWriteBuffer(int fd);
+        void clearWriteBuffer(int fd);
+        string getHostName(int fd);
+        string getPassword(int fd);
+        string getLoginName(int fd);
+        int getUserFd(string nickName);
+        bool isExistUser(string nickName);
+        void setBroadCastMessageToAllUser(User &user, string command);
+        vector<string> getChannelList(int fd);
+        void deleteChannel(int fd, string channelName);
+        void deleteUser(int fd);
+        int getStatus(int fd);
+        void setStatus(int fd, int status);
+};      
 
 #endif

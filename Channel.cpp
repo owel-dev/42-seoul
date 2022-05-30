@@ -1,35 +1,78 @@
 #include "Channel.hpp"
+#include <iostream>
 
-Channel::Channel(){};
-
-void Channel::addUser(User &user)
-{
-    m_userList.insert(pair<int, User&>(user.m_fd, user));
+bool Channel::isValidChannel(string channelName){
+    return m_channelList_string.count(channelName);
 }
 
-void Channel::setName(string name)
-{
-    m_name = name;
+void Channel::addChannel(string channelName){
+    m_channelList_string.insert(make_pair(channelName, vector<int>()));
 }
 
-void Channel::setAdmin(int fd)
-{
-    m_admin = fd;
+void Channel::addUser(string channelName, int fd){
+    m_channelList_string[channelName].push_back(fd);
 }
 
-string Channel::getUserList(int newUserFd)
-{
+void Channel::deleteUser(string channelName, int fd){
+
+    if (m_channelList_string[channelName].size() == 1){
+        m_channelList_string.erase(channelName);
+        return;
+    }
+    vector<int>::iterator it = m_channelList_string[channelName].begin();
+    for (; it != m_channelList_string[channelName].end(); ++it){
+        if (*it == fd) {
+            m_channelList_string[channelName].erase(it);
+            break;
+        }
+    }
+}
+
+void Channel::setBroadCastMessage(string channelName, int sender, string message, User &user){
+    vector<int>::iterator it = m_channelList_string[channelName].begin();
+
+    for (; it != m_channelList_string[channelName].end(); ++it){
+        if (sender != *it){
+            user.setWriteBuffer(*it, message);
+        }
+    }
+}
+
+string Channel::getUserList(User &user, string channelName, int fd){
+    
     string userList = "@";
-    userList += m_userList[m_admin].getNick();
+    int admin = *(m_channelList_string[channelName].begin());
+    userList += user.getNickName(admin);
 
-    map<int, User&>::iterator it = m_userList.begin();
-    for (; it != m_userList.end(); ++it)
+    vector<int>::iterator it = m_channelList_string[channelName].begin();
+    for (; it != m_channelList_string[channelName].end(); ++it)
     {
-        if (it->first != newUserFd && it->first != m_admin)
+        if (*it != fd && it != m_channelList_string[channelName].begin())
         {
             userList += " ";
-            userList += it->second.getNick();
+            userList += user.getNickName(*it);
         }
     }
     return userList;
+}
+
+vector<int> Channel::getUserList_vec(string channelName){
+    return m_channelList_string[channelName];
+}
+
+bool Channel::isAdmin(string channelName, int fd){
+    return (m_channelList_string[channelName].front() == fd);
+}
+
+bool Channel::hasUser(string channelName, int fd){
+
+    vector<int> channel = m_channelList_string[channelName];
+    for (int i = 0; i < channel.size(); i++)
+    {
+        if (channel[i] == fd) {
+            return true;
+        }
+    }
+    
+    return false;
 }

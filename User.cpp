@@ -1,95 +1,128 @@
 #include "User.hpp"
 
-User::User(int fd) : m_fd(fd), m_status(0), m_nickName(""), m_loginName(""), m_hostName(""), m_password(""), m_writeBuffer("")
-{
+void User::addUserListInt(int fd){
+    m_userList_int.insert(make_pair(fd, userInfo()));
 }
 
-bool User::isChecked()
-{
-    return (m_nickName != "" && m_loginName != "" && m_password != "");
+void User::addUserListString(int fd, string nickName){
+    m_userList_string.insert(make_pair(nickName, fd));
 }
 
-int User::getFd()
-{
-    return m_fd;
+void User::setHostName(int fd, string hostname){
+    m_userList_int[fd].hostName = hostname;
 }
 
-void User::setFd(int fd)
-{
-    m_fd = fd;
+void User::setNickName(int fd, string nickName){
+    m_userList_string.erase(m_userList_int[fd].nickName);
+    addUserListString(fd, nickName);
+    m_userList_int[fd].nickName = nickName;
 }
 
-string User::getNick()
-{
-    return m_nickName;
+void User::setPassword(int fd, string password){
+    m_userList_int[fd].password = password;
 }
 
-void User::setNick(string nick)
-{
-    m_nickName = nick;
+void User::setLoginName(int fd, string loginName){
+    m_userList_int[fd].loginName = loginName;
 }
 
-string User::getUserInfo()
-{
-    return m_loginName;
+string User::getNickName(int fd){
+    return m_userList_int[fd].nickName;
 }
 
-void User::setLoginName(string userInfo)
-{
-    m_loginName = userInfo;
+// map<int, struct userInfo> getUserList(int fd)
+// {
+    
+// }
+
+// map<int, struct userInfo> getUserList_int(int fd)
+// {
+
+// }
+
+bool User::isLogin(int fd){
+    return m_userList_int[fd].hostName != "" && \
+    m_userList_int[fd].loginName != "" && \
+    m_userList_int[fd].nickName != "" && \
+    m_userList_int[fd].password != "";
 }
 
-string User::getPassword()
+void User::setWriteBuffer(int fd, string newString)
 {
-    return m_password;
+    m_userList_int[fd].writeBuffer += newString;
 }
 
-void User::setPassword(string password)
-{
-    m_password = password;
+string User::getWriteBuffer(int fd){
+    return m_userList_int[fd].writeBuffer;
 }
 
-string User::getChannelName()
-{
-    return m_channelName;
+void User::clearWriteBuffer(int fd){
+    m_userList_int[fd].writeBuffer = "";
 }
 
-void User::setChannelName(string channelName)
-{
-    m_channelName = channelName;
+string User::getHostName(int fd){
+    return m_userList_int[fd].hostName;
 }
 
-string User::getWriteBuffer()
-{
-    return m_writeBuffer;
+string User::getPassword(int fd){
+    return m_userList_int[fd].password;
 }
 
-void User::setWriteBuffer(string newString)
-{
-    m_writeBuffer += newString;
+string User::getLoginName(int fd){
+    return m_userList_int[fd].loginName;
 }
 
-void User::clearWriteBuffer()
-{
-    m_writeBuffer = "";
+int User::getUserFd(string nickName){
+    return m_userList_string[nickName];
 }
 
-string User::getHostName()
-{
-    return m_hostName;
+bool User::isExistUser(string nickName){
+    return(m_userList_string.count(nickName));
 }
 
-void User::setHostName(string hostName)
-{
-    m_hostName = hostName;
+void User::setBroadCastMessageToAllUser(User &user, string message){
+    map<int, struct userInfo>::iterator it = m_userList_int.begin();
+
+    for (; it != m_userList_int.end(); ++it){
+        user.setWriteBuffer(it->first, message);
+    }
 }
 
-int User::getStatus()
-{
-    return m_status; 
+void User::addChannel(int fd, string channelName){
+    m_userList_int[fd].channelList.push_back(channelName);
 }
 
-void User::setStatus(int status)
+vector<string> User::getChannelList(int fd){
+    return m_userList_int[fd].channelList;
+}
+
+void User::deleteChannel(int fd, string channelName){
+    
+    vector<string> &channelList = m_userList_int[fd].channelList;
+    vector<string>::iterator it = channelList.begin();
+    
+    for (; it != channelList.end(); ++it){
+        if (*it == channelName){
+            channelList.erase(it);
+            break;
+        }
+    }
+}
+
+void User::deleteUser(int fd)
 {
-    m_status = status;
+    string nickName = getNickName(fd);
+    m_userList_int.erase(fd);
+    m_userList_string.erase(nickName);
+    close(fd);
+}
+
+int User::getStatus(int fd)
+{
+    return m_userList_int[fd].status;
+}
+
+void User::setStatus(int fd, int status)
+{
+    m_userList_int[fd].status = status;
 }

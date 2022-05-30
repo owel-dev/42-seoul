@@ -15,57 +15,27 @@
 #include <iostream>
 #include <sstream>
 #include <queue>
-#include "User.hpp"
-#include "Channel.hpp"
 
-using namespace std;
-#define BUF_SIZE 1000
 #define EVENT_SIZE 100
+using namespace std;
 
-//int messagecount = 0;
-
-class Server
-{
+class Server {
     private:
-    //    string name;
-    string m_password;
-    vector<struct kevent> m_watchList;
-    int m_portNum;
-    int m_serverSocket;
-    struct kevent m_eventList[EVENT_SIZE];
-    map<int, User> m_userList;
-    map<string, Channel> m_channelList;
+        int m_kq;
+        int m_socket;
+        vector<struct kevent> m_watchList;
+        string m_password;
 
     public:
-    Server(int portNum, string password);
+        void createServerSocket(string password);
+        void bindServerSocket(int family, u_int32_t addr, int portNumb);
+        void listenServerSocket(int backlog);
+        void addServerSocketEvent();
+        vector<struct kevent> watchEvents(int eventSize, const timespec *timeout);
 
-    ~Server();
-
-    void WatchEvents();
-
-    private:
-    void eventHandler(int eventCount);
-
-    void acceptClientSocket();
-
-    void clientEventHandler(struct kevent event);
-
-    void join(string channelName, struct kevent event);
-    void quit(std::vector<string> command, struct kevent event);
-    void deleteUser(int i);
-    void privmsg(std::vector<string> command, struct kevent event);
-    void part(std::vector<string> command, struct kevent event);
-    void nick(std::vector<string> command, struct kevent event);
-    void kick(std::vector<string> command, struct kevent event);
-
-    string serverMessage(int code, string nickName, string message);
-    string serverMessage(int code, string nickName, string loginName, string channelName, string message);
-
-    string prefixMessage(string nickName, string loginName, string hostName, string command, string message);
-    string prefixMessage(string nickName, string loginName, string hostName, string command, string channel, string target, string message);
-    vector<string> split(string str, string delim);
-};
-
-
+        int getServerSocket();
+        string getPassword();
+        pair<int, string> acceptClientSocket();
+};       
 
 #endif

@@ -1,31 +1,28 @@
 #ifndef CHANNEL_HPP
 #define CHANNEL_HPP
 
-#include <utility>
-#include <iostream>
-#include <vector>
 #include <map>
-#include "User.hpp"
+#include <string>
+#include <vector>
 
+#include "User.hpp"
 
 using namespace std;
 
-class Channel
-{
-public:
-    Channel();
-
-    map<int, User&> m_userList;
-    string m_name;
-    int m_admin;
-
-    void addUser(User &user);
-
-    void setName(string name);
-
-    void setAdmin(int fd);
-
-    string getUserList(int newUserFd);
+class Channel {
+    private:
+        map<string, vector<int> > m_channelList_string;
+    public:
+        bool isValidChannel(string channelName);
+        bool hasUser(string channelName, int fd);
+        void addChannel(string channelName);
+        void addUser(string channelName, int fd);
+        void deleteUser(string channelName, int fd);
+        void setBroadCastMessage(string channelName, int sender, string message, User &user);
+        string getUserList(User &user, string channelName, int fd);
+        vector<int> getUserList_vec(string channelName);
+        bool isAdmin(string channelName, int fd);
 };
+
 
 #endif

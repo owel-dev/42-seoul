@@ -6,8 +6,6 @@ void join(User &user, Channel &channel, string target, int fd){
     string loginName = user.getLoginName(fd);
     string hostName = user.getHostName(fd);
     
-    std::cout << "target size: " << target.size() << std::endl;
-
     if (target.size() == 1) {
         user.setWriteBuffer(fd, serverMessage(ERR_NEEDMOREPARAMS, nickName, "", "", "Not enough parameters"));
         return;

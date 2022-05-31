@@ -1,7 +1,7 @@
 #include "Server.hpp"
 #include "User.hpp"
 #include "Channel.hpp"
-#include "command.hpp"
+#include "commands/command.hpp"
 #include "ctime"
 
 #define BUF_SIZE 1000

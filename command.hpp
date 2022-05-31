@@ -1,6 +1,7 @@
 #ifndef COMMAND_HPP
 #define COMMAND_HPP
 
+#include "define.hpp"
 #include "User.hpp"
 #include "Channel.hpp"
 

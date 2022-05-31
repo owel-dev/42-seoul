@@ -56,7 +56,6 @@ int main(int argc, char *argv[])
                     if (currentFd == server.getServerSocket())
                     {
                         pair<int, string> client = server.acceptClientSocket();
-
                         user.addUserListInt(client.first);
                         user.setHostName(client.first, client.second);
                     }
@@ -109,11 +108,6 @@ int main(int argc, char *argv[])
                                     user.setWriteBuffer(currentFd, serverMessage(RPL_YOURHOST, nickName, "", "", "Your host is " + serverName + ", running v:1.0"));
                                     user.setWriteBuffer(currentFd, serverMessage(RPL_CREATED, nickName, "", "", "This server was created" + date));
                                     user.setWriteBuffer(currentFd, serverMessage(RPL_MYINFO, nickName, "", "", serverName + " v:1.0"));
-                    
-                                    // user.setWriteBuffer(currentFd, ":ft_irc.com 001 " + user.getNickName(currentFd) + " :Welcome to the Internet Relay Network\r\n");
-                                    // user.setWriteBuffer(currentFd, ":ft_irc.com 002 " + user.getNickName(currentFd) + " :Your host is " + user.getHostName(currentFd) + ", running v:1.0\r\n");
-                                    // user.setWriteBuffer(currentFd, ":ft_irc.com 003 " + user.getNickName(currentFd) + " :This server was created" + dt + "\r\n");
-                                    // user.setWriteBuffer(currentFd, ":ft_irc.com 004 " + user.getNickName(currentFd) + " :" + user.getHostName(currentFd) + " v:1.0\r\n");
                                 }
                             }
                         }

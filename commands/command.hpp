@@ -1,9 +1,10 @@
 #ifndef COMMAND_HPP
 #define COMMAND_HPP
 
-#include "define.hpp"
-#include "User.hpp"
-#include "Channel.hpp"
+#include <iostream>
+#include "../define.hpp"
+#include "../User.hpp"
+#include "../Channel.hpp"
 
 void join(User &user, Channel &channel, string target, int fd);
 void privmsg(User &user, Channel &channel, vector<string> command, int fd);

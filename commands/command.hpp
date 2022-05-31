@@ -10,6 +10,8 @@ void join(User &user, Channel &channel, string target, int fd);
 void privmsg(User &user, Channel &channel, vector<string> command, int fd);
 void part(User &user, Channel &channel, vector<string> command, int fd);
 void nick(User &user, string newNickName, int fd);
+void user(User &user, vector<string> command, int fd);
+void pass(User &user, vector<string> command, int fd);
 void kick(User &user, Channel &channel, vector<string> command, int fd);
 void quit(User &user, Channel &channel, string message, int fd);
 void deleteUser(User &user, int fd);

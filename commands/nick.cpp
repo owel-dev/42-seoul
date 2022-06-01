@@ -1,13 +1,14 @@
 #include "command.hpp"
 
-void nick(User &user, string newNickName, int fd){
+void nick(User &user, vector<string> command, int fd){
 
+    string newNickName = command.size() > 1 ? command[1] : "";
     string nickName = user.getNickName(fd);
     string loginName = user.getLoginName(fd);
     string hostName = user.getHostName(fd);
     string fullMessage = prefixMessage(nickName, loginName, hostName, "NICK", newNickName);
 
-    if (newNickName == ""){
+    if (newNickName == "" || newNickName == ":"){
         user.setWriteBuffer(fd, serverMessage(ERR_NONICKNAMEGIVEN, nickName, "", "", "No nickname given"));
         return;
     }
@@ -18,7 +19,7 @@ void nick(User &user, string newNickName, int fd){
     }
     if (user.isExistUser(newNickName))
     {
-        user.setWriteBuffer(fd, serverMessage(ERR_NICKNAMEINUSE, nickName, "", "", "Nickname is already in use"));
+        user.setWriteBuffer(fd, serverMessage(ERR_NICKNAMEINUSE, nickName, newNickName, "", "Nickname is already in use"));
         return;
     }
     

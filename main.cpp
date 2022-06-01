@@ -72,22 +72,28 @@ int main(int argc, char *argv[])
                         for (; it != message.end(); ++it)
                         {
                             std::vector<string> command = split(*it, " ");
+                            std::cout << "================================================" << std::endl;
+                            for (size_t i = 0; i < command.size(); ++i) {
+                                std::cout << "cmd: |" << command[i] << "|" << std::endl;
+                            }
                             if (user.isLogin(currentFd))
                             {
                                 if (command[0] == "QUIT")
-                                    quit(user, channel, command[1], currentFd);
+                                    quit(user, channel, command, currentFd);
                                 else if (command[0] == "JOIN")
-                                    join(user, channel, command[1], currentFd);
+                                    join(user, channel, command, currentFd);
                                 else if (command[0] == "PRIVMSG" || command[0] == "NOTICE")
                                     privmsg(user, channel, command, currentFd);
                                 else if (command[0] == "PART")
                                     part(user, channel, command, currentFd);
                                 else if (command[0] == "NICK")
-                                    nick(user, command[1], currentFd);
+                                    nick(user, command, currentFd);
                                 else if (command[0] == "KICK")
                                     kick(user, channel, command, currentFd);
-                                else if (command[0] == "PONG")
-                                    user.setWriteBuffer(currentFd, "PING :" + user.getHostName(currentFd) + "\r\n");
+                                else if (command[0] == "PASS")
+                                    pass(user, server.getPassword(), command, currentFd);
+                                // else if (command[0] == "PONG")
+                                //     user.setWriteBuffer(currentFd, "PING :" + user.getHostName(currentFd) + "\r\n");
                                 else
                                     user.setWriteBuffer(currentFd, serverMessage(ERR_UNKNOWNCOMMAND, user.getHostName(currentFd), command[0], "", "Unknown command"));
                             }
@@ -96,7 +102,7 @@ int main(int argc, char *argv[])
                                 if (command[0] == "PASS")
                                     pass(user, server.getPassword(), command, currentFd);
                                 else if (command[0] == "NICK")
-                                    nick(user, command[1], currentFd);
+                                    nick(user, command, currentFd);
                                 else if (command[0] == "USER")
                                     userCmd(user, command, currentFd);
                                 else
@@ -133,6 +139,7 @@ int main(int argc, char *argv[])
             }
         }
         server.closeAll(user);
+        std::cout << "-------BYE!!--------" << std::endl;
         return 1;
     }
     catch(const char* str)

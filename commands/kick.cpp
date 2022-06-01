@@ -2,9 +2,9 @@
 
 void kick(User &user, Channel &channel, vector<string> command, int fd)
 {
-    string channelName = command[1];
-    string target = command[2];
-    string shortMessage = command[3];
+    string channelName = command.size() > 1 ? command[1] : "";
+    string target = command.size() > 2 ? command[2] : "";
+    string shortMessage = command.size() > 3 ? command[3] : "";
     string clientNickName = user.getNickName(fd);
     string clientLoginName = user.getLoginName(fd);
     string clientHostName = user.getHostName(fd);

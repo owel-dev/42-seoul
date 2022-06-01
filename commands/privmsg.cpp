@@ -2,8 +2,8 @@
 
 void privmsg(User &user, Channel &channel, vector<string> command, int fd){
 
-    string target = command[1];
-    string message = command[2];
+    string target = command.size() > 1 ? command[1] : "";
+    string message = command.size() > 2 ? command[2]: "";
     string senderNickName = user.getNickName(fd);
     string senderLoginName = user.getLoginName(fd);
     string senderHostName = user.getHostName(fd);
@@ -24,7 +24,7 @@ void privmsg(User &user, Channel &channel, vector<string> command, int fd){
             return;
         }
         if (!channel.hasUser(target, fd)) {
-            user.setWriteBuffer(fd, serverMessage(ERR_NOSUCHCHANNEL, senderNickName, target, "", "Cannot send to channel"));
+            user.setWriteBuffer(fd, serverMessage(ERR_CANNOTSENDTOCHAN, senderNickName, target, "", "Cannot send to channel"));
             return;
         }
         channel.setBroadCastMessage(target, fd, fullMessage, user);

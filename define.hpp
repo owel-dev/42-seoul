@@ -11,7 +11,7 @@
 
 ///////////// error code
 
-#define ERR_NOSUCHNICK 401      // 닉네임을 아무도 안쓰고 있을 때. // o
+#define ERR_NOSUCHNICK 401      // 닉네임을 아무도 안쓰고 있을 때. // 
 #define ERR_NEEDMOREPARAMS 461  // 커맨드 인자갯수 부족할때. // 구현해야 함
 #define ERR_PASSWDMISMATCH 464  // 비밀번호 안넣었거나 틀렸을때. // 구현해야 함
 #define ERR_NONICKNAMEGIVEN 431 // 닉 다음 인자를 안줬을경우. // 구현해야 함

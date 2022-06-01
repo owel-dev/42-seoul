@@ -1,12 +1,13 @@
 #include "command.hpp"
 
-void join(User &user, Channel &channel, string target, int fd){
+void join(User &user, Channel &channel, vector<string> command, int fd){
 
+    string target = command.size() > 1 ? command[1] : "";
     string nickName = user.getNickName(fd);
     string loginName = user.getLoginName(fd);
     string hostName = user.getHostName(fd);
     
-    if (target == "") {
+    if (target == "" || (target.size() == 1 && target[0] == '#')) {
         user.setWriteBuffer(fd, serverMessage(ERR_NEEDMOREPARAMS, nickName, "", "", "Not enough parameters"));
         return;
     }

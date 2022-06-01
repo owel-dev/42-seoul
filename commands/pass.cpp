@@ -2,7 +2,7 @@
 
 void pass(User &user, string serverPassword, vector<string> command, int fd) {
     string nickName = user.getNickName(fd);
-    string userPassword = command[1];
+    string userPassword = command.size() > 1 ? command[1] : "";
 
     if (userPassword == "") {
         user.setWriteBuffer(fd, serverMessage(ERR_NEEDMOREPARAMS, nickName, "", "", "Not enough parameters"));

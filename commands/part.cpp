@@ -2,14 +2,14 @@
 
 void part(User &user, Channel &channel, vector<string> command, int fd){
 
-    string channelName = command[1];
-    string message = command[2];
+    string channelName = command.size() > 1 ? command[1] : "";
+    string message = command.size() > 2 ? command[2] : "";
     string senderNickName = user.getNickName(fd);
     string senderLoginName = user.getLoginName(fd);
     string senderHostName = user.getHostName(fd);
     string fullMessage = prefixMessage(senderNickName, senderLoginName, senderHostName, "part", channelName + " " + message);
 
-    if (channelName == "") {
+    if (channelName == "" || channelName == ":") {
         user.setWriteBuffer(fd, serverMessage(ERR_NEEDMOREPARAMS, senderNickName, "", "", "Not enough parameters"));
         return;
     }

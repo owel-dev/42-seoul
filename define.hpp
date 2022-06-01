@@ -25,5 +25,6 @@
 #define ERR_UNKNOWNCOMMAND 421 // 구현해야 함
 #define ERR_NOPRIVILEGES 481 // o
 #define ERR_ALREADYREGISTRED 462
+#define ERR_NOTONCHANNEL 442
 
 #endif

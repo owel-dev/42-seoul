@@ -30,16 +30,6 @@ string User::getNickName(int fd){
     return m_userList_int[fd].nickName;
 }
 
-// map<int, struct userInfo> getUserList(int fd)
-// {
-    
-// }
-
-// map<int, struct userInfo> getUserList_int(int fd)
-// {
-
-// }
-
 bool User::isLogin(int fd){
     return m_userList_int[fd].hostName != "" && \
     m_userList_int[fd].loginName != "" && \

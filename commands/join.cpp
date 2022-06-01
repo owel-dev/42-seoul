@@ -6,8 +6,13 @@ void join(User &user, Channel &channel, string target, int fd){
     string loginName = user.getLoginName(fd);
     string hostName = user.getHostName(fd);
     
-    if (target.size() == 1) {
+    if (target == "") {
         user.setWriteBuffer(fd, serverMessage(ERR_NEEDMOREPARAMS, nickName, "", "", "Not enough parameters"));
+        return;
+    }
+
+    if (target[0] != '#') {
+        user.setWriteBuffer(fd, serverMessage(ERR_BADCHANMASK, nickName, target, "", "Bad Channel Mask"));
         return;
     }
 

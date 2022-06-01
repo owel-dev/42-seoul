@@ -4,17 +4,31 @@ void kick(User &user, Channel &channel, vector<string> command, int fd)
 {
     string channelName = command[1];
     string target = command[2];
-    string shortMessage = command.size() == 4 ? command[3] : "";
+    string shortMessage = command[3];
     string clientNickName = user.getNickName(fd);
     string clientLoginName = user.getLoginName(fd);
     string clientHostName = user.getHostName(fd);
     string message;
     
-    std::cout << "size: " << command.size() << std::endl;
-    // if (command.size() < 3) {
-    //     user.setWriteBuffer(fd, serverMessage(ERR_NEEDMOREPARAMS, clientNickName, "", "", "Not enough parameters"));
-    //     return;
-    // }
+    if (channelName == "" || target == "") {
+        user.setWriteBuffer(fd, serverMessage(ERR_NEEDMOREPARAMS, clientNickName, command[0], "", "Not enough parameters"));
+        return;
+    }
+
+    if (channelName[0] != '#') {
+        user.setWriteBuffer(fd, serverMessage(ERR_BADCHANMASK, clientNickName, channelName, "", "Bad Channel Mask"));
+        return;
+    }
+
+    if (!channel.isValidChannel(channelName)) {
+        user.setWriteBuffer(fd, serverMessage(ERR_NOSUCHCHANNEL, clientNickName, channelName, "", "No such channel"));
+        return;
+    }
+
+    if (!channel.hasUser(channelName, fd)) {
+        user.setWriteBuffer(fd, serverMessage(ERR_NOTONCHANNEL, clientNickName, channelName, "", "You're not on that channel"));
+        return;
+    }
 
     if (channel.isAdmin(channelName, fd) && user.isExistUser(target))
     {
@@ -36,8 +50,8 @@ void kick(User &user, Channel &channel, vector<string> command, int fd)
         return ;
     }
     if (channel.isAdmin(channelName, fd))
-        message = serverMessage(ERR_NOSUCHNICK, clientNickName, clientLoginName, "" , "No such nick/channel");
+        message = serverMessage(ERR_NOSUCHNICK, clientNickName, target, "" , " No such nick/channel");
     else
-        message = serverMessage(ERR_NOPRIVILEGES, clientNickName, clientLoginName, "" , "Permission Denied- You're not an IRC operator");
+        message = serverMessage(ERR_NOPRIVILEGES, clientNickName, "", "" , "Permission Denied- You're not an IRC operator");
     user.setWriteBuffer(fd, message);
 }

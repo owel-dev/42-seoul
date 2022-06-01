@@ -9,8 +9,13 @@ void part(User &user, Channel &channel, vector<string> command, int fd){
     string senderHostName = user.getHostName(fd);
     string fullMessage = prefixMessage(senderNickName, senderLoginName, senderHostName, "part", channelName + " " + message);
 
-    if (command.size() < 2) {
+    if (channelName == "") {
         user.setWriteBuffer(fd, serverMessage(ERR_NEEDMOREPARAMS, senderNickName, "", "", "Not enough parameters"));
+        return;
+    }
+
+    if (!channel.isValidChannel(channelName)) {
+        user.setWriteBuffer(fd, serverMessage(ERR_NOSUCHCHANNEL, senderNickName, channelName, "", "No such channel"));
         return;
     }
 

@@ -24,5 +24,6 @@
 #define ERR_NOTEXTTOSEND 412 // 구현해야 함
 #define ERR_UNKNOWNCOMMAND 421 // 구현해야 함
 #define ERR_NOPRIVILEGES 481 // o
+#define ERR_ALREADYREGISTRED 462
 
 #endif

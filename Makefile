@@ -5,7 +5,7 @@ CXXFLAGS		= -Wall -Wextra -Werror -std=c++98
 RM				= rm -rf
 OBJDIR			= ./obj/
 SRCS			= User.cpp Server.cpp Channel.cpp main.cpp\
-				  commands/join.cpp commands/kick.cpp commands/nick.cpp commands/part.cpp commands/privmsg.cpp commands/quit.cpp commands/utils.cpp
+				  commands/join.cpp commands/kick.cpp commands/nick.cpp commands/part.cpp commands/privmsg.cpp commands/quit.cpp commands/user.cpp commands/pass.cpp commands/utils.cpp 
 						
 					
 OBJS_FILE		= $(SRCS:.cpp=.o)

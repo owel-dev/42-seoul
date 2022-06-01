@@ -9,8 +9,12 @@ void part(User &user, Channel &channel, vector<string> command, int fd){
     string senderHostName = user.getHostName(fd);
     string fullMessage = prefixMessage(senderNickName, senderLoginName, senderHostName, "part", channelName + " " + message);
 
+    if (command.size() < 2) {
+        user.setWriteBuffer(fd, serverMessage(ERR_NEEDMOREPARAMS, senderNickName, "", "", "Not enough parameters"));
+        return;
+    }
+
     channel.setBroadCastMessage(channelName, 0, fullMessage, user);
-    
     channel.deleteUser(channelName, fd);
     user.deleteChannel(fd, channelName);
 

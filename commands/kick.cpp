@@ -5,11 +5,15 @@ void kick(User &user, Channel &channel, vector<string> command, int fd)
     string channelName = command[1];
     string target = command[2];
     string shortMessage = command.size() == 4 ? command[3] : "";
-
     string clientNickName = user.getNickName(fd);
     string clientLoginName = user.getLoginName(fd);
     string clientHostName = user.getHostName(fd);
     string message;
+    
+    // if (command.size() < 3) {
+    //     user.setWriteBuffer(fd, serverMessage(ERR_NEEDMOREPARAMS, clientNickName, "", "", "Not enough parameters"));
+    //     return;
+    // }
 
     if (channel.isAdmin(channelName, fd) && user.isExistUser(target))
     {

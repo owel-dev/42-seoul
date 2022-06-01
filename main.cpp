@@ -92,17 +92,14 @@ int main(int argc, char *argv[])
                             }
                             else
                             {
-                                if (command[0] == "PASS" && command[1] == server.getPassword()) {
-                                    user.setPassword(currentFd, command[1]);
-                                    std::cout << "currentFd: " << currentFd << "in pass: " << user.getPassword(currentFd) << std::endl;
+                                if (command[0] == "PASS") {
+                                    pass(user, server.getPassword(), command, currentFd);
                                 }
                                 else if (command[0] == "NICK") {
                                     nick(user, command[1], currentFd);
-                                    std::cout << "currentFd: " << currentFd << "in nick: " << user.getNickName(currentFd) << std::endl;
                                 }
                                 else if (command[0] == "USER") {
-                                    user.setLoginName(currentFd, command[1]);
-                                    std::cout << "currentFd: " << currentFd << "in login: " << user.getLoginName(currentFd) << std::endl;
+                                    userCmd(user, command, currentFd);
                                 }
                                 if (user.isLogin(currentFd))
                                 {

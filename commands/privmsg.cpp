@@ -23,6 +23,10 @@ void privmsg(User &user, Channel &channel, vector<string> command, int fd){
             user.setWriteBuffer(fd, serverMessage(ERR_NOSUCHCHANNEL, senderNickName, target, "", "No such channel"));
             return;
         }
+        if (!channel.hasUser(target, fd)) {
+            user.setWriteBuffer(fd, serverMessage(ERR_NOSUCHCHANNEL, senderNickName, target, "", "Cannot send to channel"));
+            return;
+        }
         channel.setBroadCastMessage(target, fd, fullMessage, user);
     }
     else {

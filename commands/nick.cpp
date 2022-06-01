@@ -11,12 +11,12 @@ void nick(User &user, string newNickName, int fd){
         user.setWriteBuffer(fd, serverMessage(ERR_NONICKNAMEGIVEN, nickName, "", "", "No nickname given"));
         return;
     }
-    if (validNickName(newNickName) == false)
+    if (isValidNickName(newNickName) == false)
     {
         user.setWriteBuffer(fd, serverMessage(ERR_ERRONEUSNICKNAME, nickName, newNickName, "", "Erroneous nickname"));
         return;
     }
-    if(user.isExistUser(newNickName))
+    if (user.isExistUser(newNickName))
     {
         user.setWriteBuffer(fd, serverMessage(ERR_NICKNAMEINUSE, nickName, "", "", "Nickname is already in use"));
         return;
@@ -28,7 +28,7 @@ void nick(User &user, string newNickName, int fd){
         user.setBroadCastMessageToAllUser(fullMessage);
 }
 
-bool validNickName(string newNickName)
+bool isValidNickName(string newNickName)
 {
     size_t len = newNickName.length();
     for (size_t i = 0; i < len; i++)

@@ -10,6 +10,7 @@ void kick(User &user, Channel &channel, vector<string> command, int fd)
     string clientHostName = user.getHostName(fd);
     string message;
     
+    std::cout << "size: " << command.size() << std::endl;
     // if (command.size() < 3) {
     //     user.setWriteBuffer(fd, serverMessage(ERR_NEEDMOREPARAMS, clientNickName, "", "", "Not enough parameters"));
     //     return;

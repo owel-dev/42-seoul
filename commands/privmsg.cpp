@@ -9,7 +9,20 @@ void privmsg(User &user, Channel &channel, vector<string> command, int fd){
     string senderHostName = user.getHostName(fd);
     string fullMessage = prefixMessage(senderNickName, senderLoginName, senderHostName, command[0], target + " " + message);
     
+    if (target == "") {
+        user.setWriteBuffer(fd, serverMessage(ERR_NORECIPIENT, senderNickName, "", "", "No recipient given " + command[0]));
+        return;
+    }
+    if (message == "") {
+        user.setWriteBuffer(fd, serverMessage(ERR_NOTEXTTOSEND, senderNickName, "", "", "No text to send"));
+        return;
+    }
+
     if (target[0] == '#'){
+        if (!channel.isValidChannel(target)) {
+            user.setWriteBuffer(fd, serverMessage(ERR_NOSUCHCHANNEL, senderNickName, target, "", "No such channel"));
+            return;
+        }
         channel.setBroadCastMessage(target, fd, fullMessage, user);
     }
     else {

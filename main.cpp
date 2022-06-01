@@ -72,7 +72,6 @@ int main(int argc, char *argv[])
                         for (; it != message.end(); ++it)
                         {
                             std::vector<string> command = split(*it, " ");
-                            std::cout << "command[0]: |" << command[0] << "|, command[1]: |" << command[1] << "|" << std::endl;
                             if (user.isLogin(currentFd))
                             {
                                 if (command[0] == "QUIT")
@@ -89,18 +88,19 @@ int main(int argc, char *argv[])
                                     kick(user, channel, command, currentFd);
                                 else if (command[0] == "PONG")
                                     user.setWriteBuffer(currentFd, "PING :" + user.getHostName(currentFd) + "\r\n");
+                                else
+                                    user.setWriteBuffer(currentFd, serverMessage(ERR_UNKNOWNCOMMAND, user.getHostName(currentFd), command[0], "", "Unknown command"));
                             }
                             else
                             {
-                                if (command[0] == "PASS") {
+                                if (command[0] == "PASS")
                                     pass(user, server.getPassword(), command, currentFd);
-                                }
-                                else if (command[0] == "NICK") {
+                                else if (command[0] == "NICK")
                                     nick(user, command[1], currentFd);
-                                }
-                                else if (command[0] == "USER") {
+                                else if (command[0] == "USER")
                                     userCmd(user, command, currentFd);
-                                }
+                                else
+                                    user.setWriteBuffer(currentFd, serverMessage(ERR_UNKNOWNCOMMAND, user.getHostName(currentFd), command[0], "", "Unknown command"));
                                 if (user.isLogin(currentFd))
                                 {
                                     time_t now = time(0);

@@ -67,7 +67,6 @@ pair<int, string> Server::acceptClientSocket()
 	EV_SET(&tempEvent, clientSocket, EVFILT_WRITE, EV_ADD | EV_ENABLE, 0, 0, NULL);
     m_watchList.push_back(tempEvent);
     string hostName = inet_ntoa(clientAddr.sin_addr);
-    // cout << "-----Connect user. socket number: " << clientSocket << "------" << endl;
      
     return (make_pair(clientSocket, hostName));
 }

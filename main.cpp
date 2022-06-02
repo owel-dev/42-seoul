@@ -17,6 +17,24 @@ void sigint(int num)
 	}
 }
 
+bool receiveMessage(int fd, User &user)
+{
+    char buf[BUF_SIZE];
+    int str_len = recv(fd, &buf, BUF_SIZE, 0);                
+    if (str_len == 0)
+        return false;
+    buf[str_len] = 0;
+    user.setReadBuffer(fd, buf);
+}
+
+bool isValidMessage(string readBuffer)
+{
+    int len = readBuffer.size();
+    if (readBuffer[len - 1] != '\n') { 
+        return false;
+    }
+}
+
 int main(int argc, char *argv[])
 {
     Server server;
@@ -64,18 +82,14 @@ int main(int argc, char *argv[])
                     }
                     else
                     {
-                        char buf[BUF_SIZE];
-                        int str_len = recv(currentFd, &buf, BUF_SIZE, 0);                
-                        if (str_len == 0)
+                        if (!receiveMessage(currentFd, user))
                             continue;
-                        buf[str_len] = 0;
-                        user.setReadBuffer(currentFd, buf);
                         string readBuffer = user.getReadBuffer(currentFd);
+
                         int len = readBuffer.size();
                         if (readBuffer[len - 1] != '\n') { 
                             continue;
                         }
-                        cout << "Recieve: " << readBuffer << endl;
                         std::vector<string> message;
                         if (readBuffer[len - 1] == '\n' && readBuffer[len - 2] != '\r')
                             message = split(readBuffer, "\n");
@@ -86,10 +100,6 @@ int main(int argc, char *argv[])
                         for (; it != message.end(); ++it)
                         {
                             std::vector<string> command = split(*it, " ");
-                            std::cout << "================================================" << std::endl;
-                            for (size_t i = 0; i < command.size(); ++i) {
-                                std::cout << "cmd: |" << command[i] << "|" << std::endl;
-                            }
                             if (user.isLogin(currentFd))
                             {
                                 if (command[0] == "QUIT")
@@ -143,7 +153,6 @@ int main(int argc, char *argv[])
                     if (message != "")
                     {
                         send(currentFd, message.c_str(), message.size(), 0);
-                        std::cout << "send to " << user.getNickName(currentFd) << ": " << message << std::endl;
                         user.clearWriteBuffer(currentFd);
                     }
 
@@ -153,7 +162,6 @@ int main(int argc, char *argv[])
             }
         }
         server.closeAll(user);
-        std::cout << "-------BYE!!--------" << std::endl;
         return 2;
     }
     catch(const char* str)
@@ -162,6 +170,5 @@ int main(int argc, char *argv[])
         server.closeAll(user);
         return 1;
     }
-    std::cout << "-------0--------" << std::endl;
     return 0;
 }

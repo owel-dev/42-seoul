@@ -19,6 +19,7 @@ class User {
             string hostName;
             string password;
             string writeBuffer;
+            string readBuffer;
             int status;
             vector<string> channelList;
 
@@ -48,7 +49,7 @@ class User {
         bool isLogin(int fd);
         void setWriteBuffer(int fd, string newString);
         string getWriteBuffer(int fd);
-        void clearWriteBuffer(int fd);
+        void clearBuffer(int fd);
         string getHostName(int fd);
         string getPassword(int fd);
         string getLoginName(int fd);
@@ -61,6 +62,8 @@ class User {
         int getStatus(int fd);
         void setStatus(int fd, int status);
         map<string, int> getUserListString();
+        void setReadBuffer(int fd, string newString);
+        string getReadBuffer(int fd);
 };      
 
 #endif

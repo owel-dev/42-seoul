@@ -66,8 +66,18 @@ int main(int argc, char *argv[])
                         if (str_len == 0)
                             continue;
                         buf[str_len] = 0;
-                        cout << "Recieve: " << buf << endl;
-                        std::vector<string> message = split(buf, "\r\n");
+                        user.setReadBuffer(currentFd, buf);
+                        string readBuffer = user.getReadBuffer(currentFd);
+                        int len = readBuffer.size();
+                        if (readBuffer[len - 1] != '\n') { 
+                            continue;
+                        }
+                        cout << "Recieve: " << readBuffer << endl;
+                        std::vector<string> message;
+                        if (readBuffer[len - 1] == '\n' && readBuffer[len - 2] != '\r')
+                            message = split(readBuffer, "\n");
+                        else if (readBuffer[len - 1] == '\n' && readBuffer[len - 2] == '\r')
+                            message = split(readBuffer, "\r\n");
                         vector<string>::iterator it = message.begin();
                         for (; it != message.end(); ++it)
                         {
@@ -130,7 +140,7 @@ int main(int argc, char *argv[])
                     {
                         send(currentFd, message.c_str(), message.size(), 0);
                         std::cout << "send to " << user.getNickName(currentFd) << ": " << message << std::endl;
-                        user.clearWriteBuffer(currentFd);
+                        user.clearBuffer(currentFd);
                     }
 
                     if (user.getStatus(currentFd) == QUIT)

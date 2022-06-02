@@ -46,8 +46,9 @@ string User::getWriteBuffer(int fd){
     return m_userList_int[fd].writeBuffer;
 }
 
-void User::clearWriteBuffer(int fd){
+void User::clearBuffer(int fd){
     m_userList_int[fd].writeBuffer = "";
+    m_userList_int[fd].readBuffer = "";
 }
 
 string User::getHostName(int fd){
@@ -120,4 +121,14 @@ void User::setStatus(int fd, int status)
 map<string, int> User::getUserListString()
 {
     return m_userList_string;
+}
+
+void User::setReadBuffer(int fd, string newString)
+{
+    m_userList_int[fd].readBuffer += newString;
+}
+
+string User::getReadBuffer(int fd)
+{
+    return m_userList_int[fd].readBuffer;
 }

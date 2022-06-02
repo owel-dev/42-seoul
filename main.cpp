@@ -48,7 +48,10 @@ int main(int argc, char *argv[])
             {
                 struct kevent currentEvent = eventList[i];
                 int currentFd = currentEvent.ident;
-                if (currentEvent.flags & EV_ERROR){
+                if (currentEvent.flags & EV_ERROR) {
+                    vector <string> command;
+                    command.push_back("QUIT");
+                    quit(user, channel, command, currentFd);
                     user.deleteUser(currentFd);
                 }
                 else if (currentEvent.filter == EVFILT_READ)
@@ -78,6 +81,7 @@ int main(int argc, char *argv[])
                             message = split(readBuffer, "\n");
                         else if (readBuffer[len - 1] == '\n' && readBuffer[len - 2] == '\r')
                             message = split(readBuffer, "\r\n");
+                        user.clearReadBuffer(currentFd);
                         vector<string>::iterator it = message.begin();
                         for (; it != message.end(); ++it)
                         {
@@ -102,8 +106,8 @@ int main(int argc, char *argv[])
                                     kick(user, channel, command, currentFd);
                                 else if (command[0] == "PASS")
                                     pass(user, server.getPassword(), command, currentFd);
-                                // else if (command[0] == "PONG")
-                                //     user.setWriteBuffer(currentFd, "PING :" + user.getHostName(currentFd) + "\r\n");
+                                else if (command[0] == "PONG")
+                                    user.setWriteBuffer(currentFd, "PING :" + user.getHostName(currentFd) + "\r\n");
                                 else
                                     user.setWriteBuffer(currentFd, serverMessage(ERR_UNKNOWNCOMMAND, user.getHostName(currentFd), command[0], "", "Unknown command"));
                             }
@@ -140,7 +144,7 @@ int main(int argc, char *argv[])
                     {
                         send(currentFd, message.c_str(), message.size(), 0);
                         std::cout << "send to " << user.getNickName(currentFd) << ": " << message << std::endl;
-                        user.clearBuffer(currentFd);
+                        user.clearWriteBuffer(currentFd);
                     }
 
                     if (user.getStatus(currentFd) == QUIT)
@@ -150,7 +154,7 @@ int main(int argc, char *argv[])
         }
         server.closeAll(user);
         std::cout << "-------BYE!!--------" << std::endl;
-        return 1;
+        return 2;
     }
     catch(const char* str)
     {
@@ -158,5 +162,6 @@ int main(int argc, char *argv[])
         server.closeAll(user);
         return 1;
     }
+    std::cout << "-------0--------" << std::endl;
     return 0;
 }

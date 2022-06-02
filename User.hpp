@@ -49,7 +49,8 @@ class User {
         bool isLogin(int fd);
         void setWriteBuffer(int fd, string newString);
         string getWriteBuffer(int fd);
-        void clearBuffer(int fd);
+        void clearWriteBuffer(int fd);
+        void clearReadBuffer(int fd);
         string getHostName(int fd);
         string getPassword(int fd);
         string getLoginName(int fd);

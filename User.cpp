@@ -46,11 +46,12 @@ string User::getWriteBuffer(int fd){
     return m_userList_int[fd].writeBuffer;
 }
 
-void User::clearBuffer(int fd){
+void User::clearWriteBuffer(int fd){
     m_userList_int[fd].writeBuffer = "";
+}
+void User::clearReadBuffer(int fd){
     m_userList_int[fd].readBuffer = "";
 }
-
 string User::getHostName(int fd){
     return m_userList_int[fd].hostName;
 }

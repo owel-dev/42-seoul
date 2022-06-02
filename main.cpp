@@ -25,6 +25,7 @@ bool receiveMessage(int fd, User &user)
         return false;
     buf[str_len] = 0;
     user.setReadBuffer(fd, buf);
+    return true;
 }
 
 bool isValidMessage(string readBuffer)
@@ -33,6 +34,7 @@ bool isValidMessage(string readBuffer)
     if (readBuffer[len - 1] != '\n') { 
         return false;
     }
+    return true;
 }
 
 int main(int argc, char *argv[])
@@ -85,7 +87,6 @@ int main(int argc, char *argv[])
                         if (!receiveMessage(currentFd, user))
                             continue;
                         string readBuffer = user.getReadBuffer(currentFd);
-
                         int len = readBuffer.size();
                         if (readBuffer[len - 1] != '\n') { 
                             continue;

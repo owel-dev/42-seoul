@@ -16,7 +16,7 @@ all:			objd_build	$(NAME)
 $(NAME):		$(OBJS)
 				$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
-$(OBJDIR)%.o : %.cpp
+$(OBJDIR)%.o : %.cpp | $(OBJDIR)
 				$(CXX) $(CXXFLAGS) $< -c -o $@
 
 objd_build		:

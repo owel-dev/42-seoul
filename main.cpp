@@ -17,6 +17,14 @@ void sigint(int num)
 	}
 }
 
+void deleteUserInServer(int fd, User &user, Channel &channel)
+{
+    vector <string> command;
+    command.push_back("QUIT");
+    quit(user, channel, command, fd);
+    user.deleteUser(fd);
+}
+
 bool receiveMessage(int fd, User &user)
 {
     char buf[BUF_SIZE];
@@ -28,13 +36,36 @@ bool receiveMessage(int fd, User &user)
     return true;
 }
 
-bool isValidMessage(string readBuffer)
+bool isValidMessage(string message)
 {
-    int len = readBuffer.size();
-    if (readBuffer[len - 1] != '\n') { 
+    int len = message.size();
+    if (message[len - 1] != '\n')
         return false;
-    }
     return true;
+}
+
+vector<string> getSplitedMessage(string message)
+{
+    vector<string> splitedMessage;
+    int len = message.size();
+    if (message[len - 1] == '\n' && message[len - 2] != '\r')
+        splitedMessage = split(message, "\n");
+    else if (message[len - 1] == '\n' && message[len - 2] == '\r')
+        splitedMessage = split(message, "\r\n");
+    return splitedMessage;
+}
+
+void sendWelcomeMessage(int fd, User &user)
+{
+    time_t now = time(0);
+    string date = ctime(&now);
+    string nickName = user.getNickName(fd);
+    string serverName = user.getHostName(fd);
+    user.addUserListString(fd, user.getNickName(fd));
+    user.setWriteBuffer(fd, serverMessage(RPL_WELCOME, nickName, "", "", "Welcome to the Internet Relay Network"));
+    user.setWriteBuffer(fd, serverMessage(RPL_YOURHOST, nickName, "", "", "Your host is " + serverName + ", running v:1.0"));
+    user.setWriteBuffer(fd, serverMessage(RPL_CREATED, nickName, "", "", "This server was created" + date));
+    user.setWriteBuffer(fd, serverMessage(RPL_MYINFO, nickName, "", "", serverName + " v:1.0"));
 }
 
 int main(int argc, char *argv[])
@@ -68,12 +99,8 @@ int main(int argc, char *argv[])
             {
                 struct kevent currentEvent = eventList[i];
                 int currentFd = currentEvent.ident;
-                if (currentEvent.flags & EV_ERROR) {
-                    vector <string> command;
-                    command.push_back("QUIT");
-                    quit(user, channel, command, currentFd);
-                    user.deleteUser(currentFd);
-                }
+                if (currentEvent.flags & EV_ERROR)
+                    deleteUserInServer(currentFd, user, channel);
                 else if (currentEvent.filter == EVFILT_READ)
                 {
                     if (currentFd == server.getServerSocket())
@@ -84,22 +111,18 @@ int main(int argc, char *argv[])
                     }
                     else
                     {
-                        if (!receiveMessage(currentFd, user))
-                            continue;
+                        if (!receiveMessage(currentFd, user)) 
+                            deleteUserInServer(currentFd, user, channel);
                         string readBuffer = user.getReadBuffer(currentFd);
-                        int len = readBuffer.size();
-                        if (readBuffer[len - 1] != '\n') { 
+                        if (!isValidMessage(readBuffer))
                             continue;
-                        }
-                        std::vector<string> message;
-                        if (readBuffer[len - 1] == '\n' && readBuffer[len - 2] != '\r')
-                            message = split(readBuffer, "\n");
-                        else if (readBuffer[len - 1] == '\n' && readBuffer[len - 2] == '\r')
-                            message = split(readBuffer, "\r\n");
+                        std::vector<string> message = getSplitedMessage(readBuffer);
                         user.clearReadBuffer(currentFd);
                         vector<string>::iterator it = message.begin();
                         for (; it != message.end(); ++it)
                         {
+                            if ((*it).size() == 0)
+                                continue;
                             std::vector<string> command = split(*it, " ");
                             if (user.isLogin(currentFd))
                             {
@@ -119,8 +142,9 @@ int main(int argc, char *argv[])
                                     pass(user, server.getPassword(), command, currentFd);
                                 else if (command[0] == "PONG")
                                     user.setWriteBuffer(currentFd, "PING :" + user.getHostName(currentFd) + "\r\n");
-                                else
+                                else{
                                     user.setWriteBuffer(currentFd, serverMessage(ERR_UNKNOWNCOMMAND, user.getHostName(currentFd), command[0], "", "Unknown command"));
+                                }
                             }
                             else
                             {
@@ -133,17 +157,7 @@ int main(int argc, char *argv[])
                                 else
                                     user.setWriteBuffer(currentFd, serverMessage(ERR_UNKNOWNCOMMAND, user.getHostName(currentFd), command[0], "", "Unknown command"));
                                 if (user.isLogin(currentFd))
-                                {
-                                    time_t now = time(0);
-                                    string date = ctime(&now);
-                                    string nickName = user.getNickName(currentFd);
-                                    string serverName = user.getHostName(currentFd);
-                                    user.addUserListString(currentFd, user.getNickName(currentFd));
-                                    user.setWriteBuffer(currentFd, serverMessage(RPL_WELCOME, nickName, "", "", "Welcome to the Internet Relay Network"));
-                                    user.setWriteBuffer(currentFd, serverMessage(RPL_YOURHOST, nickName, "", "", "Your host is " + serverName + ", running v:1.0"));
-                                    user.setWriteBuffer(currentFd, serverMessage(RPL_CREATED, nickName, "", "", "This server was created" + date));
-                                    user.setWriteBuffer(currentFd, serverMessage(RPL_MYINFO, nickName, "", "", serverName + " v:1.0"));
-                                }
+                                    sendWelcomeMessage(currentFd, user);
                             }
                         }
                     }
@@ -156,7 +170,6 @@ int main(int argc, char *argv[])
                         send(currentFd, message.c_str(), message.size(), 0);
                         user.clearWriteBuffer(currentFd);
                     }
-
                     if (user.getStatus(currentFd) == QUIT)
                         user.deleteUser(currentFd);
                 }

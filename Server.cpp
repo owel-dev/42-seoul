@@ -4,6 +4,9 @@ void Server::createServerSocket(string password)
 {
     if ((m_socket = socket(AF_INET, SOCK_STREAM, 0)) == -1)
         throw "socket() error";
+    // int flag = fcntl(m_socket, F_GETFL, 0);
+    // fcntl(m_socket, F_SETFL, flag | O_NONBLOCK);
+    fcntl(m_socket, F_SETFL, O_NONBLOCK);
     m_password = password;
 }
 
@@ -62,6 +65,7 @@ pair<int, string> Server::acceptClientSocket()
     struct kevent tempEvent;
 
     clientSocket = accept(m_socket, (struct sockaddr *) &clientAddr, &adr_sz);
+    fcntl(clientSocket, F_SETFL, O_NONBLOCK);
     EV_SET(&tempEvent, clientSocket, EVFILT_READ, EV_ADD | EV_ENABLE, 0, 0, NULL);
     m_watchList.push_back(tempEvent);
 	EV_SET(&tempEvent, clientSocket, EVFILT_WRITE, EV_ADD | EV_ENABLE, 0, 0, NULL);

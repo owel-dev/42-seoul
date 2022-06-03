@@ -4,8 +4,6 @@ void Server::createServerSocket(string password)
 {
     if ((m_socket = socket(AF_INET, SOCK_STREAM, 0)) == -1)
         throw "socket() error";
-    // int flag = fcntl(m_socket, F_GETFL, 0);
-    // fcntl(m_socket, F_SETFL, flag | O_NONBLOCK);
     fcntl(m_socket, F_SETFL, O_NONBLOCK);
     m_password = password;
 }

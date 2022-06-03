@@ -60,12 +60,11 @@ void sendWelcomeMessage(int fd, User &user)
     time_t now = time(0);
     string date = ctime(&now);
     string nickName = user.getNickName(fd);
-    string serverName = user.getHostName(fd);
     user.addUserListString(fd, user.getNickName(fd));
     user.setWriteBuffer(fd, serverMessage(RPL_WELCOME, nickName, "", "", "Welcome to the Internet Relay Network"));
-    user.setWriteBuffer(fd, serverMessage(RPL_YOURHOST, nickName, "", "", "Your host is " + serverName + ", running v:1.0"));
+    user.setWriteBuffer(fd, serverMessage(RPL_YOURHOST, nickName, "", "", "Your host is ft_irc.com, running v:1.0"));
     user.setWriteBuffer(fd, serverMessage(RPL_CREATED, nickName, "", "", "This server was created" + date));
-    user.setWriteBuffer(fd, serverMessage(RPL_MYINFO, nickName, "", "", serverName + " v:1.0"));
+    user.setWriteBuffer(fd, serverMessage(RPL_MYINFO, nickName, "", "", "ft_irc.com v:1.0"));
 }
 
 int main(int argc, char *argv[])

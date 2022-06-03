@@ -35,9 +35,7 @@ void join(User &user, Channel &channel, vector<string> command, int fd){
         user.addChannel(fd, channelName);
         
         channel.setBroadCastMessage(channelName, 0, message, user);
-        user.setWriteBuffer(fd, serverMessage(RPL_TOPIC, nickName, loginName, channelName, "A timey-wimey channel"));
-        user.setWriteBuffer(fd, serverMessage(RPL_NAMREPLY, nickName, loginName, channelName, \
-            channel.getUserList(user, channelName, fd)));
+        user.setWriteBuffer(fd, serverMessage(RPL_NAMREPLY, nickName, loginName, channelName, channel.getUserList(user, channelName, fd)));
         user.setWriteBuffer(fd, serverMessage(RPL_ENDOFNAMES, nickName, loginName, channelName, "End of NAMES list"));
     }
 }

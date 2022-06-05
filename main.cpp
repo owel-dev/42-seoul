@@ -4,17 +4,14 @@
 #include "commands/command.hpp"
 #include "ctime"
 
-#define BUF_SIZE 1000
+#define BUF_SIZE 3000
 
 bool stop = false;
 
 void sigint(int num)
 {
 	if (num == SIGINT)
-	{
-        // system("leaks ircserv");
 		stop = true;
-	}
 }
 
 void deleteUserInServer(int fd, User &user, Channel &channel)

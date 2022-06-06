@@ -7,13 +7,13 @@ networks:
 volumes:
   wordpress-volume:
     driver_opts:
-      type: 'none'
+      type: none
       device: '/home/ulee/data/wordpress'
       o: bind
 
   database-volume:
     driver_opts:
-      type: 'none'
+      type: none
       device: '/home/ulee/data/mariadb'
       o: bind
 

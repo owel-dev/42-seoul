@@ -1,0 +1,24 @@
+.nav {
+    background-color: #292D39;
+    color: #efefef;
+    display: flex;
+    height : 8vh;
+    padding-left: 0.5%;
+    padding-right: 0.5%;
+}
+
+#blank {
+    float :left;
+    flex: 20;
+}
+#logo {
+    object-fit: fill
+}
+.nav_menu {
+    flex : 1;
+    
+    margin-top: 1%;
+    margin-bottom: 1%;
+    margin-left: 0.5%;
+    margin-right: 0.5%;
+}

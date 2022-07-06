@@ -1,0 +1,11 @@
+.side{
+    background-color: rgb(255, 255, 255);
+    border: 1px #00BABC solid;
+    box-sizing: border-box;
+    float: right;
+    display: flex;
+    flex: 1;
+    height: 92vh;
+    width: 30vh;
+
+}

@@ -1,4 +1,4 @@
-import './Content.css'
+import 'styles/layout/Content.css'
 
 function Content({children} : any)
 {

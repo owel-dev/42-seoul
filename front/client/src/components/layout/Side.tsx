@@ -1,4 +1,4 @@
-import './Side.css'
+import 'styles/layout/Side.css'
 function Side() {
     return (
         <aside className='side'>

@@ -1,16 +1,7 @@
+import {useState, useEffect} from 'react';
 import axios from 'axios';
-import React, {useState, useEffect} from 'react';
-import './Rank.css'
-
-type userRank = {
-    ranking : [{
-        rank: string;
-        nickName: string;
-        win: number;
-        lose: number;
-        winRate: string;
-    }]
-}
+import {userRank} from 'types/RankTypes';
+import RankRow from 'components/rank/RankRow';
 
 function RankTable() {
     const [rank, setRank] = useState<userRank | null>(null);
@@ -30,6 +21,7 @@ function RankTable() {
         };
         fetchData();
     }, []);
+    
     return (
         <div className='rank-table'>
             <RankRow rank='rank' nickName='nickname' win='win' lose='lose' winRate='winRate' type='rank-row-title'></RankRow>
@@ -41,24 +33,4 @@ function RankTable() {
     )
 }
 
-function RankRow(props : any) {
-    return (
-        <div className={props.type}>
-            <span className='rank-cell'>{props.rank}</span>
-            <span className='rank-cell'>{props.nickName}</span>
-            <span className='rank-cell'>{props.win}</span>
-            <span className='rank-cell'>{props.lose}</span>
-            <span className='rank-cell'>{props.winRate}</span>
-        </div>
-    )
-}
-
-function Rank() {
-    return (
-        <div className='rank'>
-            <h1>ranking</h1>
-            <RankTable></RankTable>
-        </div>
-    )
-}
-export default Rank;
+export default RankTable;

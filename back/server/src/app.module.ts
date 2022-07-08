@@ -13,9 +13,9 @@ import { RankingModule } from './ranking/ranking.module';
 		"type": "postgres",
 		"host": "localhost",
 		"port": 5432,
-		"username": "yongwkim",
-		"password": "test",
-		"database": "test",
+		"username": "ft",
+		"password": "1234",
+		"database": "trans",
 		"entities": ["dist/**/*.entity{.ts,.js}"],
 		"synchronize": true
 		}),

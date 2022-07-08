@@ -2,6 +2,7 @@ import { Injectable, Res } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateStatDto } from './dto/create-stat.dto';
+import { ResRankDto } from './dto/res-rank.dto';
 import { ResStatDto } from './dto/res-stat.dto';
 import { UpdateStatDto } from './dto/update-stat.dto';
 import { Stat } from './entities/stat.entity';
@@ -30,6 +31,18 @@ export class StatsService {
 		return this.saveStat(createStatDto.intraId, createStatDto.win, createStatDto.lose, winrate);
 	}
 
+	async getRanking(numUser: number) {
+		const rankRepo = await this.statRepository.find({
+			order: {
+				win: "DESC",
+				winrate: "DESC",
+			},
+			take: numUser,
+		});
+		let	resRankDto = new ResRankDto();
+		resRankDto.rankingArr = rankRepo;
+		return resRankDto;
+	}
 
 	async findOne(intraId : string) {
 		const statRepo = await this.statRepository.findOneBy({

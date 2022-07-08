@@ -4,8 +4,8 @@ import { AppService } from './app.service';
 import { StatsModule } from './stats/stats.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Stat } from './stats/entities/stat.entity';
-import { UsersModule } from './users/users.module';
 import { RankingModule } from './ranking/ranking.module';
+import { ChannelModule } from './channel/channel.module';
 
 @Module({
   imports: [StatsModule,
@@ -19,8 +19,8 @@ import { RankingModule } from './ranking/ranking.module';
 		"entities": ["dist/**/*.entity{.ts,.js}"],
 		"synchronize": true
 		}),
-	UsersModule,
 	RankingModule,
+	ChannelModule,
 	],
   controllers: [AppController],
   providers: [AppService],

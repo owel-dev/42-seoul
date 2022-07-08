@@ -1,0 +1,9 @@
+.friend-table{
+    border: 1px black solid;
+    overflow-y: scroll;
+    height: 80%;
+}
+.friend-row{
+    border: 1px grey solid;
+    font-size: large;
+}

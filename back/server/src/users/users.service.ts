@@ -31,7 +31,6 @@ export class UsersService {
 
 	async findOneMyPage(intraId : string)
 	{
-		console.log(intraId);
 		const userRepo = await this.userRepository.findOne({
 			relations: ["stats"],
 			where: {

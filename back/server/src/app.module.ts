@@ -5,7 +5,6 @@ import { StatsModule } from './stats/stats.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Stat } from './stats/entities/stat.entity';
 import { UsersModule } from './users/users.module';
-import { RankingModule } from './ranking/ranking.module';
 
 @Module({
   imports: [StatsModule,
@@ -20,7 +19,6 @@ import { RankingModule } from './ranking/ranking.module';
 		"synchronize": true
 		}),
 	UsersModule,
-	RankingModule,
 	],
   controllers: [AppController],
   providers: [AppService],

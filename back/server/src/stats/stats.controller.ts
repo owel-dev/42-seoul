@@ -13,6 +13,11 @@ export class StatsController {
     return this.statsService.create(createStatDto);
   }
 
+  @Get()
+  getRanking(@Query('n') numUser: number) {
+	  return this.statsService.getRanking(numUser);
+  }
+
 //   @Get()
 //   findAll() {
 //     return this.statsService.findAll();

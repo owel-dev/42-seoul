@@ -1,3 +1,4 @@
+import { User } from "src/users/entities/user.entity";
 import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity('stats')

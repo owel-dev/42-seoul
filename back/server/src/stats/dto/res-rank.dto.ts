@@ -35,8 +35,7 @@ export class ResRankDto {
 				const rank = array.filter((iter) =>
 				(iter.win > stat.win) ||
 				((iter.win === stat.win) && iter.winrate > stat.winrate)).length + 1;
-				return new UserRank(rank, stat.intra_id, stat.win, stat.lose, stat.winrate);
-				// user_tb와 연결 후 intra_id -> nickName으로 변경 예정
+				return new UserRank(rank, stat.user.nickname, stat.win, stat.lose, stat.winrate);
 			}
 		);
 	}

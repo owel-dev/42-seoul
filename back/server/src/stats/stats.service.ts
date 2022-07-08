@@ -14,25 +14,9 @@ export class StatsService {
 		private statRepository: Repository<Stat>,
 	) { }
 
-	private async saveStat(intraId: string, win: number, lose: number, winrate: number)
-	{
-		const stat = new Stat();
-		stat.intra_id = intraId;
-		stat.win = win;
-		stat.lose = lose;
-		stat.winrate = winrate;
-		await this.statRepository.save(stat);
-	}
-
-	create(createStatDto: CreateStatDto) {
-		let win : number = createStatDto.win;
-		let lose : number = createStatDto.lose;
-		let winrate : number = +win / (+win + +lose);
-		return this.saveStat(createStatDto.intraId, createStatDto.win, createStatDto.lose, winrate);
-	}
-
 	async getRanking(numUser: number) {
 		const rankRepo = await this.statRepository.find({
+			relations: ["user"],
 			order: {
 				win: "DESC",
 				winrate: "DESC",
@@ -44,21 +28,20 @@ export class StatsService {
 		return resRankDto;
 	}
 
-	async findOne(intraId : string) {
-		const statRepo = await this.statRepository.findOneBy({
-			intra_id: intraId,
-		});
-		let resStatDto = new ResStatDto(statRepo);
-		return resStatDto;
-	}
-
 //   findAll() {
 //     return `This action returns all stats`;
 //   }
 
-//   update(id: number, updateStatDto: UpdateStatDto) {
-//     return `This action updates a #${id} stat`;
-//   }
+  async update(id: string, updateStatDto: UpdateStatDto) {
+	const statUpdate = await this.statRepository.findOneBy({
+		intra_id: id,
+	})
+	statUpdate.win = updateStatDto.win;
+	statUpdate.lose = updateStatDto.lose;
+	statUpdate.winrate = +updateStatDto.win / (+updateStatDto.win + +updateStatDto.lose);
+	return await this.statRepository.save(statUpdate);
+
+  }
 
 //   remove(id: number) {
 //     return `This action removes a #${id} stat`;

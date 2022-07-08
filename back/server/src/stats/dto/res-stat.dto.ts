@@ -7,7 +7,7 @@ export class ResStatDto {
 	winRate: string;
 
 	constructor (stat: Stat) {
-		this.nickName = stat.intra_id; // user_tb와 연결 후 nickName으로 변경 예정
+		this.nickName = stat.user.nickname;
 		this.win = stat.win;
 		this.lose = stat.lose;
 		this.winRate = (stat.winrate * 100).toFixed() + "%";

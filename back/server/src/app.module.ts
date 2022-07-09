@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { StatsModule } from './stats/stats.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Stat } from './stats/entities/stat.entity';
+import { UsersModule } from './users/users.module';
 
 
 @Module({
@@ -18,6 +19,7 @@ import { Stat } from './stats/entities/stat.entity';
 		"entities": ["dist/**/*.entity{.ts,.js}"],
 		"synchronize": true
 		}),
+	UsersModule,
 	],
   controllers: [AppController],
   providers: [AppService],

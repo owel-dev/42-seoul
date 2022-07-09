@@ -8,11 +8,6 @@ import internal from 'stream';
 export class StatsController {
   constructor(private readonly statsService: StatsService) {}
 
-  @Post()
-  create(@Body() createStatDto: CreateStatDto) {
-    return this.statsService.create(createStatDto);
-  }
-
   @Get()
   getRanking(@Query('n') numUser: number) {
 	  return this.statsService.getRanking(numUser);
@@ -23,16 +18,10 @@ export class StatsController {
 //     return this.statsService.findAll();
 //   }
 
-	@Get(':intraId')
-	findOne(@Param('intraId') intraId: string) {
-		// const stat = this.statsService.findOne(intraId);
-		return this.statsService.findOne(intraId);
-	}
-
-//   @Patch(':id')
-//   update(@Param('id') id: string, @Body() updateStatDto: UpdateStatDto) {
-//     return this.statsService.update(+id, updateStatDto);
-//   }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateStatDto: UpdateStatDto) {
+    return this.statsService.update(id, updateStatDto);
+  }
 
 //   @Delete(':id')
 //   remove(@Param('id') id: string) {

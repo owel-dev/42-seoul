@@ -3,10 +3,14 @@ import { StatsService } from './stats.service';
 import { StatsController } from './stats.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Stat } from './entities/stat.entity';
+import { DatabaseModule } from 'src/database/database.module';
+import { statProviders } from './stats.providers';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Stat])],
+  imports: [DatabaseModule],
   controllers: [StatsController],
-  providers: [StatsService]
+  providers: [
+	  ...statProviders,
+	  StatsService]
 })
 export class StatsModule {}

@@ -1,5 +1,6 @@
+import { Match } from "src/match/entities/match.entity";
 import { Stat } from "src/stats/entities/stat.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToOne, PrimaryColumn } from "typeorm";
 
 @Entity('users')
 export class User {
@@ -28,4 +29,8 @@ export class User {
 		cascade: true,
 	})
 	stats: Stat;
+
+	@ManyToMany(() => Match)
+	@JoinTable()
+	matches: Match[];
 }

@@ -1,11 +1,59 @@
-.side{
-    background-color: rgb(255, 255, 255);
-    border: 1px #00BABC solid;
-    box-sizing: border-box;
-    float: right;
-    display: flex;
-    flex: 1;
-    height: 92vh;
-    width: 30vh;
+.side {
+  background-color: rgb(255, 255, 255);
+  border: 1px #00babc solid;
+  box-sizing: border-box;
+  float: right;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2%;
+  height: 91vh;
+  width: 30vh;
+}
 
+.userContainer {
+  height: 45%;
+  border: 1px #00babc solid;
+}
+
+.userList {
+  background-color: #00babc;
+  padding: 3%;
+  color: white;
+  font-size: 1.7rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  height: 55%;
+  border: 1px #00babc solid;
+}
+
+.chat {
+  background-color: #00babc;
+  padding: 3%;
+  color: white;
+  font-size: 1.7rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.messageContainer {
+  height: 1.4rem;
+  border: 1px #00babc solid;
+}
+
+.message {
+  height: 1.2rem;
+  width: 80%;
+  border: 1px #00babc solid;
+}
+
+.button {
+  height: 1.5rem;
+  /* width: 20%; */
 }

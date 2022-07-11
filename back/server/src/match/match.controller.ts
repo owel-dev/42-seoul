@@ -17,10 +17,10 @@ export class MatchController {
 //     return this.matchService.findAll();
 //   }
 
-// //   @Get(':id')
-// //   findOne(@Param('id') id: string) {
-// //     return this.matchService.findOne(+id);
-// //   }
+	@Get(':id')
+	getMatchListOne(@Param('id') id: string) {
+	return this.matchService.getMatchListOne(id);
+	}
 
 // //   @Patch(':id')
 // //   update(@Param('id') id: string, @Body() updateMatchDto: UpdateMatchDto) {

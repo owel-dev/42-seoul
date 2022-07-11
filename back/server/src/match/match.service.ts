@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { User } from 'src/users/entities/user.entity';
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateMatchDto } from './dto/create-match.dto';
+import { ResMatchDto } from './dto/res-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { Match } from './entities/match.entity';
 
@@ -10,21 +11,54 @@ export class MatchService {
 	constructor(
 		@Inject('MATCH_REPOSITORY')
 		private matchRepository: Repository<Match>,
+		@Inject('USER_REPOSITORY')
+		private userRepository: Repository<User>,
+
 	) { }
 
-  create(createMatchDto: CreateMatchDto) {
-	const user1 = new User();
-	user1.intra_id = createMatchDto.player1;
-    // return 'This action adds a new match';
-  }
+	async create(createMatchDto: CreateMatchDto) {
+		const player1 = await this.userRepository.findOne({
+			where: { intra_id: createMatchDto.player1 },
+		});
+		const player2 = await this.userRepository.findOne({
+			where: { intra_id: createMatchDto.player2 },
+		});
+
+		const match = new Match();
+		match.mode = "default";
+		match.score_1 = createMatchDto.score1;
+		match.score_2 = createMatchDto.score2;
+		match.player_1 = player1;
+		match.player_2 = player2;
+		return await this.matchRepository.save(match);
+	}
 
 //   findAll() {
 //     return `This action returns all match`;
 //   }
 
-//   findOne(id: number) {
-//     return `This action returns a #${id} match`;
-//   }
+	async getMatchListOne(id: string) {
+		const matchRepo = await this.matchRepository.find({
+			relations: {
+				player_1: true,
+				player_2: true,
+			},
+			where: [
+				{
+					player_1: { intra_id: id }
+				},
+				{
+					player_2: { intra_id: id }
+				},
+			],
+			order: {
+				match_id: "DESC",
+			}
+		});
+		let resMatchDto = new ResMatchDto();
+		resMatchDto.matchArr = matchRepo;
+		return resMatchDto;
+	}
 
 //   update(id: number, updateMatchDto: UpdateMatchDto) {
 //     return `This action updates a #${id} match`;

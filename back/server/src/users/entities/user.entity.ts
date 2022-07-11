@@ -1,6 +1,6 @@
 import { Match } from "src/match/entities/match.entity";
 import { Stat } from "src/stats/entities/stat.entity";
-import { Column, Entity, JoinTable, ManyToMany, OneToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne, PrimaryColumn } from "typeorm";
 
 @Entity('users')
 export class User {
@@ -30,7 +30,9 @@ export class User {
 	})
 	stats: Stat;
 
-	@ManyToMany(() => Match)
-	@JoinTable()
-	matches: Match[];
+	@OneToMany(() => Match, (match) => match.player_1)
+	matches_1: Match[];
+
+	@OneToMany(() => Match, (match) => match.player_2)
+	matches_2: Match[];
 }

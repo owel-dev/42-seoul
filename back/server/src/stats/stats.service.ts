@@ -1,5 +1,4 @@
-import { Injectable, Res } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Inject, Injectable, Res } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CreateStatDto } from './dto/create-stat.dto';
 import { ResRankDto } from './dto/res-rank.dto';
@@ -10,7 +9,7 @@ import { Stat } from './entities/stat.entity';
 @Injectable()
 export class StatsService {
 	constructor(
-		@InjectRepository(Stat)
+		@Inject('STAT_REPOSITORY')
 		private statRepository: Repository<Stat>,
 	) { }
 

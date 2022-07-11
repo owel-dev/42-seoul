@@ -5,21 +5,14 @@ import { StatsModule } from './stats/stats.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Stat } from './stats/entities/stat.entity';
 import { UsersModule } from './users/users.module';
+import { MatchModule } from './match/match.module';
+import { DataSource } from 'typeorm';
 
 
 @Module({
   imports: [StatsModule,
-	TypeOrmModule.forRoot({
-		"type": "postgres",
-		"host": "localhost",
-		"port": 5432,
-		"username": "ft",
-		"password": "1234",
-		"database": "trans",
-		"entities": ["dist/**/*.entity{.ts,.js}"],
-		"synchronize": true
-		}),
 	UsersModule,
+	MatchModule,
 	],
   controllers: [AppController],
   providers: [AppService],

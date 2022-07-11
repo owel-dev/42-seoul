@@ -1,7 +1,7 @@
 import { User } from "src/users/entities/user.entity";
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity('stats')
+@Entity('stat')
 export class Stat {
 	@PrimaryColumn()
 	intra_id: string;

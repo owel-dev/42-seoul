@@ -13,7 +13,10 @@ export class Match {
 	score_2: number;
 
 	@ManyToOne(() => User)
-	players: User[];
+	player_1: User;
+
+	@ManyToOne(() => User)
+	player_2: User;
 
 	@Column('varchar')
 	mode:	string;

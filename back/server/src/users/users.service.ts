@@ -35,7 +35,6 @@ export class UsersService {
 			where: {
 				intra_id: intraId,
 			}
-
 		});
 		return (new ResUserMyPage(userRepo));
 	}

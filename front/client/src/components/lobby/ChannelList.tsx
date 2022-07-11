@@ -1,50 +1,54 @@
-import 'styles/Lobby/ChannelList.css'
+import "styles/Lobby/ChannelList.css";
+import { channelListTypes, channelTypes } from "types/LobbyTypes";
+import ChannelListRow from "components/lobby/ChannelListRow";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-const dummy = {
-    channelList:
-        [
-            {
-                channelId: "#aaa",
-                player1: "test",
-                player2: "vvv",
-                curNumUsers: 2,
-                maxUser: 8,
-                password: null,
-            },
-            {
-                channelId: "#bbb",
-                player1: "ppp",
-                player2: "lll",
-                curNumUsers: 5,
-                maxUser: 8,
-                password: "0000",
-            }
-        ]
-}
+// const dummy = {
+//   channelList: [
+//     {
+//       channelId: "#aaa",
+//       player1: "test",
+//       player2: "vvv",
+//       curNumUsers: 2,
+//       maxUser: 8,
+//       password: null,
+//     },
+//     {
+//       channelId: "#bbb",
+//       player1: "ppp",
+//       player2: "lll",
+//       curNumUsers: 5,
+//       maxUser: 8,
+//       password: "0000",
+//     },
+//   ],
+// };
 
-function ChannelListRow(props : any){
-    return (
-        <div className='channel-list-row'>
-            <span>{props.channelId} </span>
-            <span>player1 : {props.player1} </span>
-            <span>player2 : {props.player2} </span>
-            <span>Headcount : {props.curNumUsers} </span>
-            <span>{props.protect}</span>
-    </div>
-    );
-}
+function ChannelList() {
+  const [channelList, setChannelList] = useState<channelListTypes | null>(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const getAPI = await axios.get("http://localhost:3000/channel", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        setChannelList(getAPI.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchData();
+  }, []);
 
-function ChannelList(){
-    return (
-        <div>
-            {dummy.channelList.map((element, index) => {
-                const protect = element.password;
-                if (protect === null)
-                    return (<ChannelListRow key={index} channelId={element.channelId} player1={element.player1} player2={element.player2} curNumUsers={element.curNumUsers} protect=""></ChannelListRow>)
-                else
-                    return (<ChannelListRow key={index} channelId={element.channelId} player1={element.player1} player2={element.player2} curNumUsers={element.curNumUsers} protect="🔒"></ChannelListRow>)
-            })}
-        </div>
-    );
+  return (
+    <>
+      {channelList?.channelList.map((element: channelTypes, index) => (
+        <ChannelListRow key={index} props={element} />
+      ))}
+    </>
+  );
 }
 export default ChannelList;

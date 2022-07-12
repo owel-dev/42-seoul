@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'styles/mypage/MatchTable.css';
 import { matchList } from 'types/MyPageTypes';
-import { DUMMY_SERVER, DUMMY_USER } from 'utils/recoil/dummy';
+import { DUMMY_SERVER, DUMMY_USER } from 'utils/dummy';
 
 function MatchTable() {
   const [List, setList] = useState<matchList | null>(null);

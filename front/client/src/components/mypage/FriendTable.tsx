@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'styles/mypage/FriendTable.css';
 import { friendList } from 'types/MyPageTypes';
-import { DUMMY_SERVER, DUMMY_USER } from 'utils/recoil/dummy';
+import { DUMMY_SERVER, DUMMY_USER } from 'utils/dummy';
 
 function FriendTable() {
   const [List, setList] = useState<friendList | null>(null);

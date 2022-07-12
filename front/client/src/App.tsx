@@ -4,6 +4,7 @@ import Layout from 'components/layout/Layout';
 import Rank from 'pages/Rank';
 import MyPage from 'pages/MyPage';
 import Lobby from 'pages/Lobby';
+import Game from 'pages/Game';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
               <Route path='/ranking' element={<Rank />} />
               <Route path='/mypage' element={<MyPage />} />
               <Route path='/' element={<Lobby />} />
+              <Route path='/game' element={<Game />}></Route>
             </Routes>
           </Layout>
         </Router>

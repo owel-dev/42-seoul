@@ -50,3 +50,16 @@ export const DUMMY_MATCH = {
     },
   ],
 };
+
+export const DUMMY_PLAYER = {
+  players: [
+    {
+      player: 'yongwkim',
+      avatar: 'https://cdn.intra.42.fr/users/norminet.jpeg',
+    },
+    {
+      player: 'samin',
+      avatar: 'https://cdn.intra.42.fr/users/norminet.jpeg',
+    },
+  ],
+};

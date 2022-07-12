@@ -35,7 +35,7 @@ function MatchTable() {
     const fetchData = async () => {
       try {
         const getAPI = await axios.get(
-          'http://localhost:3000/' + 'match/' + { id },
+          'http://localhost:3000/match/' + { id },
           {
             headers: {
               'Content-Type': 'application/json',

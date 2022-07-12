@@ -1,6 +1,6 @@
 import 'styles/layout/Side.css';
 import React from 'react';
-import { io } from 'socket.io-client';
+//import { io } from 'socket.io-client';
 
 // const socket = io('http://10.19.226.233:3000');
 // const SocketContext = React.createContext('');

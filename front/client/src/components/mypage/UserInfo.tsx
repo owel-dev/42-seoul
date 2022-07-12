@@ -6,7 +6,10 @@ import Modal from 'components/modal/Modal';
 import NickChangeModal from 'components/modal/NickChangeModal';
 import AvatarChangeModal from 'components/modal/AvatarChangeModal';
 
-import { modalState } from 'utils/recoil/modalState';
+import {
+  nickChangeModalState,
+  avatarChangeModalState,
+} from 'utils/recoil/modalState';
 import { useSetRecoilState } from 'recoil';
 
 // const dummy = {
@@ -25,10 +28,15 @@ const id: string = 'hello'; //임시값
 
 function UserInfo() {
   const [info, setInfo] = useState<userInfo | null>(null);
-  const setStatus = useSetRecoilState(modalState);
 
-  const openModal = () => {
-    setStatus(true);
+  const setNickStatus = useSetRecoilState(nickChangeModalState);
+  const openNickModal = () => {
+    setNickStatus(true);
+  };
+
+  const setAvatarStatus = useSetRecoilState(avatarChangeModalState);
+  const openAvatarModal = () => {
+    setAvatarStatus(true);
   };
 
   useEffect(() => {
@@ -54,7 +62,7 @@ function UserInfo() {
     <div className='user-info'>
       <div id='user-info-left'>
         <img src={info?.user.avatar} id='avatar' alt='프로필사진'></img>
-        <button onClick={openModal}>change</button>
+        <button onClick={openAvatarModal}>change</button>
         <Modal>
           <AvatarChangeModal />
         </Modal>
@@ -67,7 +75,7 @@ function UserInfo() {
         <div className='user-info-line'>
           <span className='user-label'>nickname </span>
           <input defaultValue={info?.user.nickName}></input>
-          <button onClick={openModal}>change</button>
+          <button onClick={openNickModal}>change</button>
           <Modal>
             <NickChangeModal />
           </Modal>

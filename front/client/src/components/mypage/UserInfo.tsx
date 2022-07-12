@@ -1,30 +1,16 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'styles/mypage/UserInfo.css';
+import { DUMMY_SERVER, DUMMY_USER } from 'utils/recoil/dummy';
 import { userInfo } from 'types/MyPageTypes';
 import Modal from 'components/modal/Modal';
 import NickChangeModal from 'components/modal/NickChangeModal';
 import AvatarChangeModal from 'components/modal/AvatarChangeModal';
-
 import {
   nickChangeModalState,
   avatarChangeModalState,
 } from 'utils/recoil/modalState';
 import { useSetRecoilState } from 'recoil';
-
-// const dummy = {
-//     user :
-//     {
-//         intraId : "hello",
-//         avatar : "https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif",
-//         nickName : "hello",
-//         win : 5,
-//         lose : 5,
-//         winRate : "50%"
-//     }
-// }
-
-const id: string = 'hello'; //임시값
 
 function UserInfo() {
   const [info, setInfo] = useState<userInfo | null>(null);
@@ -43,7 +29,7 @@ function UserInfo() {
     const fetchData = async () => {
       try {
         const getAPI = await axios.get(
-          'http://localhost:3000/users/' + { id } + '/mypage',
+          DUMMY_SERVER + 'users/' + DUMMY_USER.intraId + '/mypage',
           {
             headers: {
               'Content-Type': 'application/json',
@@ -61,7 +47,7 @@ function UserInfo() {
   return (
     <div className='user-info'>
       <div id='user-info-left'>
-        <img src={info?.user.avatar} id='avatar' alt='프로필사진'></img>
+        <img src={info?.avatar} id='avatar' alt='프로필사진'></img>
         <button onClick={openAvatarModal}>change</button>
         <Modal>
           <AvatarChangeModal />
@@ -70,23 +56,23 @@ function UserInfo() {
       <div id='user-info-right'>
         <div className='user-info-line'>
           <span className='user-label'>intraID </span>
-          <span>{info?.user.intraId}</span>
+          <span>{info?.intraId}</span>
         </div>
         <div className='user-info-line'>
           <span className='user-label'>nickname </span>
-          <input defaultValue={info?.user.nickName}></input>
+          <input defaultValue={info?.nickName}></input>
           <button onClick={openNickModal}>change</button>
           <Modal>
             <NickChangeModal />
           </Modal>
         </div>
         <div className='user-info-line'>
-          <span>{info?.user.win} </span>
+          <span>{info?.win} </span>
           <span>win </span>
-          <span>{info?.user.lose} </span>
+          <span>{info?.lose} </span>
           <span>lose </span>
           <span>winRate : </span>
-          <span>{info?.user.winRate} </span>
+          <span>{info?.winRate} </span>
         </div>
       </div>
     </div>

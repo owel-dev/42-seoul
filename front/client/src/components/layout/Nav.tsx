@@ -5,14 +5,14 @@ function Nav() {
   return (
     <div>
       <header className='nav'>
-        <Link to='home' className='link'>
+        <Link to='/' className='link'>
           <button className='nav_menu'>logo</button>
         </Link>
         <span className='nav_menu' id='blank'></span>
-        <Link to='ranking' className='link'>
+        <Link to='/ranking' className='link'>
           <button className='nav_menu'>rank</button>
         </Link>
-        <Link to='mypage' className='link'>
+        <Link to='/mypage' className='link'>
           <button className='nav_menu'>mypage</button>
         </Link>
         <button className='nav_menu'>logout</button>

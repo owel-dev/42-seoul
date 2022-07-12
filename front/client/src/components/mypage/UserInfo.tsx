@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'styles/mypage/UserInfo.css';
-import { DUMMY_SERVER, DUMMY_USER } from 'utils/recoil/dummy';
+import { DUMMY_SERVER, DUMMY_USER } from 'utils/dummy';
 import { userInfo } from 'types/MyPageTypes';
 import Modal from 'components/modal/Modal';
 import NickChangeModal from 'components/modal/NickChangeModal';

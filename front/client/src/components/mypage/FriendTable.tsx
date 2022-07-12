@@ -33,7 +33,7 @@ function FriendTable() {
     const fetchData = async () => {
       try {
         const getAPI = await axios.get(
-          'http://localhost:3000/' + 'friend/' + { id },
+          'http://localhost:3000/friend/' + { id },
           {
             headers: {
               'Content-Type': 'application/json',

@@ -1,7 +1,7 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import 'styles/mypage/MatchTable.css'
-import {matchList} from 'types/MyPageTypes'
+import 'styles/mypage/MatchTable.css';
+import { matchList } from 'types/MyPageTypes';
 
 // const dummy = {
 //     matchList:
@@ -27,43 +27,43 @@ import {matchList} from 'types/MyPageTypes'
 //         ]
 // };
 
+const id: string = 'hello'; //임시값
 
-const id : string = "hello";//임시값
+function MatchTable() {
+  const [List, setList] = useState<matchList | null>(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const getAPI = await axios.get(
+          'http://localhost:3000/' + 'match/' + { id },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        setList(getAPI.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchData();
+  }, []);
 
-function MatchTable(){
-    const [List, setList] = useState<matchList | null>(null);
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const getAPI = await axios.get(
-                    'http://localhost:3000/users/' + {id} + '/match', {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                setList(getAPI.data);
-            } catch (e) {
-                console.log(e);
-            }
-        };
-        fetchData();
-    }, []);
-
-    return (
-        <div className='match-table'>
-            {List?.matchList.map((element, index) => {
-                return (
-                    <div className='match-row' key={index}>
-                        <span>{element.player1} </span>
-                        <span>{element.playerScore1}</span>
-                        <span> vs </span>
-                        <span>{element.player2} </span>
-                        <span>{element.playerScore2}</span>
-                    </div>
-                );
-            })}
-            
-        </div>
-    );
+  return (
+    <div className='match-table'>
+      {List?.matchList.map((element, index) => {
+        return (
+          <div className='match-row' key={index}>
+            <span>{element.player1} </span>
+            <span>{element.playerScore1}</span>
+            <span> vs </span>
+            <span>{element.player2} </span>
+            <span>{element.playerScore2}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 export default MatchTable;

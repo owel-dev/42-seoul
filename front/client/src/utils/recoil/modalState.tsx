@@ -19,13 +19,11 @@ export const gameStartModalState = atom<boolean>({
 export const userState = atom<userInfo>({
   key: 'userState',
   default: {
-    user: {
-      intraId: '',
-      avatar: '',
-      nickName: '',
-      win: 0,
-      lose: 0,
-      winRate: '0%',
-    },
+    intraId: '',
+    avatar: '',
+    nickName: '',
+    win: 0,
+    lose: 0,
+    winRate: '0%',
   },
 });

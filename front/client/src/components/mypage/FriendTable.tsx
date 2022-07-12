@@ -2,30 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'styles/mypage/FriendTable.css';
 import { friendList } from 'types/MyPageTypes';
-
-// const dummy = {
-//     friendList:
-//         [
-//             {
-//                 nickName : "kim",
-//                 status : "online"
-//             },
-//             {
-//                 nickName : "lee",
-//                 status : "offline"
-//             },
-//             {
-//                 nickName : "park",
-//                 status : "online"
-//             },
-//             {
-//                 nickName : "choi",
-//                 status : "ingame"
-//             }
-// ]
-// };
-
-const id = 'hello';
+import { DUMMY_SERVER, DUMMY_USER } from 'utils/recoil/dummy';
 
 function FriendTable() {
   const [List, setList] = useState<friendList | null>(null);
@@ -33,7 +10,7 @@ function FriendTable() {
     const fetchData = async () => {
       try {
         const getAPI = await axios.get(
-          'http://localhost:3000/friend/' + { id },
+          DUMMY_SERVER + 'friend/' + DUMMY_USER.intraId,
           {
             headers: {
               'Content-Type': 'application/json',

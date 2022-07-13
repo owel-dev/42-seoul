@@ -32,6 +32,9 @@
   height: 55%;
   border: 1px #00babc solid;
 }
+.chat-list {
+  height: 100%;
+}
 
 .chat {
   background-color: #00babc;
@@ -49,11 +52,16 @@
 
 .message {
   height: 1.2rem;
-  width: 80%;
+  width: 75%;
   border: 1px #00babc solid;
 }
 
 .button {
   height: 1.5rem;
   /* width: 20%; */
+}
+
+.userlist-row {
+  height: 2rem;
+  border: 1px grey solid;
 }

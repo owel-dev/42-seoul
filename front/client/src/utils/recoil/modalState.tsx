@@ -15,6 +15,10 @@ export const gameStartModalState = atom<boolean>({
   key: 'gameStartModalState',
   default: false,
 });
+export const profileModalState = atom<string | null>({
+  key: 'profileModalState',
+  default: null,
+});
 
 export const userState = atom<userInfo>({
   key: 'userState',

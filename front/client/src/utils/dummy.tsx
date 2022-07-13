@@ -1,4 +1,4 @@
-export const DUMMY_SERVER = 'http://10.19.247.186:3000/';
+export const DUMMY_SERVER = 'http://localhost:3000/';
 export const DUMMY_USER = {
   intraId: 'hello',
   avatar:
@@ -66,7 +66,7 @@ export const DUMMY_PLAYER = {
 export const DUMMY_CHANNELS = {
   channelList: [
     {
-      channelId: '#aaa',
+      channelId: '0',
       player1: 'test',
       player2: 'vvv',
       curNumUsers: 2,
@@ -74,7 +74,7 @@ export const DUMMY_CHANNELS = {
       password: null,
     },
     {
-      channelId: '#bbb',
+      channelId: '1',
       player1: 'ppp',
       player2: 'lll',
       curNumUsers: 5,

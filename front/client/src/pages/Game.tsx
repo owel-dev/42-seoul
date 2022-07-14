@@ -1,9 +1,9 @@
 import axios from 'axios';
-import GameModule from 'components/game/GameModule';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import 'styles/game/Game.css';
 import { DUMMY_PLAYER, DUMMY_SERVER } from 'utils/dummy';
+import GameModule from 'components/game/GameModule';
+import 'styles/game/Game.css';
 
 type playerType = {
   player1: string;
@@ -24,7 +24,7 @@ function Game() {
         });
         setPlayers(getAPI.data);
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     };
     fetchData();

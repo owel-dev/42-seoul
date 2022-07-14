@@ -1,16 +1,18 @@
-import { nickChangeModalState } from 'utils/recoil/modalState';
-import { useRecoilState } from 'recoil';
-import 'styles/modal/Modal.css';
-import { useState } from 'react';
 import axios from 'axios';
+import { useState } from 'react';
+import { useSetRecoilState } from 'recoil';
 import { DUMMY_SERVER, DUMMY_USER } from 'utils/dummy';
+import { modalState } from 'types/modal';
+import 'styles/modal/Modal.css';
 
 function NickChangeModal() {
-  const [status, setStatus] = useRecoilState(nickChangeModalState);
+  const setModalInfo = useSetRecoilState(modalState);
+
   const [inputValue, setInputValue] = useState('');
   const CloseModal = () => {
-    setStatus(false);
+    setModalInfo({ modalName: null });
   };
+
   function PostNickName() {
     const fetchData = async () => {
       try {
@@ -23,33 +25,32 @@ function NickChangeModal() {
             nickName: inputValue,
           }
         );
-        console.log(getAPI.data);
+        // console.log(getAPI.data);
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     };
     fetchData();
   }
-  if (status === false) return <div></div>;
-  else
-    return (
-      <div className='modal'>
-        <div className='modal-title'>nickname change</div>
-        <div className='modal-content'>
-          <div>
-            <span>nickname </span>
-            <input
-              placeholder={'닉네임 입력'}
-              onChange={(e) => setInputValue(e.target.value)}
-            ></input>
-          </div>
-        </div>
-        <div className='modal-select'>
-          <button onClick={PostNickName}>change</button>
-          <button onClick={CloseModal}>close</button>
+
+  return (
+    <div className='modal'>
+      <div className='modal-title'>nickname change</div>
+      <div className='modal-content'>
+        <div>
+          <span>nickname </span>
+          <input
+            placeholder={'닉네임 입력'}
+            onChange={(e) => setInputValue(e.target.value)}
+          ></input>
         </div>
       </div>
-    );
+      <div className='modal-select'>
+        <button onClick={PostNickName}>change</button>
+        <button onClick={CloseModal}>close</button>
+      </div>
+    </div>
+  );
 }
 
 export default NickChangeModal;

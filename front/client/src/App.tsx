@@ -5,6 +5,7 @@ import Rank from 'pages/Rank';
 import MyPage from 'pages/MyPage';
 import Lobby from 'pages/Lobby';
 import Game from 'pages/Game';
+import ModalProvider from 'components/modal/ModalProvider';
 
 function App() {
   return (
@@ -16,9 +17,10 @@ function App() {
               <Route path='/ranking' element={<Rank />} />
               <Route path='/mypage' element={<MyPage />} />
               <Route path='/' element={<Lobby />} />
-              <Route path='/game/:channelId' element={<Game />}></Route>
+              <Route path='/game/:channelId' element={<Game />} />
             </Routes>
           </Layout>
+          <ModalProvider />
         </Router>
       </RecoilRoot>
     </>

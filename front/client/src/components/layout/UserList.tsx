@@ -1,14 +1,13 @@
-import Modal from 'components/modal/Modal';
-import ProfileModal from 'components/modal/ProfileModal';
 import { useSetRecoilState } from 'recoil';
-import { profileModalState } from 'utils/recoil/modalState';
+import { modalState } from 'types/modal';
 
 const dummy = ['aaa', 'bbb', 'ccc'];
 
 function UserList() {
-  const setStatus = useSetRecoilState(profileModalState);
+  const setModalInfo = useSetRecoilState(modalState);
+
   function ProfileModalOpen(nickName: string) {
-    setStatus(nickName);
+    setModalInfo({ modalName: 'SIDE-USER', user: nickName });
   }
 
   return (
@@ -24,9 +23,6 @@ function UserList() {
           </div>
         );
       })}
-      <Modal>
-        <ProfileModal />
-      </Modal>
     </div>
   );
 }

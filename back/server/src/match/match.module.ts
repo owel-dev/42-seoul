@@ -14,5 +14,4 @@ import { userProviders } from 'src/users/users.providers';
 	MatchService,
 ],
 })
-@Injectable()
 export class MatchModule {}

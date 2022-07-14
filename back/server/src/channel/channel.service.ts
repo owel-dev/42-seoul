@@ -1,19 +1,39 @@
-import { Injectable } from '@nestjs/common';
-import { CreateChannelDto } from './dto/create-channel.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { PostChannelDto } from './dto/post-channel.dto';
 import { UpdateChannelDto } from './dto/update-channel.dto';
+import { ChannelEntity } from './entities/channel.entity';
 
 @Injectable()
 export class ChannelService {
-  create(createChannelDto: CreateChannelDto) {
-    return 'This action adds a new channel';
+  constructor (
+    @Inject('CHANNEL_REPOSITORY')
+    private channelRepository: Repository<ChannelEntity>
+  ){}
+
+  async createChannel(postChannelDto: PostChannelDto) {
+    const channel = new ChannelEntity();
+    channel.player1 = postChannelDto.player1;
+    channel.player2 = postChannelDto.player2;
+    channel.admin = postChannelDto.admin;
+    channel.curNumUser = 0;
+    channel.maxNumUser = 10;
+    channel.password = postChannelDto.password;
+    channel.mode = postChannelDto.mode;
+    channel.type = postChannelDto.type;
+
+    await this.channelRepository.save(channel);
   }
 
-  findAll() {
-    return `This action returns all channel`;
+  async getAllChannelList() {
+    const result = await this.channelRepository.find();
+    return result;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} channel`;
+  async getOneChannel(id: number) {
+    const result = await this.channelRepository.findOneBy({channelId : id});
+    return result;
   }
 
   update(id: number, updateChannelDto: UpdateChannelDto) {

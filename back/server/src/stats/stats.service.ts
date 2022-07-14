@@ -1,8 +1,6 @@
 import { Inject, Injectable, Res } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { CreateStatDto } from './dto/create-stat.dto';
 import { ResRankDto } from './dto/res-rank.dto';
-import { ResStatDto } from './dto/res-stat.dto';
 import { UpdateStatDto } from './dto/update-stat.dto';
 import { Stat } from './entities/stat.entity';
 

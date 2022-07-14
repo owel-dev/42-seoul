@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ChannelService } from './channel.service';
-import { CreateChannelDto } from './dto/create-channel.dto';
+import { PostChannelDto } from './dto/post-channel.dto';
 import { UpdateChannelDto } from './dto/update-channel.dto';
 
 @Controller('channel')
@@ -8,18 +8,21 @@ export class ChannelController {
   constructor(private readonly channelService: ChannelService) {}
 
   @Post()
-  create(@Body() createChannelDto: CreateChannelDto) {
-    return this.channelService.create(createChannelDto);
+  createChannel(@Body() postChannelDto: PostChannelDto) {
+    console.log("channel_post");
+    return this.channelService.createChannel(postChannelDto);
   }
 
   @Get()
-  findAll() {
-    return this.channelService.findAll();
+  getAllChannelList() {
+    console.log("channel_get");
+    return {channelList : this.channelService.getAllChannelList()};
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.channelService.findOne(+id);
+  getOneChannel(@Param('id') id: number) {
+    console.log(`getOneChannel ${id}` );
+    return this.channelService.getOneChannel(id);
   }
 
   @Patch(':id')

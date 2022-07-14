@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateChannelDto } from './create-channel.dto';
+import { PostChannelDto } from './post-channel.dto';
 
-export class UpdateChannelDto extends PartialType(CreateChannelDto) {}
+export class UpdateChannelDto extends PartialType(PostChannelDto) {}

@@ -1,8 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
-import { GetChannelDto } from './dto/get-channelList.dto';
 import { PostChannelDto } from './dto/post-channel.dto';
 import { UpdateChannelDto } from './dto/update-channel.dto';
 import { ChannelEntity } from './entities/channel.entity';
@@ -10,16 +8,15 @@ import { ChannelEntity } from './entities/channel.entity';
 @Injectable()
 export class ChannelService {
   constructor (
-    @InjectRepository(ChannelEntity)
-    private channelRepository: Repository<ChannelEntity>,
-
+    @Inject('CHANNEL_REPOSITORY')
+    private channelRepository: Repository<ChannelEntity>
   ){}
 
   async createChannel(postChannelDto: PostChannelDto) {
     const channel = new ChannelEntity();
     channel.player1 = postChannelDto.player1;
     channel.player2 = postChannelDto.player2;
-    channel.intraId = postChannelDto.intraId;
+    channel.admin = postChannelDto.admin;
     channel.curNumUser = 0;
     channel.maxNumUser = 10;
     channel.password = postChannelDto.password;
@@ -34,12 +31,9 @@ export class ChannelService {
     return await this.channelRepository.find();
   }
 
-  async findOne(id: number) {
-    console.log(`findone ${id}` );
-    console.log(await this.channelRepository.findOneBy(
-      {channelId : id}
-      ));
-    return await this.channelRepository.findOneBy({channelId : id});
+  async getOneChannel(id: number) {
+    const result = await this.channelRepository.findOneBy({channelId : id});
+    return result;
   }
 
   update(id: number, updateChannelDto: UpdateChannelDto) {

@@ -4,7 +4,7 @@ export class PostChannelDto
     
     player2 : string;
     
-    intraId : string;
+    admin : string;
     // curNumUser : string;
     
     // maxNumUser : string;

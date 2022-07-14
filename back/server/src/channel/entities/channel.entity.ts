@@ -13,7 +13,7 @@ export class ChannelEntity
     player2: string;
 
     @Column()
-    intraId: string;
+    admin: string;
 
     @Column()
     curNumUser : number;

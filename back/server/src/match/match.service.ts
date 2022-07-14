@@ -3,7 +3,6 @@ import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { ResMatchDto } from './dto/res-match.dto';
-import { UpdateMatchDto } from './dto/update-match.dto';
 import { Match } from './entities/match.entity';
 
 @Injectable()

@@ -21,9 +21,9 @@ export class ChannelController {
   }
 
   @Get(':id')
-  async getOneChannel(@Param('id') id: number) {
+  getOneChannel(@Param('id') id: number) {
     console.log(`getOneChannel ${id}` );
-    return await this.channelService.findOne(id);
+    return this.channelService.getOneChannel(id);
   }
 
   @Patch(':id')

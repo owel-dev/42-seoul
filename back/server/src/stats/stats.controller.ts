@@ -4,7 +4,7 @@ import { CreateStatDto } from './dto/create-stat.dto';
 import { UpdateStatDto } from './dto/update-stat.dto';
 import internal from 'stream';
 
-@Controller('stats')
+@Controller('stat')
 export class StatsController {
   constructor(private readonly statsService: StatsService) {}
 
@@ -18,8 +18,8 @@ export class StatsController {
 //     return this.statsService.findAll();
 //   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStatDto: UpdateStatDto) {
+  @Patch(':intraid')
+  update(@Param('intraid') id: string, @Body() updateStatDto: UpdateStatDto) {
     return this.statsService.update(id, updateStatDto);
   }
 

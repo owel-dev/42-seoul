@@ -13,20 +13,6 @@ export class UsersService {
 		private userRepository: Repository<User>,
 	) { }
 
-	private async saveUser(createUserDto: CreateUserDto)
-	{
-		const user = new User();
-		user.intra_id = createUserDto.intraId;
-		user.nickname = createUserDto.nickName;
-		user.intra_email = createUserDto.intraEmail;
-		user.avatar = createUserDto.avatar;
-		user.status = createUserDto.status;
-		user.role = createUserDto.role;
-		user.channel_id = createUserDto.channelId;
-
-		user.stats = new Stat();
-		await this.userRepository.save(user);
-	}
 
 	async findOneMyPage(intraId : string)
 	{
@@ -39,23 +25,67 @@ export class UsersService {
 		return (new ResUserMyPage(userRepo));
 	}
 
-  create(createUserDto: CreateUserDto) {
-    return this.saveUser(createUserDto);
-  }
+	create(createUserDto: CreateUserDto, file: Express.Multer.File) {
+		return this.saveUser(createUserDto, file);
+	}
 
-//   findAll() {
-//     return `This action returns all users`;
-//   }
+	async update(intraId: string, updateUserDto: UpdateUserDto, file: Express.Multer.File) {
+		const ipv4 = this.getIpAdrress();
+		if (updateUserDto.nickName !== undefined && await this.isNickAvailable(updateUserDto.nickName)) {
+			console.log('nickname updated');
+			this.userRepository.update(intraId, {
+				nickname: updateUserDto.nickName,
+			});
+		}
+		if (file !== undefined) {
+			console.log("avatar updated");
+			this.userRepository.update(intraId, {
+				avatar: `http://${ipv4}:3000/public/avatar/${file.filename}`,
+			});
+		}
+		return `update`;
+	}
 
-//   findOne(id: number) {
-//     return `This action returns a #${id} user`;
-//   }
+	private async saveUser(createUserDto: CreateUserDto, file: Express.Multer.File)
+	{
+		const user = new User();
+		const filePath = `avatar/${file.filename}`;
+		const ipv4 = this.getIpAdrress();
 
-//   update(id: number, updateUserDto: UpdateUserDto) {
-//     return `This action updates a #${id} user`;
-//   }
+		user.intra_id = createUserDto.intraId;
+		user.nickname = createUserDto.nickName;
+		user.intra_email = createUserDto.intraEmail;
+		user.avatar = `http://${ipv4}:3000/public/${filePath}`;
+		user.status = createUserDto.status;
+		user.role = createUserDto.role;
+		user.channel_id = createUserDto.channelId;
+		user.stats = new Stat();
 
-//   remove(id: number) {
-//     return `This action removes a #${id} user`;
-//   }
+		return await this.userRepository.save(user);
+	}
+
+	private async isNickAvailable(nickName: string) {
+		const users = await this.userRepository.find({
+			where: {
+				nickname: nickName
+			}
+		})
+		console.log(nickName);
+		console.log(users);
+
+		if (users.length === 0)
+		{
+			return (true);
+		}
+		return (false);
+	}
+
+	private async getIpAdrress()
+	{
+		const { networkInterfaces } = require('os');
+		const nets = networkInterfaces();
+		const ipv4 = nets['en0'][1]['address'];
+		return (ipv4);
+	}
+
 }

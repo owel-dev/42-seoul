@@ -36,7 +36,7 @@ export class MatchService {
 //     return `This action returns all match`;
 //   }
 
-	async getMatchListOne(id: string) {
+	async getMatchListOne(intraId: string) {
 		const matchRepo = await this.matchRepository.find({
 			relations: {
 				player_1: true,
@@ -44,10 +44,10 @@ export class MatchService {
 			},
 			where: [
 				{
-					player_1: { intra_id: id }
+					player_1: { intra_id: intraId }
 				},
 				{
-					player_2: { intra_id: id }
+					player_2: { intra_id: intraId }
 				},
 			],
 			order: {

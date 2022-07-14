@@ -27,8 +27,8 @@ export class ChannelService {
   }
 
   async getAllChannelList() {
-
-    return await this.channelRepository.find();
+    const result = await this.channelRepository.find();
+    return result;
   }
 
   async getOneChannel(id: number) {

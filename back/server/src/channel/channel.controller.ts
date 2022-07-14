@@ -10,14 +10,13 @@ export class ChannelController {
   @Post()
   createChannel(@Body() postChannelDto: PostChannelDto) {
     console.log("channel_post");
-    console.log(postChannelDto);
     return this.channelService.createChannel(postChannelDto);
   }
 
   @Get()
-  async getAllChannelList() {
+  getAllChannelList() {
     console.log("channel_get");
-    return {channelList : await this.channelService.getAllChannelList()};
+    return {channelList : this.channelService.getAllChannelList()};
   }
 
   @Get(':id')

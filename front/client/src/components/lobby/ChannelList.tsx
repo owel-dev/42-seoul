@@ -1,9 +1,9 @@
-import 'styles/Lobby/ChannelList.css';
-import { channelListTypes, channelTypes } from 'types/LobbyTypes';
-import ChannelListRow from 'components/lobby/ChannelListRow';
-import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { channelListTypes, channelTypes } from 'types/LobbyTypes';
 import { DUMMY_SERVER } from 'utils/dummy';
+import ChannelListRow from 'components/lobby/ChannelListRow';
+import 'styles/Lobby/ChannelList.css';
 
 function ChannelList() {
   const [channelList, setChannelList] = useState<channelListTypes | null>(null);
@@ -17,7 +17,7 @@ function ChannelList() {
         });
         setChannelList(getAPI.data);
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     };
     fetchData();

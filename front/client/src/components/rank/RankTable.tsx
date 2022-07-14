@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useState, useEffect } from 'react';
 import { userRank } from 'types/RankTypes';
-import RankRow from 'components/rank/RankRow';
 import { DUMMY_SERVER } from 'utils/dummy';
+import RankRow from 'components/rank/RankRow';
 
 function RankTable() {
   const [rank, setRank] = useState<userRank | null>(null);
@@ -16,7 +16,7 @@ function RankTable() {
         });
         setRank(getAPI.data);
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     };
     fetchData();

@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
 import axios from 'axios';
-import 'styles/mypage/FriendTable.css';
+import { useState, useEffect } from 'react';
 import { friendList } from 'types/MyPageTypes';
 import { DUMMY_SERVER, DUMMY_USER } from 'utils/dummy';
+import 'styles/mypage/FriendTable.css';
 
 function FriendTable() {
   const [List, setList] = useState<friendList | null>(null);
@@ -19,7 +19,7 @@ function FriendTable() {
         );
         setList(getAPI.data);
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     };
     fetchData();

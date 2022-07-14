@@ -1,28 +1,21 @@
-import { useState, useEffect } from 'react';
 import axios from 'axios';
-import 'styles/mypage/UserInfo.css';
+import { useState, useEffect } from 'react';
+import { useSetRecoilState } from 'recoil';
 import { DUMMY_SERVER, DUMMY_USER } from 'utils/dummy';
 import { userInfo } from 'types/MyPageTypes';
-import Modal from 'components/modal/Modal';
-import NickChangeModal from 'components/modal/NickChangeModal';
-import AvatarChangeModal from 'components/modal/AvatarChangeModal';
-import {
-  nickChangeModalState,
-  avatarChangeModalState,
-} from 'utils/recoil/modalState';
-import { useSetRecoilState } from 'recoil';
+import { modalState } from 'types/modal';
+import 'styles/mypage/UserInfo.css';
 
 function UserInfo() {
   const [info, setInfo] = useState<userInfo | null>(null);
+  const setModalInfo = useSetRecoilState(modalState);
 
-  const setNickStatus = useSetRecoilState(nickChangeModalState);
   const openNickModal = () => {
-    setNickStatus(true);
+    setModalInfo({ modalName: 'USER-NICK' });
   };
 
-  const setAvatarStatus = useSetRecoilState(avatarChangeModalState);
   const openAvatarModal = () => {
-    setAvatarStatus(true);
+    setModalInfo({ modalName: 'USER-AVATAR' });
   };
 
   useEffect(() => {
@@ -38,7 +31,7 @@ function UserInfo() {
         );
         setInfo(getAPI.data);
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     };
     fetchData();
@@ -49,9 +42,6 @@ function UserInfo() {
       <div id='user-info-left'>
         <img src={info?.avatar} id='avatar' alt='프로필사진'></img>
         <button onClick={openAvatarModal}>change</button>
-        <Modal>
-          <AvatarChangeModal />
-        </Modal>
       </div>
       <div id='user-info-right'>
         <div className='user-info-line'>
@@ -62,9 +52,6 @@ function UserInfo() {
           <span className='user-label'>nickname </span>
           <input defaultValue={info?.nickName}></input>
           <button onClick={openNickModal}>change</button>
-          <Modal>
-            <NickChangeModal />
-          </Modal>
         </div>
         <div className='user-info-line'>
           <span>{info?.win} </span>

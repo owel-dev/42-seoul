@@ -1,7 +1,7 @@
-import 'styles/layout/Side.css';
-import React from 'react';
+// import React from 'react';
 import UserList from './UserList';
 import ChatList from './ChatList';
+import 'styles/layout/Side.css';
 //import { io } from 'socket.io-client';
 
 // const socket = io('http://10.19.226.233:3000');

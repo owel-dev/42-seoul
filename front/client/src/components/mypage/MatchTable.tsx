@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
 import axios from 'axios';
-import 'styles/mypage/MatchTable.css';
+import { useState, useEffect } from 'react';
 import { matchList } from 'types/MyPageTypes';
 import { DUMMY_SERVER, DUMMY_USER } from 'utils/dummy';
+import 'styles/mypage/MatchTable.css';
 
 function MatchTable() {
   const [List, setList] = useState<matchList | null>(null);
@@ -19,7 +19,7 @@ function MatchTable() {
         );
         setList(getAPI.data);
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     };
     fetchData();

@@ -1,7 +1,11 @@
 import { Link } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { modalState } from 'types/modal';
 import 'styles/layout/Nav.css';
 
 function Nav() {
+  const setModalInfo = useSetRecoilState(modalState);
+
   return (
     <div>
       <header className='nav'>
@@ -15,7 +19,12 @@ function Nav() {
         <Link to='/mypage' className='link'>
           <button className='nav_menu'>mypage</button>
         </Link>
-        <button className='nav_menu'>logout</button>
+        <button
+          className='nav_menu'
+          onClick={() => setModalInfo({ modalName: 'LOGOUT' })}
+        >
+          logout
+        </button>
       </header>
     </div>
   );

@@ -1,20 +1,33 @@
-.modal {
+.container {
   background-color: white;
   border: 1px black solid;
-  position: absolute;
-  height: 150px;
-  width: 150px;
+  height: 10rem;
+  width: 10rem;
 }
 
-.modal-title {
+.title {
+  text-align: center;
   background-color: aqua;
+  color: blue;
+  font-size: 2rem;
+  font-weight: 500;
 }
 
-.modal-select {
-  background-color: aquamarine;
-  position: absolute;
-  bottom: 0px;
+.content {
+  display: flex;
+  background-color: white;
   width: inherit;
+  height: 60%;
+  color: #00babc;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+.select {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: aquamarine;
 }
 
 .selectButton {
@@ -24,9 +37,6 @@
   all: unset;
   cursor: pointer;
   border-radius: 0.5rem;
-  width: 3rem;
-  height: 1rem;
-  background: linear-gradient(to bottom, #00babc, #c4fff8);
   color: black;
   font-size: 1rem;
   text-align: center;
@@ -45,7 +55,7 @@
   align-items: center;
 }
 
-.modalContainer {
+.buttonBackGround {
   position: fixed;
   display: flex;
   flex-direction: column;

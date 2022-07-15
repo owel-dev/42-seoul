@@ -19,19 +19,20 @@ export class ChannelController {
     return {channelList : this.channelService.getAllChannelList()};
   }
 
-  @Get(':id')
-  getOneChannel(@Param('id') id: number) {
-    console.log(`getOneChannel ${id}` );
-    return this.channelService.getOneChannel(id);
+  @Get(':channelid')
+  getOneChannel(@Param('channelid') channelid: number) {
+    console.log(`getOneChannel ${channelid}`);
+    return this.channelService.getOneChannel(channelid);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateChannelDto: UpdateChannelDto) {
-    return this.channelService.update(+id, updateChannelDto);
+  @Patch(':channelid/password')
+  updatePassword(@Param('channelid') channelid: number, @Body() updateChannelDto: UpdateChannelDto) {
+    console.log("updatePassword");
+    return this.channelService.update(channelid, updateChannelDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.channelService.remove(+id);
+  @Delete(':channelid')
+  remove(@Param('channelid') channelid: number) {
+    return this.channelService.remove(+channelid);
   }
 }

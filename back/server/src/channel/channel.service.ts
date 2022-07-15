@@ -31,16 +31,16 @@ export class ChannelService {
     return result;
   }
 
-  async getOneChannel(id: number) {
-    const result = await this.channelRepository.findOneBy({channelId : id});
+  async getOneChannel(channelid: number) {
+    const result = await this.channelRepository.findOneBy({channelId : channelid});
     return result;
   }
 
-  update(id: number, updateChannelDto: UpdateChannelDto) {
-    return `This action updates a #${id} channel`;
+  async update(channelid: number, updateChannelDto: UpdateChannelDto) {
+    await this.channelRepository.update(channelid, {password: updateChannelDto.password});
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} channel`;
+  remove(channelid: number) {
+    return `This action removes a #${channelid} channel`;
   }
 }

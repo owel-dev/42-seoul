@@ -24,10 +24,7 @@ function GameStartModal() {
           type: 2,
           // },
         });
-        // console.log(getAPI.data);
-      } catch (e) {
-        // console.log(e);
-      }
+      } catch (e) {}
     };
     fetchData();
   }

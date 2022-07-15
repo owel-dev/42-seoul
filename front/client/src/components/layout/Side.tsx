@@ -1,4 +1,3 @@
-// import React from 'react';
 import UserList from './UserList';
 import ChatList from './ChatList';
 import 'styles/layout/Side.css';
@@ -27,12 +26,16 @@ function Side() {
   return (
     <aside className='side'>
       <section className='userContainer'>
-        <div className='userList'>유저리스트</div>
-        <UserList />
+        <div className='userTitle'>유저리스트</div>
+        <div className='users'>
+          <UserList />
+        </div>
       </section>
       <section className='chatContainer'>
-        <div className='chat'>채팅창</div>
-        <ChatList />
+        <div className='chatTiTle'>채팅창</div>
+        <div className='chat'>
+          <ChatList />
+        </div>
         <div className='messageContainer'>
           <input className='message' />
           <input

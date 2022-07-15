@@ -15,29 +15,35 @@
   border: 1px #00babc solid;
 }
 
-.userList {
+.userTitle {
   background-color: #00babc;
+  height: auto;
   padding: 3%;
   color: white;
   font-size: 1.7rem;
   font-weight: 700;
   text-align: center;
+}
+
+.users {
+  height: 87%;
+  border: 1px #00babc solid;
+  overflow-y: scroll;
+  position: sticky;
 }
 
 .chatContainer {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-
   height: 55%;
-  border: 1px #00babc solid;
 }
 .chat-list {
   height: 100%;
 }
 
-.chat {
+.chatTiTle {
   background-color: #00babc;
+  height: auto;
   padding: 3%;
   color: white;
   font-size: 1.7rem;
@@ -45,20 +51,28 @@
   text-align: center;
 }
 
+.chat {
+  height: 84%;
+  overflow-y: scroll;
+  position: sticky;
+}
+
 .messageContainer {
-  height: 1.4rem;
-  border: 1px #00babc solid;
+  display: flex;
+  justify-content: space-between;
 }
 
 .message {
-  height: 1.2rem;
-  width: 75%;
+  height: 1.4rem;
+  width: 15rem;
   border: 1px #00babc solid;
+  font-size: 1rem;
+  font-weight: 400;
 }
 
 .button {
-  height: 1.5rem;
-  /* width: 20%; */
+  height: 1.7rem;
+  width: 3rem;
 }
 
 .userlist-row {

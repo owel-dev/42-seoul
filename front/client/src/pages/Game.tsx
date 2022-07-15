@@ -23,9 +23,7 @@ function Game() {
           },
         });
         setPlayers(getAPI.data);
-      } catch (e) {
-        // console.log(e);
-      }
+      } catch (e) {}
     };
     fetchData();
   }, [channelId]);

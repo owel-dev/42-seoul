@@ -30,9 +30,7 @@ function UserInfo() {
           }
         );
         setInfo(getAPI.data);
-      } catch (e) {
-        // console.log(e);
-      }
+      } catch (e) {}
     };
     fetchData();
   }, []);

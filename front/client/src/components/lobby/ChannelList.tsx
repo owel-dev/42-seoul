@@ -16,9 +16,7 @@ function ChannelList() {
           },
         });
         setChannelList(getAPI.data);
-      } catch (e) {
-        // console.log(e);
-      }
+      } catch (e) {}
     };
     fetchData();
   }, []);

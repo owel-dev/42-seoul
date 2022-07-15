@@ -14,7 +14,7 @@ function App() {
         <Router>
           <Layout>
             <Routes>
-              <Route path='/stat' element={<Rank />} />
+              <Route path='/ranking' element={<Rank />} />
               <Route path='/mypage' element={<MyPage />} />
               <Route path='/' element={<Lobby />} />
               <Route path='/game/:channelId' element={<Game />} />

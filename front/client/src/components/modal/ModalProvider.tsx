@@ -6,7 +6,6 @@ import AvatarChangeModal from './AvatarChangeModal';
 import ProfileModal from './ProfileModal';
 import LogoutModal from './LogoutModal';
 import 'styles/modal/Modal.css';
-// import { convertCompilerOptionsFromJson } from 'typescript';
 
 export default function ModalProvider() {
   const [modalInfo, setModalInfo] = useRecoilState(modalState);

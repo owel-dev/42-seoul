@@ -13,5 +13,5 @@ type ModalName =
 
 export interface ModalInfo {
   modalName: ModalName;
-  user?: string;
+  user?: string | null;
 }

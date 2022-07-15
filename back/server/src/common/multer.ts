@@ -5,6 +5,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 const createFolder = (folder: string) => {
   try {
@@ -57,15 +58,18 @@ const storage = (folder: string): multer.StorageEngine => {
 
 // multerOptions을 컨트롤러에서 사용해서 업로드 한다.
 export const multerOptions = (folder: string) => {
-  const result: MulterOptions = {
-	fileFilter: (request, file, callback) => {
-		if (file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
-			// 이미지 형식은 jpg, jpeg, png만 허용합니다.
-			callback(null, true);
-		}
+	const result: MulterOptions = {
+		fileFilter: (request, file, callback) => {
+			if (file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
+				// 이미지 형식은 jpg, jpeg, png만 허용합니다.
+				callback(null, true);
+			}
+			else {
+				callback(new HttpException('Invalid image extension', HttpStatus.BAD_REQUEST), false);
+			}
 		},
-	
-	storage: storage(folder),
+		
+		storage: storage(folder),
 	};
 
   return result;

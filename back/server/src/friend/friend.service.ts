@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateFriendDto } from './dto/create-friend.dto';
@@ -16,14 +16,17 @@ export class FriendService {
 
 	) { }
 	async create(createFriendDto: CreateFriendDto) {
-		console.log(createFriendDto);
+		console.log("Friend created");
 		const friend1 = await this.userRepository.findOne({
-			where: { intra_id: createFriendDto.friend1 },
+			where: { intra_id: createFriendDto.player1 },
 		})
 		const friend2 = await this.userRepository.findOne({
-			where: { intra_id: createFriendDto.friend2 },
+			where: { intra_id: createFriendDto.player2 },
 		});
-		const friend = new Friend();
+		if (friend1 === undefined || friend2 === undefined)
+			throw new HttpException(`${createFriendDto.player1}, ${createFriendDto.player2}: Cannot find user`, HttpStatus.BAD_REQUEST);
+		
+			const friend = new Friend();
 		friend.status = createFriendDto.status;
 		friend.friend_1 = friend1;
 		friend.friend_2 = friend2;
@@ -31,6 +34,8 @@ export class FriendService {
 	}
 
 	async getFriendListOne(intraId: string) {
+		if (await this.userRepository.findOneBy({ intra_id: intraId }) === undefined)
+			throw new HttpException(`${intraId}: Cannot find user`, HttpStatus.BAD_REQUEST);
 		const friendRepo = await this.friendRepository.find({
 			relations: {
 				friend_1: true,

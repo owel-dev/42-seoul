@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Stat } from 'src/stats/entities/stat.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,6 +22,8 @@ export class UsersService {
 				intra_id: intraId,
 			}
 		});
+		if (userRepo == undefined)
+			throw new HttpException(`${intraId}: Cannot find user`, HttpStatus.BAD_REQUEST);
 		return (new ResUserMyPage(userRepo));
 	}
 
@@ -30,12 +32,19 @@ export class UsersService {
 	}
 
 	async update(intraId: string, updateUserDto: UpdateUserDto, file: Express.Multer.File) {
-		const ipv4 = this.getIpAdrress();
-		if (updateUserDto.nickName !== undefined && await this.isNickAvailable(updateUserDto.nickName)) {
-			console.log('nickname updated');
-			this.userRepository.update(intraId, {
-				nickname: updateUserDto.nickName,
-			});
+		if (await this.userRepository.findOneBy({ intra_id: intraId }) == undefined)
+			throw new HttpException(`${intraId}: Cannot find user`, HttpStatus.BAD_REQUEST)
+		
+		const ipv4 = await this.getIpAdrress();
+		if (updateUserDto.nickName !== undefined) {
+
+			if (await this.isNickAvailable(updateUserDto.nickName)) {
+				console.log('nickname updated');
+				console.log(updateUserDto);
+				this.userRepository.update(intraId, {
+					nickname: updateUserDto.nickName,
+				});
+			}
 		}
 		if (file !== undefined) {
 			console.log("avatar updated");
@@ -50,7 +59,7 @@ export class UsersService {
 	{
 		const user = new User();
 		const filePath = `avatar/${file.filename}`;
-		const ipv4 = this.getIpAdrress();
+		const ipv4 = await this.getIpAdrress();
 
 		user.intra_id = createUserDto.intraId;
 		user.nickname = createUserDto.nickName;
@@ -70,14 +79,14 @@ export class UsersService {
 				nickname: nickName
 			}
 		})
-		console.log(nickName);
-		console.log(users);
-
 		if (users.length === 0)
 		{
 			return (true);
 		}
-		return (false);
+		else
+		{
+			throw new HttpException(`${nickName}: Nickname already exist`, HttpStatus.FORBIDDEN);
+		}
 	}
 
 	private async getIpAdrress()

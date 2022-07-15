@@ -15,6 +15,7 @@ export class UsersController {
 		@Body() createUserDto: CreateUserDto,
 		@UploadedFile() file: Express.Multer.File
 		) {
+			console.log(createUserDto);
 			return this.usersService.create(createUserDto, file);
 		}
 

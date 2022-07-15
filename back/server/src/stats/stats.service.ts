@@ -1,4 +1,4 @@
-import { Inject, Injectable, Res } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, Res } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { ResRankDto } from './dto/res-rank.dto';
 import { UpdateStatDto } from './dto/update-stat.dto';
@@ -25,14 +25,12 @@ export class StatsService {
 		return resRankDto;
 	}
 
-//   findAll() {
-//     return `This action returns all stats`;
-//   }
-
   async update(id: string, updateStatDto: UpdateStatDto) {
 	const statUpdate = await this.statRepository.findOneBy({
 		intra_id: id,
 	})
+	if (statUpdate === undefined)
+		throw new HttpException(`${id}: Cannot find user`, HttpStatus.BAD_REQUEST);
 	statUpdate.win = updateStatDto.win;
 	statUpdate.lose = updateStatDto.lose;
 	statUpdate.winrate = +updateStatDto.win / (+updateStatDto.win + +updateStatDto.lose);

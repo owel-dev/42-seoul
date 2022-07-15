@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateMatchDto } from './dto/create-match.dto';
@@ -23,6 +23,9 @@ export class MatchService {
 			where: { intra_id: createMatchDto.player2 },
 		});
 
+		if (player1 === undefined || player2 === undefined)
+			throw new HttpException(`${createMatchDto.player1}, ${createMatchDto.player2}: Cannot find user`, HttpStatus.BAD_REQUEST);
+			
 		const match = new Match();
 		match.mode = "default";
 		match.score_1 = createMatchDto.score1;
@@ -37,6 +40,8 @@ export class MatchService {
 //   }
 
 	async getMatchListOne(intraId: string) {
+		if (await this.userRepository.findOneBy({ intra_id: intraId }) === undefined)
+			throw new HttpException(`${intraId}: Cannot find user`, HttpStatus.BAD_REQUEST);
 		const matchRepo = await this.matchRepository.find({
 			relations: {
 				player_1: true,

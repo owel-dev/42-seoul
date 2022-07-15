@@ -12,7 +12,6 @@ export class ResUserMyPage {
 
 	constructor (user: User) {
 		this.intraId = user.intra_id;
-		const file = createReadStream(user.avatar)
 		this.avatar = user.avatar;
 		this.nickName = user.nickname;
 		this.win = user.stats.win;

@@ -9,7 +9,7 @@ function RankTable() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const getAPI = await axios.get(DUMMY_SERVER + 'ranking', {
+        const getAPI = await axios.get(DUMMY_SERVER + 'stat', {
           headers: {
             'Content-Type': 'application/json',
           },

@@ -1,9 +1,9 @@
-export const DUMMY_SERVER = 'http://localhost:3000/';
+export const DUMMY_SERVER = 'http://10.19.236.57:3000/';
 export const DUMMY_USER = {
-  intraId: 'hello',
+  intraId: 'yongwkim',
   avatar:
     'https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif',
-  nickName: 'hello',
+  nickName: 'yongwkim',
   win: 5,
   lose: 5,
   winRate: '50%',

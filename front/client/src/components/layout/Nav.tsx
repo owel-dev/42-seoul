@@ -13,7 +13,7 @@ function Nav() {
           <button className='nav_menu'>logo</button>
         </Link>
         <span className='nav_menu' id='blank'></span>
-        <Link to='/ranking' className='link'>
+        <Link to='/stat' className='link'>
           <button className='nav_menu'>rank</button>
         </Link>
         <Link to='/mypage' className='link'>

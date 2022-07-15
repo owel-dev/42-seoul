@@ -5,9 +5,9 @@ export class PostChannelDto
     player2 : string;
     
     admin : string;
-    // curNumUser : string;
+    curNumUser : string;
     
-    // maxNumUser : string;
+    maxNumUser : string;
     
     password : string;
     

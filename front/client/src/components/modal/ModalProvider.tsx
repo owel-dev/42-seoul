@@ -17,7 +17,6 @@ export default function ModalProvider() {
   };
 
   const findModal = () => {
-    console.log(modalInfo);
     const { modalName } = modalInfo;
     switch (modalName) {
       case 'MAIN-START':

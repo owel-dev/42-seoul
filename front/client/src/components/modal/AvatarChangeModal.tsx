@@ -1,18 +1,26 @@
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { modalState } from 'types/modal';
-import 'styles/modal/Modal.css';
 import { DUMMY_SERVER, DUMMY_USER } from 'utils/dummy';
-import { useState } from 'react';
-import axios from 'axios';
+import 'styles/modal/Modal.css';
 
 function AvatarChangeModal() {
   const setModalInfo = useSetRecoilState(modalState);
   const [previewImg, setPreviewImg] = useState(DUMMY_USER.avatar);
   const [postImg, setPostImg] = useState<FormData>();
+  const [isChange, setIsChange] = useState<boolean>();
 
   const CloseModal = () => {
     setModalInfo({ modalName: null });
   };
+
+  useEffect(() => {
+    if (isChange) {
+      window.location.reload();
+      setIsChange(false);
+    }
+  }, [isChange]);
 
   const UploadAvatar = (e: any) => {
     const rd = new FileReader();
@@ -20,7 +28,6 @@ function AvatarChangeModal() {
     if (e.target.files[0] !== null) {
       //미리보기
       rd.readAsDataURL(e.target.files[0]);
-      console.log(e.target.files[0]);
       setPreviewImg(URL.createObjectURL(e.target.files[0]));
 
       //전송할 FormData
@@ -33,7 +40,6 @@ function AvatarChangeModal() {
   const PostAvatar = () => {
     const fetchData = async () => {
       try {
-        console.log(postImg);
         await axios.patch(
           DUMMY_SERVER + 'users/' + DUMMY_USER.intraId,
           postImg,
@@ -43,10 +49,10 @@ function AvatarChangeModal() {
             },
           }
         );
+        setIsChange(true);
       } catch (e) {}
     };
     fetchData();
-    window.location.reload();
   };
 
   return (
@@ -54,12 +60,12 @@ function AvatarChangeModal() {
       <div className='modal-title'>avatar change</div>
       <div className='modal-content'>
         <div>
-          <input type='file' accept='image/*' onChange={UploadAvatar}></input>
+          <input type='file' accept='image/*' onChange={UploadAvatar} />
           <img
             src={previewImg}
             alt='프로필 이미지'
             style={{ width: '100px', height: '100px' }}
-          ></img>
+          />
           <span>아바타</span>
         </div>
       </div>

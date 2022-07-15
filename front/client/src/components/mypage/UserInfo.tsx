@@ -50,7 +50,7 @@ function UserInfo() {
         </div>
         <div className='user-info-line'>
           <span className='user-label'>nickname </span>
-          <input defaultValue={info?.nickName}></input>
+          <span> {info?.nickName}</span>
           <button onClick={openNickModal}>change</button>
         </div>
         <div className='user-info-line'>

@@ -16,21 +16,19 @@ function NickChangeModal() {
   function PostNickName() {
     const fetchData = async () => {
       try {
-        const getAPI = await axios.patch(
+        await axios.patch(
           DUMMY_SERVER + 'users/' + DUMMY_USER.intraId,
+          { nickName: inputValue },
           {
             headers: {
               'Content-Type': 'application/json',
             },
-            nickName: inputValue,
           }
         );
-        // console.log(getAPI.data);
-      } catch (e) {
-        // console.log(e);
-      }
+      } catch (e) {}
     };
     fetchData();
+    window.location.reload();
   }
 
   return (

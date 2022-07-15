@@ -7,7 +7,7 @@ import axios from 'axios';
 
 function AvatarChangeModal() {
   const setModalInfo = useSetRecoilState(modalState);
-  const [previewImg, setpreviewImg] = useState(DUMMY_USER.avatar);
+  const [previewImg, setPreviewImg] = useState(DUMMY_USER.avatar);
   const [postImg, setPostImg] = useState<FormData>();
 
   const CloseModal = () => {
@@ -21,11 +21,10 @@ function AvatarChangeModal() {
       //미리보기
       rd.readAsDataURL(e.target.files[0]);
       console.log(e.target.files[0]);
-      setpreviewImg(URL.createObjectURL(e.target.files[0]));
+      setPreviewImg(URL.createObjectURL(e.target.files[0]));
 
       //전송할 FormData
       const img = new FormData();
-      //img.append('file', '');
       img.append('avatar', e.target.files[0]);
       setPostImg(img);
     }
@@ -38,17 +37,13 @@ function AvatarChangeModal() {
         await axios.patch(
           DUMMY_SERVER + 'users/' + DUMMY_USER.intraId,
           postImg,
-          // { avatar: postImg },
           {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
           }
         );
-        // console.log(getAPI.data);
-      } catch (e) {
-        // console.log(e);
-      }
+      } catch (e) {}
     };
     fetchData();
     window.location.reload();

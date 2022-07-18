@@ -14,9 +14,10 @@ export class ChannelController {
   }
 
   @Get()
-  getAllChannelList() {
+  async getAllChannelList() {
     console.log("channel_get");
-    return {channelList : this.channelService.getAllChannelList()};
+    console.log({channelList : await this.channelService.getAllChannelList()});
+    return {channelList : await this.channelService.getAllChannelList()};
   }
 
   @Get(':channelid')
@@ -28,7 +29,14 @@ export class ChannelController {
   @Patch(':channelid/password')
   updatePassword(@Param('channelid') channelid: number, @Body() updateChannelDto: UpdateChannelDto) {
     console.log("updatePassword");
-    return this.channelService.update(channelid, updateChannelDto);
+    return this.channelService.updatePassword(channelid, updateChannelDto);
+  }
+
+  @Patch(':channelid/entry')
+  updateCurNumUser(@Param('channelid') channelid: number)
+  {
+    console.log("updateCurNumUser");
+    return this.channelService.updateCurNumUser(channelid);
   }
 
   @Delete(':channelid')

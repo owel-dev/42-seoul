@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { getConnection, getRepository, QueryBuilder, Repository } from 'typeorm';
 import { PostChannelDto } from './dto/post-channel.dto';
 import { UpdateChannelDto } from './dto/update-channel.dto';
 import { ChannelEntity } from './entities/channel.entity';
@@ -36,8 +36,15 @@ export class ChannelService {
     return result;
   }
 
-  async update(channelid: number, updateChannelDto: UpdateChannelDto) {
+  async updatePassword(channelid: number, updateChannelDto: UpdateChannelDto) {
     await this.channelRepository.update(channelid, {password: updateChannelDto.password});
+
+  }
+
+  async updateCurNumUser(channelid: number) {
+    const chnnelUpdate = await this.channelRepository.findOneBy({channelId : channelid});
+    chnnelUpdate.curNumUser += 1;
+    await this.channelRepository.update(channelid, {curNumUser: chnnelUpdate.curNumUser});
   }
 
   remove(channelid: number) {

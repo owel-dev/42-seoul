@@ -1,13 +1,14 @@
 export class PostChannelDto 
-{    
+{
     player1 : string;
     
     player2 : string;
     
     admin : string;
-    curNumUser : string;
+
+    curNumUser : number;
     
-    maxNumUser : string;
+    maxNumUser : number;
     
     password : string;
     

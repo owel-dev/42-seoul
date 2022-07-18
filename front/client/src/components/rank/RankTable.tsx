@@ -9,7 +9,7 @@ function RankTable() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const getAPI = await axios.get(DUMMY_SERVER + 'stat', {
+        const getAPI = await axios.get(DUMMY_SERVER + '/stat', {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -29,7 +29,7 @@ function RankTable() {
         lose='lose'
         winRate='winRate'
         type='rank-row-title'
-      ></RankRow>
+      />
       {rank?.ranking.map((val: any, index: any) => {
         const row_type = index % 2 ? 'rank-row' : 'rank-row-gray';
         return (
@@ -41,7 +41,7 @@ function RankTable() {
             lose={val.lose}
             winRate={val.winRate}
             type={row_type}
-          ></RankRow>
+          />
         );
       })}
     </div>

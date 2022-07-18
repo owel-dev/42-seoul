@@ -41,7 +41,7 @@ function AvatarChangeModal() {
     const fetchData = async () => {
       try {
         await axios.patch(
-          DUMMY_SERVER + 'users/' + DUMMY_USER.intraId,
+          DUMMY_SERVER + '/users/' + DUMMY_USER.intraId,
           postImg,
           {
             headers: {

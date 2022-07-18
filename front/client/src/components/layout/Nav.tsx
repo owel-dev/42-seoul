@@ -16,7 +16,7 @@ function Nav() {
         <Link to='/ranking' className='link'>
           <button className='nav_menu'>rank</button>
         </Link>
-        <Link to='/mypage' className='link'>
+        <Link to='/users/:nickName' className='link'>
           <button className='nav_menu'>mypage</button>
         </Link>
         <button

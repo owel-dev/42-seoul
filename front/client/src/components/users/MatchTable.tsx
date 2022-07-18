@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { matchList } from 'types/MyPageTypes';
+import { matchList } from 'types/profileTypes';
 import { DUMMY_SERVER, DUMMY_USER } from 'utils/dummy';
-import 'styles/mypage/MatchTable.css';
+import 'styles/users/MatchTable.css';
 
 function MatchTable() {
   const [List, setList] = useState<matchList | null>(null);
@@ -10,7 +11,7 @@ function MatchTable() {
     const fetchData = async () => {
       try {
         const getAPI = await axios.get(
-          DUMMY_SERVER + 'match/' + DUMMY_USER.intraId,
+          DUMMY_SERVER + '/match/' + DUMMY_USER.intraId,
           {
             headers: {
               'Content-Type': 'application/json',
@@ -28,11 +29,15 @@ function MatchTable() {
       {List?.matchList.map((element, index) => {
         return (
           <div className='match-row' key={index}>
-            <span>{element.player1} </span>
-            <span>{element.score1}</span>
+            <Link to={`/users/yongwkim`}>
+              <span>{element.player1}</span>
+            </Link>
+            <span> {element.score1}</span>
             <span> vs </span>
-            <span>{element.player2} </span>
-            <span>{element.score2}</span>
+            <Link to={`/users/yongwkim`}>
+              <span>{element.player2}</span>
+            </Link>
+            <span> {element.score2}</span>
           </div>
         );
       })}

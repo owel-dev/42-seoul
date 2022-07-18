@@ -17,7 +17,7 @@ function Game() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const getAPI = await axios.get(DUMMY_SERVER + 'channel/' + channelId, {
+        const getAPI = await axios.get(DUMMY_SERVER + '/channel/' + channelId, {
           headers: {
             'Content-Type': 'application/json',
           },

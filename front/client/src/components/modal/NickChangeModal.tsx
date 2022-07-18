@@ -25,7 +25,7 @@ function NickChangeModal() {
     const fetchData = async () => {
       try {
         await axios.patch(
-          DUMMY_SERVER + 'users/' + DUMMY_USER.intraId,
+          DUMMY_SERVER + '/users/' + DUMMY_USER.intraId,
           { nickName: inputValue },
           {
             headers: {

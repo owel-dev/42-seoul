@@ -2,9 +2,9 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { DUMMY_SERVER, DUMMY_USER } from 'utils/dummy';
-import { userInfo } from 'types/MyPageTypes';
+import { userInfo } from 'types/profileTypes';
 import { modalState } from 'types/modal';
-import 'styles/mypage/UserInfo.css';
+import 'styles/users/UserInfo.css';
 
 function UserInfo() {
   const [info, setInfo] = useState<userInfo | null>(null);
@@ -22,7 +22,7 @@ function UserInfo() {
     const fetchData = async () => {
       try {
         const getAPI = await axios.get(
-          DUMMY_SERVER + 'users/' + DUMMY_USER.intraId + '/mypage',
+          DUMMY_SERVER + '/users/' + DUMMY_USER.nickName + '/mypage',
           {
             headers: {
               'Content-Type': 'application/json',

@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { friendList } from 'types/MyPageTypes';
+import { friendList } from 'types/profileTypes';
 import { DUMMY_SERVER, DUMMY_USER } from 'utils/dummy';
-import 'styles/mypage/FriendTable.css';
+import 'styles/users/FriendTable.css';
 
 function FriendTable() {
   const [List, setList] = useState<friendList | null>(null);
@@ -10,7 +11,7 @@ function FriendTable() {
     const fetchData = async () => {
       try {
         const getAPI = await axios.get(
-          DUMMY_SERVER + 'friend/' + DUMMY_USER.intraId,
+          DUMMY_SERVER + '/friend/' + DUMMY_USER.intraId,
           {
             headers: {
               'Content-Type': 'application/json',
@@ -21,18 +22,18 @@ function FriendTable() {
       } catch (e) {}
     };
     fetchData();
-  }, []);
+  }, [List?.friendList.length]);
 
   return (
     <div className='friend-table'>
-      {List?.friendList.map((element, index) => {
-        return (
-          <div className='friend-row' key={index}>
-            <span>{element.nickName} </span>
-            <span>{element.status}</span>
-          </div>
-        );
-      })}
+      {List?.friendList.map((element, index) => (
+        <div className='friend-row' key={index}>
+          <Link to={`/users/yongwkim`}>
+            <span>{element.nickName}</span>
+          </Link>
+          <span> {element.status}</span>
+        </div>
+      ))}
     </div>
   );
 }

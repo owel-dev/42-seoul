@@ -14,11 +14,11 @@ function GameStartModal() {
   function PostMakeChannel() {
     const fetchData = async () => {
       try {
-        const getAPI = await axios.post(DUMMY_SERVER + 'channel', {
+        const getAPI = await axios.post(DUMMY_SERVER + '/channel', {
           // data: {
           player1: 'yongwkim',
           player2: 'samin',
-          intraId: 'yongwkim',
+          admin: 'yongwkim',
           password: 'asdf',
           mode: 1,
           type: 2,

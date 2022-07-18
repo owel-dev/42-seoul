@@ -1,5 +1,5 @@
-// export const DUMMY_SERVER = 'http://10.19.247.186:3000/';
-export const DUMMY_SERVER = 'http://10.19.236.57:3000/';
+// export const DUMMY_SERVER = 'http://10.19.247.186:3000';
+export const DUMMY_SERVER = 'http://10.19.236.57:3000';
 export const DUMMY_USER = {
   intraId: 'yongwkim',
   avatar:

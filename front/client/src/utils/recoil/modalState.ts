@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { userInfo } from 'types/MyPageTypes';
+import { userInfo } from 'types/profileTypes';
 
 export const nickChangeModalState = atom<boolean>({
   key: 'nickChangeModalState',

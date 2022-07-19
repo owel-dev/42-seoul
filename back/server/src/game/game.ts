@@ -1,6 +1,6 @@
 const uuid = require('uuid');
-const MAX_SPEED = 2;
-const MIN_SPEED = 2;
+const MAX_SPEED = 3;
+const MIN_SPEED = 3;
 const MAX_SCORE = 10;
 
 export class User {
@@ -48,6 +48,7 @@ export class Game {
             this.players[this.player2].score++;
             this.reset(2);
         }
+
 
         if (this.ball.y >= 100) {
             this.ball_velocity[1] *= -1;

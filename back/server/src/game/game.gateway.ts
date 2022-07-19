@@ -47,6 +47,16 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     this.gameService.matchRequest(this.server, socket, data);
   }
 
+  @SubscribeMessage('spectate-request')
+  spectateRequest(socket: Socket, data: any): void {
+    this.gameService.spectateRequest(this.server, socket, data);
+  }
+
+  @SubscribeMessage('gamelist-request')
+  gamelistRequest(socket: Socket, data: any): any {
+    return this.gameService.gamelistRequest(this.server, socket);
+  }
+
   // socket.on('get-ping', (callback) => {
   //     callback(true);
   //   });

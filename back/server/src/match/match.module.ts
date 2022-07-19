@@ -4,6 +4,7 @@ import { MatchController } from './match.controller';
 import { DatabaseModule } from 'src/database/database.module';
 import { matchProviders } from './match.providers';
 import { userProviders } from 'src/users/users.providers';
+import { statProviders } from 'src/stats/stats.providers';
 
 @Module({
   imports: [DatabaseModule],

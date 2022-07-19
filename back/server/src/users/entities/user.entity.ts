@@ -1,3 +1,4 @@
+import { Ban } from "src/ban/entities/ban.entity";
 import { Friend } from "src/friend/entities/friend.entity";
 import { Match } from "src/match/entities/match.entity";
 import { Stat } from "src/stats/entities/stat.entity";
@@ -37,9 +38,15 @@ export class User {
 	@OneToMany(() => Match, (match) => match.player_2)
 	matches_2: Match[];
 
-	@OneToMany(() => Friend, (match) => match.friend_1)
-	frined_1: Friend[];
+	@OneToMany(() => Friend, (friend) => friend.friend_1)
+	friend_1: Friend[];
 
-	@OneToMany(() => Friend, (match) => match.friend_2)
-	frined_2: Friend[];
+	@OneToMany(() => Friend, (friend) => friend.friend_2)
+	friend_2: Friend[];
+
+	@OneToMany(() => Ban, (ban) => ban.ban_1)
+	ban_1: Ban[];
+
+	@OneToMany(() => Ban, (ban) => ban.ban_2)
+	ban_2: Ban[];
 }

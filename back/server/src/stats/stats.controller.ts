@@ -23,9 +23,9 @@ export class StatsController {
 		return this.statsService.getRanking(query.n);
 	}
 
-	@Patch(':intraid')
-	update(@Param('intraid') id: string, @Body() updateStatDto: UpdateStatDto) {
-		return this.statsService.update(id, updateStatDto);
+	@Patch(':nickname')
+	update(@Param('nickname') nickName: string, @Body() updateStatDto: UpdateStatDto) {
+		return this.statsService.update(nickName, updateStatDto);
 	}
 
 //   @Delete(':id')

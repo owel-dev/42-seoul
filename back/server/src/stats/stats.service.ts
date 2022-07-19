@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Inject, Injectable, Res } from '@nestjs/common';
+import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { ResRankDto } from './dto/res-rank.dto';
 import { UpdateStatDto } from './dto/update-stat.dto';
@@ -9,6 +10,8 @@ export class StatsService {
 	constructor(
 		@Inject('STAT_REPOSITORY')
 		private statRepository: Repository<Stat>,
+		@Inject('USER_REPOSITORY')
+		private userRepository: Repository<User>,
 	) { }
 
 	async getRanking(numUser: number) {
@@ -25,18 +28,25 @@ export class StatsService {
 		return resRankDto;
 	}
 
-  async update(id: string, updateStatDto: UpdateStatDto) {
-	const statUpdate = await this.statRepository.findOneBy({
-		intra_id: id,
-	})
-	if (statUpdate === undefined)
-		throw new HttpException(`${id}: Cannot find user`, HttpStatus.BAD_REQUEST);
-	statUpdate.win = updateStatDto.win;
-	statUpdate.lose = updateStatDto.lose;
-	statUpdate.winrate = +updateStatDto.win / (+updateStatDto.win + +updateStatDto.lose);
-	return await this.statRepository.save(statUpdate);
+	async update(nickName: string, updateStatDto: UpdateStatDto) {
+		const user = await this.userRepository.findOne({
+			where: { nickname: nickName},
+		})
+		if (user === undefined)
+			throw new HttpException(`${nickName}: Cannot find user`, HttpStatus.BAD_REQUEST);
+		
+			const statUpdate = await this.statRepository.findOne({
+			relations: ['user'],
+			where:{
+				user: user,
+			}
+		})
+		statUpdate.win = updateStatDto.win;
+		statUpdate.lose = updateStatDto.lose;
+		statUpdate.winrate = +updateStatDto.win / (+updateStatDto.win + +updateStatDto.lose);
+		return await this.statRepository.save(statUpdate);
 
-  }
+	}
 
 //   remove(id: number) {
 //     return `This action removes a #${id} stat`;

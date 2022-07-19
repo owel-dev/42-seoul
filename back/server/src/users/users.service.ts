@@ -1,7 +1,10 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { Ban } from 'src/ban/entities/ban.entity';
+import { Friend } from 'src/friend/entities/friend.entity';
 import { Stat } from 'src/stats/entities/stat.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ResUserModal } from './dto/res-user-modal.dto';
 import { ResUserMyPage } from './dto/res-user-mypage.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -11,49 +14,101 @@ export class UsersService {
 	constructor(
 		@Inject('USER_REPOSITORY')
 		private userRepository: Repository<User>,
+		@Inject('FRIEND_REPOSITORY')
+		private friendRepository: Repository<Friend>,
+		@Inject('BAN_REPOSITORY')
+		private banRepository: Repository<Ban>,
 	) { }
 
 
-	async findOneMyPage(intraId : string)
+	async findOneMyPage(nickName : string)
 	{
+		console.log("user findOneMyPage");
 		const userRepo = await this.userRepository.findOne({
 			relations: ["stats"],
 			where: {
-				intra_id: intraId,
+				nickname: nickName,
 			}
 		});
 		if (userRepo == undefined)
-			throw new HttpException(`${intraId}: Cannot find user`, HttpStatus.BAD_REQUEST);
+			throw new HttpException(`${nickName}: Cannot find user`, HttpStatus.BAD_REQUEST);
 		return (new ResUserMyPage(userRepo));
+	}
+
+	async findOneModal(requester : string, nickName : string) {
+		console.log("user findOneModal");
+		const userRepo = await this.userRepository.findOne({
+			relations: ["stats", "friend_1", "friend_2", "ban_1", "ban_2"],
+			where: {
+				nickname: nickName,
+			}
+		});
+		console.log(userRepo);
+		if (userRepo == undefined)
+			throw new HttpException(`${nickName}: Cannot find user`, HttpStatus.BAD_REQUEST);
+		const resUserModal = new ResUserModal(userRepo);
+		resUserModal.setFriend = await this.isFriend(requester, userRepo.friend_2);
+		resUserModal.setBan = await this.isBan(requester, userRepo.ban_2);
+		console.log(resUserModal.friend);
+		console.log(resUserModal.ban);
+		return (resUserModal);
+	}
+
+	private async isFriend(requester : string, friendList : Friend[]) : Promise<boolean> {
+		for (let i = 0; i < friendList.length; i++) {
+			const friend = await this.friendRepository.findOne({
+				relations: ["friend_1", "friend_2"],
+				where: {friend_id: friendList[i].friend_id }
+			});
+			if (friend.friend_1.nickname == requester)
+				return (true);
+		}
+		return (false);
+	}
+
+	private async isBan(requester : string, banList : Ban[]) : Promise<boolean> {
+		for (let i = 0; i < banList.length; i++) {
+			const ban = await this.banRepository.findOne({
+				relations: ["ban_1", "ban_2"],
+				where: {ban_id: banList[i].ban_id }
+			});
+			if (ban.ban_1.nickname == requester)
+				return (true);
+		}
+		return (false);
 	}
 
 	create(createUserDto: CreateUserDto, file: Express.Multer.File) {
 		return this.saveUser(createUserDto, file);
 	}
 
-	async update(intraId: string, updateUserDto: UpdateUserDto, file: Express.Multer.File) {
-		if (await this.userRepository.findOneBy({ intra_id: intraId }) == undefined)
-			throw new HttpException(`${intraId}: Cannot find user`, HttpStatus.BAD_REQUEST)
-		
+	async update(nickName: string, updateUserDto: UpdateUserDto, file: Express.Multer.File) {
+		if (await this.userRepository.findOneBy({ nickname: nickName }) == undefined)
+			throw new HttpException(`${nickName}: Cannot find user`, HttpStatus.BAD_REQUEST)
 		const ipv4 = await this.getIpAdrress();
 		if (updateUserDto.nickName !== undefined) {
-
 			if (await this.isNickAvailable(updateUserDto.nickName)) {
 				console.log('nickname updated');
-				console.log(updateUserDto);
-				this.userRepository.update(intraId, {
-					nickname: updateUserDto.nickName,
-				});
+				this.userRepository.update(
+					{ nickname: nickName },
+					{ nickname: updateUserDto.nickName },
+				);
 			}
 		}
 		if (file !== undefined) {
 			console.log("avatar updated");
-			this.userRepository.update(intraId, {
+			this.userRepository.update(nickName, {
 				avatar: `http://${ipv4}:3000/public/avatar/${file.filename}`,
 			});
 		}
 		return `update`;
 	}
+
+	async delete(nickName: string) {
+		console.log("delete user");
+		await this.userRepository.delete({ nickname: nickName });	
+	}
+	
 
 	private async saveUser(createUserDto: CreateUserDto, file: Express.Multer.File)
 	{
@@ -79,6 +134,8 @@ export class UsersService {
 				nickname: nickName
 			}
 		})
+		console.log(nickName);
+		console.log(users);
 		if (users.length === 0)
 		{
 			return (true);
@@ -96,5 +153,4 @@ export class UsersService {
 		const ipv4 = nets['en0'][1]['address'];
 		return (ipv4);
 	}
-
 }

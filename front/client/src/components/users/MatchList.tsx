@@ -1,5 +1,5 @@
-import MatchTable from 'components/mypage/MatchTable';
-import 'styles/mypage/MatchList.css';
+import MatchTable from 'components/users/MatchTable';
+import 'styles/users/MatchList.css';
 
 function MatchList() {
   return (

@@ -10,7 +10,7 @@ function ChannelList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const getAPI = await axios.get(DUMMY_SERVER + 'channel', {
+        const getAPI = await axios.get(DUMMY_SERVER + '/channel', {
           headers: {
             'Content-Type': 'application/json',
           },

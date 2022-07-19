@@ -1,9 +1,10 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { DUMMY_PLAYER, DUMMY_SERVER } from 'utils/dummy';
+import { useSetRecoilState } from 'recoil';
 import GameModule from 'components/game/GameModule';
 import instance from 'utils/axios';
+import { modalState } from 'utils/recoil/modal';
+import { channelIdState } from 'utils/recoil/modalState';
 import 'styles/game/Game.css';
 
 type playerType = {
@@ -13,11 +14,16 @@ type playerType = {
 
 function Game() {
   const { channelId } = useParams();
+  const setModalInfo = useSetRecoilState(modalState);
+
+  const setSaveChannelId = useSetRecoilState(channelIdState);
+  setSaveChannelId(channelId);
+
   const [players, setPlayers] = useState<playerType | null>(null);
 
   useEffect(() => {
     getData();
-  }, [channelId]);
+  }, []);
 
   const getData = async () => {
     try {
@@ -28,12 +34,14 @@ function Game() {
 
   return (
     <div className='game-area'>
-      <button>채널설정</button>
+      <button onClick={() => setModalInfo({ modalName: 'GAME-SETTING' })}>
+        채널설정
+      </button>
       <div className='player-game-area'>
         <div className='player'>
           플레이어1
           <img
-            src={DUMMY_PLAYER.players[0].avatar}
+            src={'https://cdn.intra.42.fr/users/norminet.jpeg'}
             alt=''
             className='player-image'
           ></img>
@@ -46,7 +54,7 @@ function Game() {
         <div className='player'>
           플레이어2
           <img
-            src={DUMMY_PLAYER.players[1].avatar}
+            src={'https://cdn.intra.42.fr/users/norminet.jpeg'}
             alt=''
             className='player-image'
           ></img>

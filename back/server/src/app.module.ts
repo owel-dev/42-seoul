@@ -6,6 +6,8 @@ import { UsersModule } from './users/users.module';
 import { MatchModule } from './match/match.module';
 import { ChannelModule } from './channel/channel.module';
 import { FriendModule } from './friend/friend.module';
+import { ChatModule } from './chat/chat.module';
+import { BanModule } from './ban/ban.module';
 
 @Module({
 	imports: [
@@ -13,7 +15,8 @@ import { FriendModule } from './friend/friend.module';
 		UsersModule,
 		MatchModule,
 		ChannelModule,
-		FriendModule
+		FriendModule,
+		BanModule
 	],
 	controllers: [AppController],
 	providers: [AppService],

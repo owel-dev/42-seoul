@@ -1,12 +1,14 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState } from 'recoil';
 import { DUMMY_SERVER, DUMMY_USER } from 'utils/dummy';
-import { modalState } from 'types/modal';
+import { modalState } from 'utils/recoil/modal';
+import { myDataState } from 'utils/recoil/myData';
+import instance from 'utils/axios';
 import 'styles/modal/Modal.css';
 
 function NickChangeModal() {
   const setModalInfo = useSetRecoilState(modalState);
+  const [myData, setMyData] = useRecoilState(myDataState);
   const [inputValue, setInputValue] = useState('');
   const [isChange, setIsChange] = useState<boolean>();
 
@@ -15,24 +17,28 @@ function NickChangeModal() {
   };
 
   useEffect(() => {
+    getMyData();
     if (isChange) {
-      window.location.reload();
+      window.location.replace(`/users/${myData.nickName}/mypage`);
+      console.log('useEffect', myData);
       setIsChange(false);
     }
-  }, [isChange]);
+  }, [isChange && myData]);
+
+  const getMyData = async () => {
+    try {
+      const res = await instance.get(`/users/navi`);
+      setMyData(res?.data);
+      console.log('getData', myData);
+    } catch (e) {}
+  };
 
   function PostNickName() {
     const fetchData = async () => {
       try {
-        await axios.patch(
-          DUMMY_SERVER + '/users/' + DUMMY_USER.intraId,
-          { nickName: inputValue },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
+        await instance.patch(`/users/` + myData.nickName, {
+          nickName: inputValue,
+        });
         setIsChange(true);
       } catch (e) {
         alert('이미 존재하는 닉네임입니다!');

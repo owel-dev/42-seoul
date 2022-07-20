@@ -1,15 +1,16 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
-import { modalState } from 'types/modal';
-import { DUMMY_SERVER, DUMMY_USER } from 'utils/dummy';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { modalState } from 'utils/recoil/modal';
+import { myDataState } from 'utils/recoil/myData';
 import 'styles/modal/Modal.css';
 
 function AvatarChangeModal() {
-  const setModalInfo = useSetRecoilState(modalState);
-  const [previewImg, setPreviewImg] = useState(DUMMY_USER.avatar);
+  const myData = useRecoilValue(myDataState);
   const [postImg, setPostImg] = useState<FormData>();
   const [isChange, setIsChange] = useState<boolean>();
+  const [previewImg, setPreviewImg] = useState(myData.avatar);
+  const setModalInfo = useSetRecoilState(modalState);
 
   const CloseModal = () => {
     setModalInfo({ modalName: null });
@@ -41,11 +42,12 @@ function AvatarChangeModal() {
     const fetchData = async () => {
       try {
         await axios.patch(
-          DUMMY_SERVER + '/users/' + DUMMY_USER.intraId,
+          'http://10.19.236.57:3000/users/' + myData.nickName,
           postImg,
           {
             headers: {
               'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${localStorage.getItem('tran-token')}`, // 로그인 후 처리
             },
           }
         );

@@ -1,7 +1,7 @@
 import { useSetRecoilState } from 'recoil';
-import { modalState } from 'types/modal';
+import { modalState } from 'utils/recoil/modal';
 
-const dummy = ['aaa', 'bbb', 'ccc'];
+const dummy = ['yongwkim', 'samin', 'ulee', 'jeonhyun'];
 
 function UserList() {
   const setModalInfo = useSetRecoilState(modalState);

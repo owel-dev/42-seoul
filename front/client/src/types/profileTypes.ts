@@ -1,4 +1,4 @@
-export type userInfo = {
+export type profileType = {
   intraId: string;
   avatar: string;
   nickName: string;

@@ -1,0 +1,41 @@
+.loginContainer {
+  display: flex;
+  height: 100vh;
+  position: relative;
+  background-image: url('../../../public/piscine.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.innerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+}
+
+.title {
+  color: #fff;
+  letter-spacing: 0.1rem;
+  font-size: 6rem;
+  font-weight: 700;
+  padding-bottom: 5rem;
+}
+
+.buttons {
+  all: unset;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  background: linear-gradient(to bottom, #49fcff, #009194);
+  width: 13rem;
+  height: 3.5rem;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-align: center;
+}

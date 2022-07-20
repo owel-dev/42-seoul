@@ -17,9 +17,9 @@ export class MatchController {
 //     return this.matchService.findAll();
 //   }
 
-	@Get(':intraid')
-	getMatchListOne(@Param('intraid') intraId: string) {
-	return this.matchService.getMatchListOne(intraId);
+	@Get(':nickname')
+	getMatchListOne(@Param('nickname') nickName: string) {
+	return this.matchService.getMatchListOne(nickName);
 	}
 
 // //   @Patch(':id')

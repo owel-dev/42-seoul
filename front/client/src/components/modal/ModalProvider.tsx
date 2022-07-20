@@ -1,5 +1,5 @@
 import { useRecoilState } from 'recoil';
-import { modalState } from 'types/modal';
+import { modalState } from 'utils/recoil/modal';
 import GameStartModal from './GameStartModal';
 import NickChangeModal from './NickChangeModal';
 import AvatarChangeModal from './AvatarChangeModal';

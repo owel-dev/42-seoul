@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
 import { DUMMY_SERVER } from 'utils/dummy';
-import { modalState } from 'types/modal';
+import { modalState } from 'utils/recoil/modal';
+import instance from 'utils/axios';
 import 'styles/modal/Modal.css';
 
 function GameStartModal() {
@@ -14,7 +15,7 @@ function GameStartModal() {
   function PostMakeChannel() {
     const fetchData = async () => {
       try {
-        const getAPI = await axios.post(DUMMY_SERVER + '/channel', {
+        const getAPI = await instance.post(`/channel`, {
           // data: {
           player1: 'yongwkim',
           player2: 'samin',

@@ -1,35 +1,7 @@
 import { socket } from 'App';
 import { MouseEvent, useEffect, useRef } from 'react';
-import { atom, useRecoilState } from 'recoil';
-
-type gameType = {
-  firstPlayerScore: number;
-  secondPlayerScore: number;
-  firstPlayerPaddle: number;
-  secondPlayerPaddle: number;
-  ball: {
-    x: number;
-    y: number;
-  };
-};
-
-export const gameState = atom<gameType>({
-  key: 'gameState',
-  default: {
-    firstPlayerScore: 0,
-    secondPlayerScore: 0,
-    firstPlayerPaddle: 0,
-    secondPlayerPaddle: 0,
-    ball: {
-      x: 0,
-      y: 0,
-    },
-  },
-});
-export const countState = atom<string>({
-  key: 'countState',
-  default: '',
-});
+import { useRecoilState } from 'recoil';
+import { channelState, countState, gameState } from 'utils/recoil/gameState';
 
 let mouseState = 0;
 
@@ -39,6 +11,7 @@ function GameModule() {
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvasEle.width, canvasEle.height);
   }
+
   function draw_ball(ctx: any, x: number, y: number) {
     ctx.beginPath();
     ctx.arc(x, y, 10, 0, Math.PI * 2);
@@ -46,6 +19,7 @@ function GameModule() {
     ctx.fill();
     ctx.closePath();
   }
+
   function draw_paddle(
     ctx: any,
     x: number,
@@ -56,6 +30,7 @@ function GameModule() {
     ctx.fillStyle = 'white';
     ctx.fillRect(x, y, width, height);
   }
+
   function draw_text(ctx: any, text: string, width: number, height: number) {
     ctx.font = '40pt Fira';
     ctx.fillStyle = 'white';
@@ -66,6 +41,7 @@ function GameModule() {
   const canvas: any = useRef();
   const [gameData, setGameData] = useRecoilState(gameState);
   const [countData, setCountData] = useRecoilState(countState);
+  const [channelInfo, setChannelInfo] = useRecoilState(channelState);
 
   useEffect(() => {
     socket.on('count-down', (data) => {
@@ -73,11 +49,15 @@ function GameModule() {
     });
     socket.on('game-data', (data, callback) => {
       setGameData(data);
-      callback((mouseState / 500) * 100);
+      if (typeof callback === 'function') callback((mouseState / 500) * 100);
     });
     socket.on('game-end', (data) => {
       setCountData('game over');
-
+      setChannelInfo({
+        channelId: null,
+        firstPlayer: channelInfo.firstPlayer,
+        secondPlayer: channelInfo.secondPlayer,
+      });
       //게임 끝난 여부 true
     });
   }, []);

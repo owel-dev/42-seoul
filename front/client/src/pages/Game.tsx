@@ -1,36 +1,12 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import GameModule from 'components/game/GameModule';
-import instance from 'utils/axios';
 import { modalState } from 'utils/recoil/modal';
-import { channelIdState } from 'utils/recoil/modalState';
+import { channelState } from 'utils/recoil/gameState';
 import 'styles/game/Game.css';
 
-type playerType = {
-  player1: string;
-  player2: string;
-};
-
 function Game() {
-  const { channelId } = useParams();
   const setModalInfo = useSetRecoilState(modalState);
-
-  const setSaveChannelId = useSetRecoilState(channelIdState);
-  setSaveChannelId(channelId);
-
-  const [players, setPlayers] = useState<playerType | null>(null);
-
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const getData = async () => {
-    try {
-      const getAPI = await instance.get(`/channel/` + channelId);
-      setPlayers(getAPI.data);
-    } catch (e) {}
-  };
+  const [channelInfo] = useRecoilState(channelState);
 
   return (
     <div className='game-area'>
@@ -45,7 +21,7 @@ function Game() {
             alt=''
             className='player-image'
           ></img>
-          <label>{players?.player1}</label>
+          <label>{channelInfo.firstPlayer}</label>
         </div>
         <div className='game-content'>
           게임영역
@@ -58,7 +34,7 @@ function Game() {
             alt=''
             className='player-image'
           ></img>
-          <label>{players?.player2}</label>
+          <label>{channelInfo.secondPlayer}</label>
         </div>
       </div>
     </div>

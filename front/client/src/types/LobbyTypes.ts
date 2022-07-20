@@ -2,7 +2,7 @@ export type channelTypes = {
   channelId: string;
   player1: string;
   player2: string;
-  curNumUsers: number;
+  curNumUser: number;
   maxUser: number;
   password: string | null;
   type: number;

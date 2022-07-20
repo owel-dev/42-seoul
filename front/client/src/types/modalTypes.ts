@@ -4,7 +4,7 @@ type UserModal = 'NICK' | 'AVATAR';
 
 type SideModal = 'USER';
 
-type GameModal = 'SETTING';
+type GameModal = 'SETTING' | 'PASSWORD';
 
 type ModalName =
   | null

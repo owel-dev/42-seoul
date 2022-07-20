@@ -2,10 +2,10 @@ import { socket } from 'App';
 import { useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { modalState } from 'utils/recoil/modal';
-import { channelIdState } from 'utils/recoil/modalState';
+import { channelState } from 'utils/recoil/gameState';
 
 function ChannelSettingModal() {
-  const channelId = useRecoilState(channelIdState);
+  const [channelId] = useRecoilState(channelState);
   const setModalInfo = useSetRecoilState(modalState);
   const [inputValue, setInputValue] = useState('');
 
@@ -13,12 +13,10 @@ function ChannelSettingModal() {
     setModalInfo({ modalName: null });
   }
   function ChangePassword() {
-    console.log(typeof inputValue);
-    console.log(typeof channelId[0]);
     socket.emit('change-password', {
       password: inputValue,
-      channelId: channelId[0],
-    }); //채널Id 추가
+      channelId: channelId.channelId,
+    });
     CloseModal();
   }
 

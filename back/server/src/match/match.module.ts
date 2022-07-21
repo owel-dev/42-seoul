@@ -5,6 +5,7 @@ import { DatabaseModule } from 'src/database/database.module';
 import { matchProviders } from './match.providers';
 import { userProviders } from 'src/users/users.providers';
 import { statProviders } from 'src/stats/stats.providers';
+import { AuthService } from 'src/auth/auth.service';
 
 @Module({
   imports: [DatabaseModule],
@@ -13,6 +14,7 @@ import { statProviders } from 'src/stats/stats.providers';
 	...userProviders,
 	...matchProviders,
 	MatchService,
+	AuthService,
 ],
 })
 export class MatchModule {}

@@ -22,31 +22,28 @@ export class User {
 	status: string;
 
 	@Column()
-	role: string;
-
-	@Column()
 	channel_id: string;
 
 	@OneToOne(() => Stat, (stat) => stat.user, {
-		cascade: true,
+		cascade: ["remove", "insert", "update"],
 	})
 	stats: Stat;
 
-	@OneToMany(() => Match, (match) => match.player_1)
-	matches_1: Match[];
+	@OneToMany(() => Match, (match) => match.player_1, { nullable: true })
+	matches_1?: Match[];
 
-	@OneToMany(() => Match, (match) => match.player_2)
-	matches_2: Match[];
+	@OneToMany(() => Match, (match) => match.player_2, { nullable: true })
+	matches_2?: Match[];
 
-	@OneToMany(() => Friend, (friend) => friend.friend_1)
-	friend_1: Friend[];
+	@OneToMany(() => Friend, (friend) => friend.friend_1, { nullable: true })
+	friend_1?: Friend[];
 
-	@OneToMany(() => Friend, (friend) => friend.friend_2)
-	friend_2: Friend[];
+	@OneToMany(() => Friend, (friend) => friend.friend_2, { nullable: true })
+	friend_2?: Friend[];
 
-	@OneToMany(() => Ban, (ban) => ban.ban_1)
-	ban_1: Ban[];
+	@OneToMany(() => Ban, (ban) => ban.ban_1, { nullable: true })
+	ban_1?: Ban[];
 
-	@OneToMany(() => Ban, (ban) => ban.ban_2)
-	ban_2: Ban[];
+	@OneToMany(() => Ban, (ban) => ban.ban_2, { nullable: true })
+	ban_2?: Ban[];
 }

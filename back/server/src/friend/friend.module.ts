@@ -4,6 +4,7 @@ import { FriendController } from './friend.controller';
 import { DatabaseModule } from 'src/database/database.module';
 import { friendProviders } from './friend.providers';
 import { userProviders } from 'src/users/users.providers';
+import { AuthService } from 'src/auth/auth.service';
 
 @Module({
 	imports: [DatabaseModule],
@@ -11,6 +12,8 @@ import { userProviders } from 'src/users/users.providers';
 	providers: [
 		...friendProviders,
 		...userProviders,
-		FriendService]
+		FriendService,
+		AuthService,
+	]
 })
 export class FriendModule {}

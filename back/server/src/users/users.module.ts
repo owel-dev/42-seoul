@@ -5,6 +5,8 @@ import { DatabaseModule } from 'src/database/database.module';
 import { userProviders } from './users.providers';
 import { friendProviders } from 'src/friend/friend.providers';
 import { banProviders } from 'src/ban/ban.providers';
+import { AuthModule } from 'src/auth/auth.module';
+import { AuthService } from 'src/auth/auth.service';
 
 @Module({
   imports: [DatabaseModule],
@@ -14,6 +16,7 @@ import { banProviders } from 'src/ban/ban.providers';
 	...friendProviders,
 	...banProviders,
 	UsersService,
+	AuthService,
 	],
 })
 export class UsersModule {}

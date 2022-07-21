@@ -11,7 +11,7 @@ export class CreateUserDto {
 	intraEmail: string;
 	
 	avatar: string;
-	status: string;
-	role: string;
-	channelId: string;
+	status?: string;
+	channelId?: string;
+	access_token: string;
 }

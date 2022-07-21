@@ -8,6 +8,7 @@ import { ChannelModule } from './channel/channel.module';
 import { FriendModule } from './friend/friend.module';
 import { BanModule } from './ban/ban.module';
 import { GameModule } from './game/game.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
 	imports: [
@@ -17,7 +18,8 @@ import { GameModule } from './game/game.module';
 		ChannelModule,
 		FriendModule,
 		BanModule,
-		GameModule
+		GameModule,
+		AuthModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

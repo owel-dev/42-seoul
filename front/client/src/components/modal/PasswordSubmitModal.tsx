@@ -21,11 +21,9 @@ function PasswordSubmitModal() {
       { channelId: channelInfo.channelId, password: inputValue },
       (data: boolean) => {
         if (data === true) {
-          console.log('비밀번호가 맞았습니다');
           setPasswordCorrect(true);
           socket.emit('spectate-request', { gameId: channelInfo.channelId });
         } else {
-          console.log('비밀번호가 틀렸습니다');
         }
       }
     );

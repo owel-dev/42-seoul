@@ -12,11 +12,11 @@ function GameStartModal() {
   const [matchWait, setMatchWait] = useState<boolean>(false);
   const [channelInfo, setChannelInfo] = useRecoilState(channelState);
   const [inputValue, setInputValue] = useState('');
+  const [radioValue, setRadioValue] = useState('none');
   const setModalInfo = useSetRecoilState(modalState);
   function closeModal() {
     setModalInfo({ modalName: null });
   }
-  const [radioValue, setRadioValue] = useState('none');
 
   function radioChange(value: string) {
     setRadioValue(value);
@@ -36,14 +36,12 @@ function GameStartModal() {
       setMatchWait(false);
       setChannelInfo(data);
     });
-  }, []);
+  }, [setChannelInfo]);
   //게임 시작, 대기를 따로 컴포넌트로 빼기 GameOption, GameMatchWait
 
   if (channelInfo.channelId !== null) {
-    closeModal();
     return <Navigate to={'/channel/' + channelInfo.channelId} />;
-  }
-  if (matchWait === false) {
+  } else if (matchWait === false) {
     return (
       <div className='modal'>
         <div className='modal-title'>game start</div>

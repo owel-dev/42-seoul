@@ -1,9 +1,10 @@
 import { socket } from 'App';
-import { MouseEvent, useEffect, useRef } from 'react';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { channelState, countState, gameState } from 'utils/recoil/gameState';
 
 let mouseState = 0;
+let pingTime = 0;
 
 function GameModule() {
   function draw_background(ctx: any, canvasEle: any) {
@@ -52,6 +53,7 @@ function GameModule() {
       if (typeof callback === 'function') callback((mouseState / 500) * 100);
     });
     socket.on('game-end', (data) => {
+      clearInterval(ping_interval);
       setCountData('game over');
       setChannelInfo({
         channelId: null,
@@ -60,6 +62,12 @@ function GameModule() {
       });
       //게임 끝난 여부 true
     });
+    let ping_interval = setInterval(() => {
+      let time = Date.now();
+      socket.emit('get-ping', (callback: any) => {
+        pingTime = Date.now() - time;
+      });
+    }, 500);
   }, []);
 
   useEffect(() => {
@@ -113,6 +121,7 @@ function GameModule() {
   function saveMouseState(event: MouseEvent) {
     mouseState = event.nativeEvent.offsetY;
   }
+  //const [pingTime, setPingTime] = useState<number>(0);
 
   return (
     <div>
@@ -122,6 +131,7 @@ function GameModule() {
         width='700px'
         onMouseMove={saveMouseState}
       ></canvas>
+      <div>ping : {pingTime}</div>
     </div>
   );
 }

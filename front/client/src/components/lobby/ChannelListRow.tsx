@@ -35,7 +35,7 @@ function ChannelListRow({ props }: { props: channelTypes }) {
       {/* <Link to={'/channel/' + channelId} onClick={spectateRequest}>
         <span style={{ backgroundColor: '#ffff66' }}>입장 </span>
       </Link> */}
-      {password !== null && (
+      {password !== '' && (
         <span
           style={{ backgroundColor: '#ffff66' }}
           onClick={activePasswordSubmitModal}
@@ -43,7 +43,7 @@ function ChannelListRow({ props }: { props: channelTypes }) {
           입장{' '}
         </span>
       )}
-      {password === null && (
+      {password === '' && (
         <Link to={'/channel/' + channelId}>
           <span
             style={{ backgroundColor: '#ffff66' }}

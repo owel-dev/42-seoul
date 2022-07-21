@@ -10,7 +10,6 @@ function ChannelList() {
   useEffect(() => {
     socket.emit('gamelist-request', (response: any) => {
       setChannelList(response);
-      console.log(response);
     });
   }, []);
 

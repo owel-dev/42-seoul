@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateFriendDto } from './dto/create-friend.dto';
@@ -14,21 +15,22 @@ export class FriendService {
 		private friendRepository: Repository<Friend>,
 		@Inject('USER_REPOSITORY')
 		private userRepository: Repository<User>,
-
+		private readonly authService: AuthService,
 	) { }
 
-	async create(createFriendDto: CreateFriendDto) {
+	async create(token: string, nickName: string) {
 		console.log("Friend created");
+		const reqUser = await this.authService.getUserNickByToken(token);
 		const friend1 = await this.userRepository.findOne({
-			where: { nickname: createFriendDto.player1 },
+			where: { nickname: reqUser },
 		})
 		const friend2 = await this.userRepository.findOne({
-			where: { nickname: createFriendDto.player2 },
+			where: { nickname: nickName },
 		});
 		if (friend1 === null)
-			throw new HttpException(`${createFriendDto.player1}: Cannot find user`, HttpStatus.BAD_REQUEST);
+			throw new HttpException(`${reqUser}: Cannot find user`, HttpStatus.BAD_REQUEST);
 		if (friend2 === null)
-			throw new HttpException(`${createFriendDto.player2}: Cannot find user`, HttpStatus.BAD_REQUEST);
+			throw new HttpException(`${nickName}: Cannot find user`, HttpStatus.BAD_REQUEST);
 		
 		const alreadyFriend = await this.friendRepository.findOne({
 			relations: ["friend_1", 'friend_2'],
@@ -60,13 +62,14 @@ export class FriendService {
 		return resFrinedListDto;
 	}
 
-	async deletefriend(player1: string, player2: string) {
+	async deletefriend(token: string, nickName: string) {
 		console.log("delete friend");
+		const reqUser = await this.authService.getUserNickByToken(token);
 		const findFriend = await this.friendRepository.findOne({
 			relations: ["friend_1", 'friend_2'],
 			where: {
-				friend_1: { nickname: player1 },
-				friend_2: { nickname: player2 },
+				friend_1: { nickname: reqUser },
+				friend_2: { nickname: nickName },
 			}
 		});
 		if (findFriend === null)

@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { AuthService } from 'src/auth/auth.service';
 import { Ban } from 'src/ban/entities/ban.entity';
 import { Friend } from 'src/friend/entities/friend.entity';
 import { Stat } from 'src/stats/entities/stat.entity';
@@ -6,6 +7,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ResUserModal } from './dto/res-user-modal.dto';
 import { ResUserMyPage } from './dto/res-user-mypage.dto';
+import { ResUserNavi } from './dto/res-user-navi.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 
@@ -18,6 +20,7 @@ export class UsersService {
 		private friendRepository: Repository<Friend>,
 		@Inject('BAN_REPOSITORY')
 		private banRepository: Repository<Ban>,
+		private readonly authService: AuthService,
 	) { }
 
 
@@ -35,8 +38,9 @@ export class UsersService {
 		return (new ResUserMyPage(userRepo));
 	}
 
-	async findOneModal(requester : string, nickName : string) {
+	async findOneModal(token: string, nickName: string) {
 		console.log("user findOneModal");
+		const reqNick = (await this.authService.getUserNickByToken(token));
 		const userRepo = await this.userRepository.findOne({
 			relations: ["stats", "friend_1", "friend_2", "ban_1", "ban_2"],
 			where: {
@@ -47,11 +51,25 @@ export class UsersService {
 		if (userRepo == undefined)
 			throw new HttpException(`${nickName}: Cannot find user`, HttpStatus.BAD_REQUEST);
 		const resUserModal = new ResUserModal(userRepo);
-		resUserModal.setFriend = await this.isFriend(requester, userRepo.friend_2);
-		resUserModal.setBan = await this.isBan(requester, userRepo.ban_2);
+		resUserModal.setFriend = await this.isFriend(reqNick, userRepo.friend_2);
+		resUserModal.setBan = await this.isBan(reqNick, userRepo.ban_2);
 		console.log(resUserModal.friend);
 		console.log(resUserModal.ban);
 		return (resUserModal);
+	}
+
+	async findOneNavi(token: string) {
+		console.log("findOneNavi");
+		const userNick = await this.authService.getUserNickByToken(token);
+		console.log("userNick", userNick);
+		const userRepo = await this.userRepository.findOne({
+			where: {
+				nickname: userNick,
+			}
+		});
+		console.log("userRepo", userRepo);
+		let resUserNavi = new ResUserNavi(userRepo);
+		return (resUserNavi);
 	}
 
 	private async isFriend(requester : string, friendList : Friend[]) : Promise<boolean> {
@@ -121,7 +139,6 @@ export class UsersService {
 		user.intra_email = createUserDto.intraEmail;
 		user.avatar = `http://${ipv4}:3000/public/${filePath}`;
 		user.status = createUserDto.status;
-		user.role = createUserDto.role;
 		user.channel_id = createUserDto.channelId;
 		user.stats = new Stat();
 

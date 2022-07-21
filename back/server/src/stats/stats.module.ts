@@ -4,6 +4,7 @@ import { StatsController } from './stats.controller';
 import { DatabaseModule } from 'src/database/database.module';
 import { statProviders } from './stats.providers';
 import { userProviders } from 'src/users/users.providers';
+import { AuthService } from 'src/auth/auth.service';
 
 @Module({
   imports: [DatabaseModule],
@@ -11,6 +12,7 @@ import { userProviders } from 'src/users/users.providers';
   providers: [
 	  ...statProviders,
 	  ...userProviders,
-	  StatsService]
+	  StatsService,
+	  AuthService]
 })
 export class StatsModule {}

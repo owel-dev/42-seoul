@@ -19,7 +19,6 @@ function NickChangeModal() {
     getMyData();
     if (isChange) {
       window.location.replace(`/users/${myData.nickName}/mypage`);
-      console.log('useEffect', myData);
       setIsChange(false);
     }
   }, [isChange && myData]);

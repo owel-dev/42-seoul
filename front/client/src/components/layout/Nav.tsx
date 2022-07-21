@@ -24,19 +24,19 @@ function Nav() {
 
   return (
     <div>
-      {myData.nickName && (
+      {myData?.nickName && (
         <header className='nav'>
-          <a href='/' className='logo'>
-            <img src='42.png' width='80vw' />
-          </a>
+          <Link to='/' className='logo'>
+            <img src='/42.png' width='80vw' alt='logoImg' />
+          </Link>
           <div className='blank'>
-            <a href='/ranking'>
+            <Link to='/ranking'>
               <div className='ranking'>🏆</div>
-            </a>
+            </Link>
           </div>
-          <a href={`/users/${myData?.nickName}/mypage`} className='myPage'>
+          <Link to={`/users/${myData?.nickName}/mypage`} className='myPage'>
             <img src={myData?.avatar} height='60vh' width='75vw' />
-          </a>
+          </Link>
           <div
             className='logout'
             onClick={() => setModalInfo({ modalName: 'LOGOUT' })}

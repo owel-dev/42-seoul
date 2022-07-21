@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { friendList } from 'types/profileTypes';
@@ -25,9 +25,9 @@ function FriendTable() {
     <div className='friend-table'>
       {List?.friendList.map((element, index) => (
         <div className='friend-row' key={index}>
-          <a href={`/users/${element.nickName}/mypage`}>
+          <Link to={`/users/${element.nickName}/mypage`}>
             <span>{element.nickName}</span>
-          </a>
+          </Link>
           <span> {element.status}</span>
         </div>
       ))}

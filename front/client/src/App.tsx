@@ -8,9 +8,8 @@ import Lobby from 'pages/Lobby';
 import Game from 'pages/Game';
 import ModalProvider from 'components/modal/ModalProvider';
 import LoginChecker from 'components/LoginChecker';
-import { DUMMY_SERVER } from 'utils/dummy';
 
-export const socket = io(DUMMY_SERVER);
+export const socket = io('http://10.19.236.57:3000');
 
 function App() {
   return (

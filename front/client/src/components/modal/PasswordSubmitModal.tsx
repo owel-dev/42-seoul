@@ -2,7 +2,7 @@ import { socket } from 'App';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { modalState } from 'types/modal';
+import { modalState } from 'utils/recoil/modal';
 import { channelState } from 'utils/recoil/gameState';
 
 function PasswordSubmitModal() {
@@ -24,6 +24,7 @@ function PasswordSubmitModal() {
           setPasswordCorrect(true);
           socket.emit('spectate-request', { gameId: channelInfo.channelId });
         } else {
+          alert('password가 틀렸습니다.');
         }
       }
     );
@@ -31,28 +32,26 @@ function PasswordSubmitModal() {
   if (passwordCorrect === true) {
     closeModal();
     return <Navigate to={'/channel/' + channelInfo.channelId} />;
-  }
-  return (
-    <div className='modal'>
-      <div className='modal-title'>비밀번호 제출</div>
-      <div className='modal-content'>
-        <div>
-          <span>password </span>
-          <input
-            placeholder={'비밀번호 입력'}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
+  } else {
+    return (
+      <div className='modal'>
+        <div className='modal-title'>비밀번호 제출</div>
+        <div className='modal-content'>
+          <div>
+            <span>password </span>
+            <input
+              placeholder={'비밀번호 입력'}
+              onChange={(e) => setInputValue(e.target.value)}
+            />
+          </div>
         </div>
-        {/* {passwordCorrect === true && (
-          <Navigate to={'/channel/' + channelInfo.channelId} />
-        )} */}
+        <div className='modal-select'>
+          <button onClick={submitPassword}>제출</button>
+          <button onClick={closeModal}>close</button>
+        </div>
       </div>
-      <div className='modal-select'>
-        <button onClick={submitPassword}>제출</button>
-        <button onClick={closeModal}>close</button>
-      </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default PasswordSubmitModal;

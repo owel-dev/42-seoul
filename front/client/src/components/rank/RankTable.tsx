@@ -1,7 +1,5 @@
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { userRank } from 'types/RankTypes';
-import { DUMMY_SERVER } from 'utils/dummy';
 import RankRow from 'components/rank/RankRow';
 import instance from 'utils/axios';
 

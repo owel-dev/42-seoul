@@ -1,13 +1,14 @@
+import { useEffect } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import GameModule from 'components/game/GameModule';
 import { modalState } from 'utils/recoil/modal';
 import { channelState } from 'utils/recoil/gameState';
+import GameModule from 'components/game/GameModule';
 import 'styles/game/Game.css';
-import { useEffect } from 'react';
 
 function Game() {
   const setModalInfo = useSetRecoilState(modalState);
   const [channelInfo] = useRecoilState(channelState);
+
   useEffect(() => {
     setModalInfo({ modalName: null });
   }, []);

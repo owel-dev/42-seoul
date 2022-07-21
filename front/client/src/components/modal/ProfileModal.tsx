@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { modalState } from 'utils/recoil/modal';
 import { userData } from 'types/userTypes';
-import { DUMMY_SERVER } from 'utils/dummy';
 import { myDataState } from 'utils/recoil/myData';
 import instance from 'utils/axios';
 import 'styles/modal/Modal.css';

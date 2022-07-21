@@ -29,21 +29,14 @@ function ChannelListRow({ props }: { props: channelTypes }) {
 
   return (
     <div className='channel-list-row'>
-      {/* <a href={'/game/' + channelId}>
-        <span style={{ backgroundColor: '#ffff66' }}>{channelId} </span>
-      </a> */}
-      {/* <Link to={'/channel/' + channelId} onClick={spectateRequest}>
-        <span style={{ backgroundColor: '#ffff66' }}>입장 </span>
-      </Link> */}
-      {password !== '' && (
+      {password !== '' ? (
         <span
           style={{ backgroundColor: '#ffff66' }}
           onClick={activePasswordSubmitModal}
         >
           입장{' '}
         </span>
-      )}
-      {password === '' && (
+      ) : (
         <Link to={'/channel/' + channelId}>
           <span
             style={{ backgroundColor: '#ffff66' }}

@@ -1,8 +1,9 @@
 import { atom } from 'recoil';
+import { v1 } from 'uuid';
 import { gameType, channelType } from 'types/GameTypes';
 
 export const channelState = atom<channelType>({
-  key: 'channelState',
+  key: `channelState/${v1()}`,
   default: {
     channelId: null,
     firstPlayer: null,
@@ -11,12 +12,12 @@ export const channelState = atom<channelType>({
 });
 
 export const countState = atom<string>({
-  key: 'countState',
+  key: `countState/${v1()}`,
   default: '',
 });
 
 export const gameState = atom<gameType>({
-  key: 'gameState',
+  key: `gameState/${v1()}`,
   default: {
     firstPlayerScore: 0,
     secondPlayerScore: 0,

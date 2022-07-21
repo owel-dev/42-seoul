@@ -2,7 +2,7 @@ import { socket } from 'App';
 import { useState, useEffect } from 'react';
 import { channelListTypes, channelTypes } from 'types/LobbyTypes';
 import ChannelListRow from 'components/lobby/ChannelListRow';
-import 'styles/lobby/ChannelList.css';
+import 'styles/Lobby/ChannelList.css';
 
 function ChannelList() {
   const [channelList, setChannelList] = useState<channelListTypes | null>(null);

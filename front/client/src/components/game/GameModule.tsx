@@ -1,5 +1,5 @@
 import { socket } from 'App';
-import { MouseEvent, useEffect, useRef, useState } from 'react';
+import { MouseEvent, useEffect, useRef } from 'react';
 import { useRecoilState } from 'recoil';
 import { channelState, countState, gameState } from 'utils/recoil/gameState';
 
@@ -42,7 +42,6 @@ function GameModule() {
   const canvas: any = useRef();
   const [gameData, setGameData] = useRecoilState(gameState);
   const [countData, setCountData] = useRecoilState(countState);
-  const [channelInfo, setChannelInfo] = useRecoilState(channelState);
 
   useEffect(() => {
     socket.on('count-down', (data) => {
@@ -52,19 +51,14 @@ function GameModule() {
       setGameData(data);
       if (typeof callback === 'function') callback((mouseState / 500) * 100);
     });
-    socket.on('game-end', (data) => {
+    socket.on('game-end', () => {
       clearInterval(ping_interval);
       setCountData('game over');
-      setChannelInfo({
-        channelId: null,
-        firstPlayer: channelInfo.firstPlayer,
-        secondPlayer: channelInfo.secondPlayer,
-      });
       //게임 끝난 여부 true
     });
-    let ping_interval = setInterval(() => {
-      let time = Date.now();
-      socket.emit('get-ping', (callback: any) => {
+    const ping_interval = setInterval(() => {
+      const time = Date.now();
+      socket.emit('get-ping', () => {
         pingTime = Date.now() - time;
       });
     }, 500);
@@ -73,7 +67,7 @@ function GameModule() {
   useEffect(() => {
     //배경
     const canvasEle: any = canvas.current;
-    var ctx = canvasEle.getContext('2d');
+    const ctx = canvasEle.getContext('2d');
     draw_background(ctx, canvasEle);
     draw_ball(
       ctx,
@@ -113,7 +107,7 @@ function GameModule() {
 
   useEffect(() => {
     const canvasEle: any = canvas.current;
-    var ctx = canvasEle.getContext('2d');
+    const ctx = canvasEle.getContext('2d');
     draw_background(ctx, canvasEle);
     draw_text(ctx, countData, canvasEle.width / 2, canvasEle.height / 2);
   }, [countData]);
@@ -121,7 +115,6 @@ function GameModule() {
   function saveMouseState(event: MouseEvent) {
     mouseState = event.nativeEvent.offsetY;
   }
-  //const [pingTime, setPingTime] = useState<number>(0);
 
   return (
     <div>
@@ -130,7 +123,7 @@ function GameModule() {
         height='500px'
         width='700px'
         onMouseMove={saveMouseState}
-      ></canvas>
+      />
       <div>ping : {pingTime}</div>
     </div>
   );

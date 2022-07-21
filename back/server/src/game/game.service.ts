@@ -2,9 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { GetChannelDto } from 'src/channel/dto/get-channelList.dto';
 import { Game, User } from './game';
-import { GameGateway } from './game.gateway';
 
-var uNRegex = new RegExp('^[a-zA-Z0-9_.-]{3,}$');
 var users = {};
 var matchmaking = [];
 var games = {};
@@ -13,19 +11,17 @@ var gameList: GetChannelDto[] = [];
 @Injectable()
 export class GameService {
     constructor(
-        private readonly gameService: GetChannelDto,
     ) { }
 
     setGameData(server: Server) {
-        const interv = setInterval(() => {
+        setInterval(() => {
             for (let key in games) {
                 let game = games[key];
 
                 game.update();
 
-                if (game.players[game.player1].score == 3 || game.players[game.player2].score == 3) {
+                if (game.players[game.player1].score == 10 || game.players[game.player2].score == 10) {
                     delete games[key];
-                    console.log("games: ", games[key]);
                     users[game.player1].socket.emit('game-end', game.id);
                     users[game.player2].socket.emit('game-end', game.id);
                     server.to(game.id).emit('game-end', game.id);
@@ -60,7 +56,6 @@ export class GameService {
                 server.to(game.id).emit('game-data', data);
             }
         }, (1 / 40) * 1000);
-        // }, 1000);
     }
 
     handleConnection(socket: Socket) {
@@ -68,20 +63,16 @@ export class GameService {
     }
 
     handleDisconnect(socket: Socket) {
-        // console.log(`Client Disconnected: ${users[socket.id].username}`);
+        console.log(`Client Disconnected: ${socket.id}`);
         delete users[socket.id];
-        socket.broadcast.emit('player-broadcast', Object.keys(users).length);
         if (matchmaking.length != 0 && matchmaking[0] == socket.id) {
             matchmaking = [];
         }
-
         for (let key in games) {
             let game = games[key];
             if (game.player1 == socket.id) {
-                users[game.player2].socket.emit('player-left');
                 delete games[key];
             } else if (game.player2 == socket.id) {
-                users[game.player1].socket.emit('player-left');
                 delete games[key];
             }
         }
@@ -91,7 +82,7 @@ export class GameService {
         return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
-    async matchMaker(server: Server, new_player) {
+    async matchMaker(new_player: string, data: any) {
         if (matchmaking.length != 0) {
             //* 게임 대기 화면
             var game = new Game(
@@ -99,10 +90,20 @@ export class GameService {
                 users[matchmaking[0]].username,
                 new_player,
                 users[new_player].username,
+                data.password,
+                data.mode
             );
 
-            users[matchmaking[0]].socket.emit('game-wait', { channelId: game.id });
-            users[new_player].socket.emit('game-wait', { channelId: game.id });
+            users[matchmaking[0]].socket.emit('game-wait', {
+                channelId: game.id,
+                firstPlayer: users[matchmaking[0]].username,
+                secondPlayer: users[new_player].username
+            });
+            users[new_player].socket.emit('game-wait', {
+                channelId: game.id,
+                firstPlayer: users[matchmaking[0]].username,
+                secondPlayer: users[new_player].username
+            });
 
             for (let i = 5; i >= 0; --i) {
                 if (i != 0) {
@@ -113,51 +114,59 @@ export class GameService {
                     users[matchmaking[0]].socket.emit('count-down', 'Game Start!');
                     users[new_player].socket.emit('count-down', 'Game Start!');
                 }
-                // console.log("count: ", i);
                 await this.sleep(1000);
             }
-            games[game.id] = game;
 
-            // users[matchmaking[0]].socket.join(game.id);
-            // users[new_player].socket.join(game.id);
+            games[game.id] = game;
 
             const dto = new GetChannelDto();
             dto.channelId = game.id;
             dto.curNumUser = 2;
             dto.maxUser = 10;
-            dto.mode = 0;
+            dto.mode = game.mode;
             dto.password = game.password;
             dto.player1 = game.players[game.player1].name;
             dto.player2 = game.players[game.player2].name;
             dto.type = 0;
 
             gameList.push(dto);
-            server.emit('game-created', { gameId: game.id, password: game.password });
+
             matchmaking = [];
         } else {
             matchmaking.push(new_player);
         }
     }
 
-    matchRequest(server: Server, socket: Socket, data: any): void {
+    matchRequest(socket: Socket, data: any): void {
         users[socket.id] = new User(socket);
         users[socket.id].username = data.username;
-        this.matchMaker(server, socket.id);
+
+        this.matchMaker(socket.id, data);
     }
 
-    spectateRequest(server: Server, socket: Socket, data: any): void {
-        // socket.emit('spectate-response');
+    spectateRequest(socket: Socket, data: any): void {
+        console.log('spec gameId: ', data.gameId);
         socket.join(data.gameId);
     }
 
-    gamelistRequest(server: Server, socket: Socket): any {
+    gamelistRequest(): any {
         return { channelList: gameList };
     }
 
+    changePassword(data: any): void {
+        console.log('id: %s, password: %d', data.channelId, data.password);
+        games[data.channelId].password = data.password;
+        for (let x of gameList) {
+            if (x.channelId === data.channelId)
+                x.password = data.password;
+        }
+    }
 
-
-
-
-
-
+    submitPassword(data: any): boolean {
+        if (!data.password || !data.channelId)
+            return false;
+        console.log("password: ", data.password);
+        console.log("channel: ", data.channelId);
+        return games[data.channelId].password === data.password;
+    }
 }

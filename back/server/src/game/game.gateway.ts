@@ -1,18 +1,12 @@
-import { Injectable } from '@nestjs/common';
 import {
-  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsResponse,
 } from '@nestjs/websockets';
-import { resolve } from 'path/posix';
-import { emit } from 'process';
 import { Server, Socket } from 'socket.io';
-import { Game, User } from './game';
 import { GameService } from './game.service';
 
 @WebSocketGateway({
@@ -28,14 +22,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     private readonly gameService: GameService,
   ) { }
 
-  afterInit(server: any) {
+  afterInit() {
     this.gameService.setGameData(this.server);
   }
 
-
   handleConnection(socket: Socket) {
     this.gameService.handleConnection(socket);
-    // console.log("",this.server);
   }
 
   handleDisconnect(socket: Socket) {
@@ -44,20 +36,32 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
   @SubscribeMessage('match-request')
   matchRequest(socket: Socket, data: any): void {
-    this.gameService.matchRequest(this.server, socket, data);
+    this.gameService.matchRequest(socket, data);
   }
 
   @SubscribeMessage('spectate-request')
   spectateRequest(socket: Socket, data: any): void {
-    this.gameService.spectateRequest(this.server, socket, data);
+    this.gameService.spectateRequest(socket, data);
   }
 
   @SubscribeMessage('gamelist-request')
-  gamelistRequest(socket: Socket, data: any): any {
-    return this.gameService.gamelistRequest(this.server, socket);
+  gamelistRequest(): any {
+    return this.gameService.gamelistRequest();
   }
 
-  // socket.on('get-ping', (callback) => {
-  //     callback(true);
-  //   });
+  @SubscribeMessage('change-password')
+  changePassword(socket: Socket, data: any): any {
+    return this.gameService.changePassword(data);
+  }
+
+  @SubscribeMessage('submit-password')
+  submitPassword(socket: Socket, data: any): boolean {
+    return this.gameService.submitPassword(data);
+  }
+
+  @SubscribeMessage('get-ping')
+  getPing(soket: Socket) {
+    return true;
+  }
+
 }

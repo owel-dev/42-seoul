@@ -16,7 +16,6 @@ export class User {
 }
 
 export class Game {
-
     ball_vel: number;
     id: string;
     player1: string;
@@ -25,8 +24,9 @@ export class Game {
     ball: any;
     ball_velocity: any;
     password: string;
+    mode: string;
 
-    constructor(id: string, username: string, id2: string, username2: string) {
+    constructor(id: string, username: string, id2: string, username2: string, password: string = '', mode: string) {
         this.ball_vel = 0.5;
         this.id = uuid.v4();
         this.player1 = id;
@@ -36,6 +36,8 @@ export class Game {
         this.players[id2] = { name: username2.toString(), pos: 50, score: 0 };
         this.ball = { x: 20, y: 50 };
         this.ball_velocity = [MIN_SPEED, 0];
+        this.password = password;
+        this.mode = mode;
     };
 
     update() {
@@ -48,7 +50,6 @@ export class Game {
             this.players[this.player2].score++;
             this.reset(2);
         }
-
 
         if (this.ball.y >= 100) {
             this.ball_velocity[1] *= -1;

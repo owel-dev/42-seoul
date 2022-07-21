@@ -6,5 +6,5 @@ export class GetChannelDto {
     maxUser: number;
     password: string;
     type: number;
-    mode: number;
+    mode: string;
 }

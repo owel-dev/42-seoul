@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useSetRecoilState, useRecoilState } from 'recoil';
-import { DUMMY_SERVER, DUMMY_USER } from 'utils/dummy';
 import { modalState } from 'utils/recoil/modal';
 import { myDataState } from 'utils/recoil/myData';
 import instance from 'utils/axios';

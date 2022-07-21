@@ -1,43 +1,32 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { DUMMY_PLAYER, DUMMY_SERVER } from 'utils/dummy';
+import { useEffect } from 'react';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { modalState } from 'utils/recoil/modal';
+import { channelState } from 'utils/recoil/gameState';
 import GameModule from 'components/game/GameModule';
-import instance from 'utils/axios';
 import 'styles/game/Game.css';
 
-type playerType = {
-  player1: string;
-  player2: string;
-};
-
 function Game() {
-  const { channelId } = useParams();
-  const [players, setPlayers] = useState<playerType | null>(null);
+  const setModalInfo = useSetRecoilState(modalState);
+  const [channelInfo] = useRecoilState(channelState);
 
   useEffect(() => {
-    getData();
-  }, [channelId]);
-
-  const getData = async () => {
-    try {
-      const getAPI = await instance.get(`/channel/` + channelId);
-      setPlayers(getAPI.data);
-    } catch (e) {}
-  };
+    setModalInfo({ modalName: null });
+  }, []);
 
   return (
     <div className='game-area'>
-      <button>채널설정</button>
+      <button onClick={() => setModalInfo({ modalName: 'GAME-SETTING' })}>
+        채널설정
+      </button>
       <div className='player-game-area'>
         <div className='player'>
           플레이어1
           <img
-            src={DUMMY_PLAYER.players[0].avatar}
+            src={'https://cdn.intra.42.fr/users/norminet.jpeg'}
             alt=''
             className='player-image'
           ></img>
-          <label>{players?.player1}</label>
+          <label>{channelInfo.firstPlayer}</label>
         </div>
         <div className='game-content'>
           게임영역
@@ -46,11 +35,11 @@ function Game() {
         <div className='player'>
           플레이어2
           <img
-            src={DUMMY_PLAYER.players[1].avatar}
+            src={'https://cdn.intra.42.fr/users/norminet.jpeg'}
             alt=''
             className='player-image'
           ></img>
-          <label>{players?.player2}</label>
+          <label>{channelInfo.secondPlayer}</label>
         </div>
       </div>
     </div>

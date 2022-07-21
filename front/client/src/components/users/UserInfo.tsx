@@ -1,17 +1,12 @@
-import axios from 'axios';
-import { useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { DUMMY_SERVER, DUMMY_USER } from 'utils/dummy';
-import { profileType } from 'types/profileTypes';
 import { modalState } from 'utils/recoil/modal';
 import { profileState } from 'utils/recoil/profileData';
 import { myDataState } from 'utils/recoil/myData';
-import instance from 'utils/axios';
 import 'styles/users/UserInfo.css';
 
 function UserInfo() {
   const myData = useRecoilValue(myDataState);
-  const [profileData, setProfileData] = useRecoilState(profileState);
+  const [profileData] = useRecoilState(profileState);
   const setModalInfo = useSetRecoilState(modalState);
 
   const openNickModal = () => {

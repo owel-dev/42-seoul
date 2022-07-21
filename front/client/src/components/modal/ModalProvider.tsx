@@ -5,6 +5,8 @@ import NickChangeModal from './NickChangeModal';
 import AvatarChangeModal from './AvatarChangeModal';
 import ProfileModal from './ProfileModal';
 import LogoutModal from './LogoutModal';
+import ChannelSettingModal from './ChannelSettingModal';
+import PasswordSubmitModal from './PasswordSubmitModal';
 import 'styles/modal/Modal.css';
 
 export default function ModalProvider() {
@@ -29,6 +31,10 @@ export default function ModalProvider() {
         return <ProfileModal />;
       case 'LOGOUT':
         return <LogoutModal />;
+      case 'GAME-SETTING':
+        return <ChannelSettingModal />;
+      case 'GAME-PASSWORD':
+        return <PasswordSubmitModal />;
       default:
         return null;
     }

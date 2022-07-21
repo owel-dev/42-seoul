@@ -1,20 +1,8 @@
 import UserList from './UserList';
 import ChatList from './ChatList';
 import 'styles/layout/Side.css';
-//import { io } from 'socket.io-client';
-
-// const socket = io('http://10.19.226.233:3000');
-// const SocketContext = React.createContext('');
 
 function Side() {
-  // socket.on('connect', () => {
-  //   console.log('connect');
-  // });
-
-  // socket.on('hello', (data: string) => {
-  //   console.log(data);
-  // });
-
   function send_massage() {
     // console.log(socket);
     // socket.emit('addChatContent', 'test');

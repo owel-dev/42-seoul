@@ -1,42 +1,39 @@
-import axios from 'axios';
-import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
 import { matchList } from 'types/profileTypes';
 import { DUMMY_SERVER, DUMMY_USER } from 'utils/dummy';
+import { profileState } from 'utils/recoil/profileData';
+import instance from 'utils/axios';
 import 'styles/users/MatchTable.css';
 
 function MatchTable() {
-  const [List, setList] = useState<matchList | null>(null);
+  const profileData = useRecoilValue(profileState);
+  const [matchList, setMatchList] = useState<matchList | null>(null);
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const getAPI = await axios.get(
-          DUMMY_SERVER + '/match/' + DUMMY_USER.intraId,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        setList(getAPI.data);
-      } catch (e) {}
-    };
-    fetchData();
+    getData();
   }, []);
+
+  const getData = async () => {
+    try {
+      const getAPI = await instance.get(`/match/` + profileData.nickName); // 로그인 후 처리
+      setMatchList(getAPI.data);
+    } catch (e) {}
+  };
 
   return (
     <div className='match-table'>
-      {List?.matchList.map((element, index) => {
+      {matchList?.matchList.map((element, index) => {
         return (
           <div className='match-row' key={index}>
-            <Link to={`/users/yongwkim`}>
+            <a href={`/users/${element.player1}`}>
               <span>{element.player1}</span>
-            </Link>
+            </a>
             <span> {element.score1}</span>
             <span> vs </span>
-            <Link to={`/users/yongwkim`}>
+            <a href={`/users/${element.player2}`}>
               <span>{element.player2}</span>
-            </Link>
+            </a>
             <span> {element.score2}</span>
           </div>
         );

@@ -3,22 +3,21 @@ import { useState, useEffect } from 'react';
 import { userRank } from 'types/RankTypes';
 import { DUMMY_SERVER } from 'utils/dummy';
 import RankRow from 'components/rank/RankRow';
+import instance from 'utils/axios';
 
 function RankTable() {
   const [rank, setRank] = useState<userRank | null>(null);
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const getAPI = await axios.get(DUMMY_SERVER + '/stat', {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        setRank(getAPI.data);
-      } catch (e) {}
-    };
-    fetchData();
+    getData();
   }, []);
+
+  const getData = async () => {
+    try {
+      const getAPI = await instance.get(`/stat`);
+      setRank(getAPI.data);
+    } catch (e) {}
+  };
 
   return (
     <div className='rank-table'>

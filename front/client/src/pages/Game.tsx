@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DUMMY_PLAYER, DUMMY_SERVER } from 'utils/dummy';
 import GameModule from 'components/game/GameModule';
+import instance from 'utils/axios';
 import 'styles/game/Game.css';
 
 type playerType = {
@@ -12,21 +13,18 @@ type playerType = {
 
 function Game() {
   const { channelId } = useParams();
-
   const [players, setPlayers] = useState<playerType | null>(null);
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const getAPI = await axios.get(DUMMY_SERVER + '/channel/' + channelId, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        setPlayers(getAPI.data);
-      } catch (e) {}
-    };
-    fetchData();
+    getData();
   }, [channelId]);
+
+  const getData = async () => {
+    try {
+      const getAPI = await instance.get(`/channel/` + channelId);
+      setPlayers(getAPI.data);
+    } catch (e) {}
+  };
 
   return (
     <div className='game-area'>

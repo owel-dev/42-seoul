@@ -3,28 +3,33 @@
   color: #efefef;
   display: flex;
   height: 8vh;
-  padding-left: 0.5%;
-  padding-right: 0.5%;
 }
 
-#blank {
-  float: left;
-  flex: 20;
+.logo {
+  width: 7vw;
+  margin: 1%;
 }
-#logo {
-  object-fit: fill;
+.blank {
+  display: flex;
+  flex-direction: row-reverse;
+  width: 73vw;
 }
-.link {
-  flex: 1;
-  margin-top: 1%;
-  margin-bottom: 1%;
-  margin-left: 0.5%;
-  margin-right: 0.5%;
+
+.ranking {
+  padding: 10%;
+  font-size: 3.3rem;
 }
-.nav_menu {
-  flex: 1;
-  margin-top: 1%;
-  margin-bottom: 1%;
-  margin-left: 0.5%;
-  margin-right: 0.5%;
+
+.myPage {
+  width: 6vw;
+  margin: 1% 2.5%;
+  border: solid 1px white;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.logout {
+  display: flex;
+  cursor: pointer;
+  align-items: flex-end;
 }

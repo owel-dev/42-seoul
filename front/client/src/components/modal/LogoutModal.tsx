@@ -1,15 +1,19 @@
 import { useSetRecoilState } from 'recoil';
-import { modalState } from 'types/modal';
+import { modalState } from 'utils/recoil/modal';
+import { loginState } from 'utils/recoil/login';
 import 'styles/modal/LogoutModal.css';
 
 function LogoutModal() {
   const setModalInfo = useSetRecoilState(modalState);
+  const setIsLoggedIn = useSetRecoilState(loginState);
 
   const onReturn = () => {
     setModalInfo({ modalName: null });
   };
 
   const onLogout = () => {
+    localStorage.removeItem('trans-token');
+    setIsLoggedIn(false);
     setModalInfo({ modalName: null });
   };
 

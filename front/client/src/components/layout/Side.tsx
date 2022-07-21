@@ -3,13 +3,7 @@ import ChatList from './ChatList';
 import 'styles/layout/Side.css';
 
 function Side() {
-  function send_massage() {
-    // console.log(socket);
-    // socket.emit('addChatContent', 'test');
-    // socket.on('addChatContent', (data: any) => {
-    //   console.log(data);
-    // });
-  }
+  function send_massage() {}
 
   return (
     <aside className='side'>

@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { modalState } from 'utils/recoil/modal';
@@ -9,7 +8,6 @@ import instance from 'utils/axios';
 import 'styles/modal/Modal.css';
 
 function ProfileModal() {
-  const navigate = useNavigate();
   const myData = useRecoilValue(myDataState);
   const [userData, setUserData] = useState<userData>();
   const [modalInfo, setModalInfo] = useRecoilState(modalState);
@@ -26,7 +24,7 @@ function ProfileModal() {
   };
 
   const moveProfile = () => {
-    window.location.replace(`/users/${modalInfo.user}/mypage`);
+    // window.location.replace(`/users/${modalInfo.user}/mypage`);
     setModalInfo({ modalName: null });
   };
 
@@ -90,7 +88,9 @@ function ProfileModal() {
           <div className='modal-content'>
             <section>
               <span>{modalInfo.user}</span>
-              <input type='button' onClick={moveProfile} value='프로필' />
+              <Link to={`/users/${modalInfo.user}/mypage`}>
+                <input type='button' onClick={moveProfile} value='프로필' />
+              </Link>
               <br />
               <span>{`${userData.win} 승`} </span>
               <span>{`${userData.lose} 패`} </span>

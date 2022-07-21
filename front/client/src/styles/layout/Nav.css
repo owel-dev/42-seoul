@@ -2,12 +2,13 @@
   background-color: #292d39;
   color: #efefef;
   display: flex;
+  justify-content: space-evenly;
   height: 8vh;
 }
 
 .logo {
   width: 7vw;
-  margin: 1%;
+  margin: 12px;
 }
 .blank {
   display: flex;
@@ -21,8 +22,8 @@
 }
 
 .myPage {
-  width: 6vw;
-  margin: 1% 2.5%;
+  width: 75px;
+  margin: 10px 25px;
   border: solid 1px white;
   border-radius: 50%;
   overflow: hidden;

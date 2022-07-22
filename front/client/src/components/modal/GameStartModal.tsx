@@ -43,10 +43,9 @@ function GameStartModal() {
 
   return (
     <>
-      {channelInfo.channelId && (
+      {channelInfo.channelId ? (
         <Navigate to={'/channel/' + channelInfo.channelId} />
-      )}
-      {
+      ) : (
         <div className='modal'>
           <div className='modal-title'>game start</div>
           {!matchWait ? (
@@ -75,7 +74,7 @@ function GameStartModal() {
             <button onClick={closeModal}>close</button>
           </div>
         </div>
-      }
+      )}
     </>
   );
 }

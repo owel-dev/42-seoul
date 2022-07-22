@@ -1,21 +1,26 @@
 import { socket } from 'App';
 import { MouseEvent, useEffect, useRef } from 'react';
 import { useRecoilState } from 'recoil';
-import { channelState, countState, gameState } from 'utils/recoil/gameState';
+import { countState, gameState } from 'utils/recoil/gameState';
 
 let mouseState = 0;
 let pingTime = 0;
 
 function GameModule() {
-  function draw_background(ctx: any, canvasEle: any) {
-    ctx.clearRect(0, 0, canvasEle.width, canvasEle.height);
+  function draw_background(
+    ctx: any,
+    canvasEle: any,
+    width: number,
+    height: number
+  ) {
+    ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, canvasEle.width, canvasEle.height);
+    ctx.fillRect(0, 0, width, height);
   }
 
   function draw_ball(ctx: any, x: number, y: number) {
     ctx.beginPath();
-    ctx.arc(x, y, 10, 0, Math.PI * 2);
+    ctx.arc(x, y, 10, 0, Math.floor(Math.PI * 2));
     ctx.fillStyle = 'white';
     ctx.fill();
     ctx.closePath();
@@ -33,10 +38,18 @@ function GameModule() {
   }
 
   function draw_text(ctx: any, text: string, width: number, height: number) {
-    ctx.font = '40pt Fira';
+    ctx.textAlign = 'center';
+    ctx.font = '40pt pira';
     ctx.fillStyle = 'white';
     ctx.strokeText(text, width, height);
     ctx.fillText(text, width, height);
+  }
+
+  function saveMouseState(event: MouseEvent) {
+    const canvasEle: any = canvas.current;
+    const ratio: number = canvasEle.height / canvasEle.clientHeight;
+    //캔버스 크기/줄어든 캔버스 실제 크기의 비율
+    mouseState = event.nativeEvent.offsetY * ratio;
   }
 
   const canvas: any = useRef();
@@ -54,7 +67,6 @@ function GameModule() {
     socket.on('game-end', () => {
       clearInterval(ping_interval);
       setCountData('game over');
-      //게임 끝난 여부 true
     });
     const ping_interval = setInterval(() => {
       const time = Date.now();
@@ -62,59 +74,62 @@ function GameModule() {
         pingTime = Date.now() - time;
       });
     }, 500);
-  }, []);
+  }, [setCountData, setGameData]);
 
   useEffect(() => {
-    //배경
     const canvasEle: any = canvas.current;
-    const ctx = canvasEle.getContext('2d');
-    draw_background(ctx, canvasEle);
+    const ctx = canvasEle.getContext('2d', { alpha: 'false' });
+    const displayWidth = canvasEle.width;
+    const displayHeight = canvasEle.height;
+
+    draw_background(ctx, canvasEle, displayWidth, displayHeight);
     draw_ball(
       ctx,
-      (gameData.ball.x / 100) * canvasEle.width,
-      (gameData.ball.y / 100) * canvasEle.height
+      Math.floor((gameData.ball.x / 100) * displayWidth),
+      Math.floor((gameData.ball.y / 100) * displayHeight)
     );
     draw_paddle(
       ctx,
-      0.05 * canvasEle.width,
-      ((gameData.firstPlayerPaddle - 10) / 100) * canvasEle.height,
-      0.015 * canvasEle.width,
-      0.2 * canvasEle.height
+      Math.floor(0.05 * displayWidth),
+      Math.floor(((gameData.firstPlayerPaddle - 10) / 100) * displayHeight),
+      Math.floor(0.015 * displayWidth),
+      Math.floor(0.2 * displayHeight)
     );
     draw_paddle(
       ctx,
-      0.945 * canvasEle.width,
-      ((gameData.secondPlayerPaddle - 10) / 100) * canvasEle.height,
-      0.015 * canvasEle.width,
-      0.2 * canvasEle.height
+      Math.floor(0.945 * displayWidth),
+      Math.floor(((gameData.secondPlayerPaddle - 10) / 100) * displayHeight),
+      Math.floor(0.015 * displayWidth),
+      Math.floor(0.2 * displayHeight)
     );
-
-    //스코어1
     draw_text(
       ctx,
       gameData.firstPlayerScore.toString(),
-      canvasEle.width / 4,
+      Math.floor(displayWidth / 4),
       50
     );
-    //스코어2
     draw_text(
       ctx,
       gameData.secondPlayerScore.toString(),
-      canvasEle.width * 0.75,
+      Math.floor(displayWidth * 0.75),
       50
     );
   });
 
   useEffect(() => {
     const canvasEle: any = canvas.current;
-    const ctx = canvasEle.getContext('2d');
-    draw_background(ctx, canvasEle);
-    draw_text(ctx, countData, canvasEle.width / 2, canvasEle.height / 2);
-  }, [countData]);
+    const ctx = canvasEle.getContext('2d', { alpha: 'false' });
+    const displayWidth = canvasEle.width;
+    const displayHeight = canvasEle.height;
 
-  function saveMouseState(event: MouseEvent) {
-    mouseState = event.nativeEvent.offsetY;
-  }
+    draw_background(ctx, canvasEle, displayWidth, displayHeight);
+    draw_text(
+      ctx,
+      countData,
+      Math.floor(displayWidth / 2),
+      Math.floor(displayHeight / 2)
+    );
+  }, [countData]);
 
   return (
     <div>
@@ -122,6 +137,7 @@ function GameModule() {
         ref={canvas}
         height='500px'
         width='700px'
+        style={{ height: '100%', width: '100%' }}
         onMouseMove={saveMouseState}
       />
       <div>ping : {pingTime}</div>

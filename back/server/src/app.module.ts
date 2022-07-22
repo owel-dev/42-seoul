@@ -9,6 +9,8 @@ import { FriendModule } from './friend/friend.module';
 import { BanModule } from './ban/ban.module';
 import { GameModule } from './game/game.module';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
 	imports: [
@@ -20,6 +22,22 @@ import { AuthModule } from './auth/auth.module';
 		BanModule,
 		GameModule,
 		AuthModule,
+		ConfigModule.forRoot({
+			isGlobal: true,
+		}),
+		MailerModule.forRootAsync({
+			useFactory: async (config: ConfigService) => ({
+				transport: {
+					host: config.get('MAIL_HOST'),
+					secure: false,
+					auth: {
+						user: config.get('MAIL_USER'),
+						pass: config.get('MAIL_PASSWORD'),
+					},
+				},
+			}),
+			inject: [ConfigService],
+		}),
 	],
 	controllers: [AppController],
 	providers: [AppService],

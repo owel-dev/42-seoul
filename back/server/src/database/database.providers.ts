@@ -17,5 +17,6 @@ export const databaseProviders = [
       });
       return dataSource.initialize();
     },
+    inject: [ConfigService],
   },
 ];

@@ -11,5 +11,6 @@ import { DatabaseModule } from 'src/database/database.module';
 		...userProviders,
 		AuthService,
 	],
+	exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }

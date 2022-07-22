@@ -6,15 +6,15 @@ import { matchProviders } from './match.providers';
 import { userProviders } from 'src/users/users.providers';
 import { statProviders } from 'src/stats/stats.providers';
 import { AuthService } from 'src/auth/auth.service';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [DatabaseModule],
-  controllers: [MatchController],
-  providers: [
-	...userProviders,
-	...matchProviders,
-	MatchService,
-	AuthService,
-],
+	imports: [DatabaseModule, AuthModule],
+	controllers: [MatchController],
+	providers: [
+		...userProviders,
+		...matchProviders,
+		MatchService,
+	],
 })
-export class MatchModule {}
+export class MatchModule { }

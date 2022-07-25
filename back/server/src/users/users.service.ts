@@ -24,8 +24,7 @@ export class UsersService {
 	) { }
 
 
-	async findOneMyPage(nickName : string)
-	{
+	async findOneMyPage(nickName: string) {
 		console.log("user findOneMyPage");
 		const userRepo = await this.userRepository.findOne({
 			relations: ["stats"],
@@ -72,11 +71,11 @@ export class UsersService {
 		return (resUserNavi);
 	}
 
-	private async isFriend(requester : string, friendList : Friend[]) : Promise<boolean> {
+	private async isFriend(requester: string, friendList: Friend[]): Promise<boolean> {
 		for (let i = 0; i < friendList.length; i++) {
 			const friend = await this.friendRepository.findOne({
 				relations: ["friend_1", "friend_2"],
-				where: {friend_id: friendList[i].friend_id }
+				where: { friend_id: friendList[i].friend_id }
 			});
 			if (friend.friend_1.nickname == requester)
 				return (true);
@@ -84,11 +83,11 @@ export class UsersService {
 		return (false);
 	}
 
-	private async isBan(requester : string, banList : Ban[]) : Promise<boolean> {
+	private async isBan(requester: string, banList: Ban[]): Promise<boolean> {
 		for (let i = 0; i < banList.length; i++) {
 			const ban = await this.banRepository.findOne({
 				relations: ["ban_1", "ban_2"],
-				where: {ban_id: banList[i].ban_id }
+				where: { ban_id: banList[i].ban_id }
 			});
 			if (ban.ban_1.nickname == requester)
 				return (true);
@@ -124,12 +123,11 @@ export class UsersService {
 
 	async delete(nickName: string) {
 		console.log("delete user");
-		await this.userRepository.delete({ nickname: nickName });	
+		await this.userRepository.delete({ nickname: nickName });
 	}
-	
 
-	private async saveUser(createUserDto: CreateUserDto, file: Express.Multer.File)
-	{
+
+	private async saveUser(createUserDto: CreateUserDto, file: Express.Multer.File) {
 		const user = new User();
 		const filePath = `avatar/${file.filename}`;
 		const ipv4 = await this.getIpAdrress();
@@ -153,18 +151,15 @@ export class UsersService {
 		})
 		console.log(nickName);
 		console.log(users);
-		if (users.length === 0)
-		{
+		if (users.length === 0) {
 			return (true);
 		}
-		else
-		{
+		else {
 			throw new HttpException(`${nickName}: Nickname already exist`, HttpStatus.FORBIDDEN);
 		}
 	}
 
-	private async getIpAdrress()
-	{
+	private async getIpAdrress() {
 		const { networkInterfaces } = require('os');
 		const nets = networkInterfaces();
 		const ipv4 = nets['en0'][1]['address'];

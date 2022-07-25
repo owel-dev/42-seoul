@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post, Query, Redirect, Res } from '@nestjs/common';
 import { Response } from 'express';
+import { ResUserNavi } from 'src/users/dto/res-user-navi.dto';
 import { AuthService } from './auth.service';
 
 @Controller('oauth')
@@ -32,7 +33,7 @@ export class AuthController {
 	async validEmail(
 		@Query('id') id: string,
 		@Body('code') code: string,
-	): Promise<boolean> {
+	): Promise<ResUserNavi> {
 		return await this.authService.validEmail(id, code);
 	}
 }

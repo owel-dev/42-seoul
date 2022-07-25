@@ -1,6 +1,34 @@
-.match-list{
-    width : 50%;
-    flex : 1;
-    padding : 2%;
+.matchList {
+  width: 50%;
+  flex: 1;
+  padding: 2%;
+}
+.matchTitle {
+  font-size: larger;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.matchTable {
+  border: 1px #00babc solid;
+  color: black;
+  overflow-y: scroll;
+  height: 40vh;
+}
+.matchRow {
+  font-size: large;
+  height: 15%;
+  display: flex;
+  align-items: center;
+}
 
+.matchLeft {
+  flex: 1;
+}
+.matchMiddle {
+  flex: 1;
+  font-weight: bold;
+}
+
+.matchRight {
+  flex: 1;
 }

@@ -23,7 +23,7 @@ function UserPage() {
       } catch (e) {}
     };
     getData();
-  }, [currentUser]);
+  }, [currentUser, setProfileData]);
 
   return (
     <>

@@ -1,13 +1,13 @@
 .nav {
   background-color: #292d39;
-  height: 10vh;
+  height: 5rem;
   display: flex;
   justify-content: space-evenly;
 }
 
 #logo {
-  margin-top: 0.5rem;
-  margin-left: 1rem;
+  margin-top: 1vh;
+  margin-left: 1vw;
   flex: 1;
   height: 75%;
 }
@@ -17,19 +17,18 @@
 }
 
 #ranking {
-  margin-top: 0.5rem;
-  margin-right: 1rem;
+  margin-top: 1vh;
+  margin-right: 1vw;
   flex: 1;
   height: 75%;
   filter: invert(100%);
 }
 
 #avatar {
-  overflow: hidden;
 }
 #avatar-image {
-  margin-top: 0.5rem;
-  margin-right: 1rem;
+  margin-top: 1vh;
+  margin-right: 1vw;
   flex: 1;
   height: 80%;
   border: solid 1px white;
@@ -37,8 +36,8 @@
 }
 
 #logout {
-  margin-top: 0.5rem;
-  margin-right: 1rem;
+  margin-top: 1vh;
+  margin-right: 1vw;
   flex: 1;
   height: 75%;
   filter: invert(100%);

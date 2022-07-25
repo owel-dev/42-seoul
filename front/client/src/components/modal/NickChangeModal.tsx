@@ -46,8 +46,8 @@ function NickChangeModal() {
 
   return (
     <div className='modal'>
-      <div className='modal-title'>nickname change</div>
-      <div className='modal-content'>
+      <div className='modalTitle'>nickname change</div>
+      <div className='modalContent'>
         <div>
           <span>nickname </span>
           <input
@@ -56,9 +56,13 @@ function NickChangeModal() {
           />
         </div>
       </div>
-      <div className='modal-select'>
-        <button onClick={PostNickName}>change</button>
-        <button onClick={CloseModal}>close</button>
+      <div className='modalSelect'>
+        <button onClick={PostNickName} className='modalButton'>
+          change
+        </button>
+        <button onClick={CloseModal} className='modalButton'>
+          close
+        </button>
       </div>
     </div>
   );

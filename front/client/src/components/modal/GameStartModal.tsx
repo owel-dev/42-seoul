@@ -47,9 +47,9 @@ function GameStartModal() {
         <Navigate to={'/channel/' + channelInfo.channelId} />
       ) : (
         <div className='modal'>
-          <div className='modal-title'>game start</div>
+          <div className='modalTitle'>game start</div>
           {!matchWait ? (
-            <div className='modal-content'>
+            <div className='modalContent'>
               <fieldset>
                 <legend>game option</legend>
                 <RadioOption radioChange={radioChange} value='none' />
@@ -65,13 +65,17 @@ function GameStartModal() {
               </div>
             </div>
           ) : (
-            <div className='modal-content'>
+            <div className='modalContent'>
               <div>대기중입니다..</div>
             </div>
           )}
-          <div className='modal-select'>
-            <button onClick={matchRequest}>regist</button>
-            <button onClick={closeModal}>close</button>
+          <div className='modalSelect'>
+            <button onClick={matchRequest} className='modalButton'>
+              regist
+            </button>
+            <button onClick={closeModal} className='modalButton'>
+              close
+            </button>
           </div>
         </div>
       )}

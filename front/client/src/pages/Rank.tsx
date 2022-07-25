@@ -4,7 +4,7 @@ import 'styles/rank/Rank.css';
 function Rank() {
   return (
     <div className='rank'>
-      <h1>ranking</h1>
+      <div id='rank-title'>ranking</div>
       <RankTable />
     </div>
   );

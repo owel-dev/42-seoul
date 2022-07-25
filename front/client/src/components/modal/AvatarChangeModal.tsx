@@ -59,8 +59,8 @@ function AvatarChangeModal() {
 
   return (
     <div className='modal'>
-      <div className='modal-title'>avatar change</div>
-      <div className='modal-content'>
+      <div className='modalTitle'>avatar change</div>
+      <div className='modalContent'>
         <div>
           <input type='file' accept='image/*' onChange={UploadAvatar} />
           <img
@@ -71,9 +71,13 @@ function AvatarChangeModal() {
           <span>아바타</span>
         </div>
       </div>
-      <div className='modal-select'>
-        <button onClick={PostAvatar}>change</button>
-        <button onClick={CloseModal}>close</button>
+      <div className='modalSelect'>
+        <button onClick={PostAvatar} className='modalButton'>
+          change
+        </button>
+        <button onClick={CloseModal} className='modalButton'>
+          close
+        </button>
       </div>
     </div>
   );

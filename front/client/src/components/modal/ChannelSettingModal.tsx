@@ -22,8 +22,8 @@ function ChannelSettingModal() {
 
   return (
     <div className='modal'>
-      <div className='modal-title'>channel setting</div>
-      <div className='modal-content'>
+      <div className='modalTitle'>channel setting</div>
+      <div className='modalContent'>
         <div>
           <span>비밀번호 </span>
           <input
@@ -32,9 +32,13 @@ function ChannelSettingModal() {
           />{' '}
         </div>
       </div>
-      <div className='modal-select'>
-        <button onClick={ChangePassword}>change</button>
-        <button onClick={CloseModal}>close</button>
+      <div className='modalSelect'>
+        <button onClick={ChangePassword} className='modalButton'>
+          change
+        </button>
+        <button onClick={CloseModal} className='modalButton'>
+          close
+        </button>
       </div>
     </div>
   );

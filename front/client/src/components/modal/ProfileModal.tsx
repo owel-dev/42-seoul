@@ -103,8 +103,8 @@ function ProfileModal() {
     <>
       {userData?.nickName && (
         <div className='modal'>
-          <div className='modal-title'>유저 프로필</div>
-          <div className='modal-content'>
+          <div className='modalTitle'>유저 프로필</div>
+          <div className='modalContent'>
             <section>
               <span>{modalInfo.user}</span>
               <Link to={`/users/${modalInfo.user}/mypage`}>
@@ -144,11 +144,12 @@ function ProfileModal() {
               )}
             </>
           </div>
-          <div className='modal-select'>
+          <div className='modalSelect'>
             <button
               onClick={() => {
                 setModalInfo({ modalName: null });
               }}
+              className='modalButton'
             >
               닫기
             </button>

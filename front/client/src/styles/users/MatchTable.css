@@ -1,9 +1,0 @@
-.match-table{
-    border: 1px black solid;
-    overflow-y: scroll;
-    height: 80%;
-}
-.match-row{
-    border: 1px grey solid;
-    font-size: large;
-}

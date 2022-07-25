@@ -12,8 +12,10 @@ function Lobby() {
 
   return (
     <div className='lobby'>
-      <h1>Lobby</h1>
-      <button onClick={openGameModal}>game start</button>
+      <div id='lobbyTitle'>Lobby</div>
+      <button onClick={openGameModal} id='gameStart'>
+        Game Start
+      </button>
       <ChannelList />
     </div>
   );

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { userRank } from 'types/RankTypes';
 import RankRow from 'components/rank/RankRow';
 import instance from 'utils/axios';
+import RankTitleRow from './RankTitleRow';
 
 function RankTable() {
   const [rank, setRank] = useState<userRank | null>(null);
@@ -19,14 +20,7 @@ function RankTable() {
 
   return (
     <div className='rank-table'>
-      <RankRow
-        rank='rank'
-        nickName='nickname'
-        win='win'
-        lose='lose'
-        winRate='winRate'
-        type='rank-row-title'
-      />
+      <RankTitleRow />
       {rank?.ranking.map((val: any, index: any) => {
         const row_type = index % 2 ? 'rank-row' : 'rank-row-gray';
         return (

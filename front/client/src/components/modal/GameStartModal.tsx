@@ -6,7 +6,7 @@ import { modalState } from 'utils/recoil/modal';
 import { channelState } from 'utils/recoil/gameState';
 import { myDataState } from 'utils/recoil/myData';
 import { myData } from 'types/myDataTypes';
-
+import RadioOption from 'components/modal/RadioOption';
 import 'styles/modal/Modal.css';
 
 function GameStartModal() {
@@ -39,70 +39,44 @@ function GameStartModal() {
       setMatchWait(false);
       setChannelInfo(data);
     });
-  }, []);
-  //게임 시작, 대기를 따로 컴포넌트로 빼기 GameOption, GameMatchWait
+  }, [setChannelInfo]);
 
-  if (channelInfo.channelId !== null) {
-    return <Navigate to={'/channel/' + channelInfo.channelId} />;
-  } else {
-    return (
-      <div className='modal'>
-        <div className='modal-title'>game start</div>
-        {!matchWait ? (
-          <div className='modal-content'>
-            <fieldset>
-              <legend>game option</legend>
+  return (
+    <>
+      {channelInfo.channelId ? (
+        <Navigate to={'/channel/' + channelInfo.channelId} />
+      ) : (
+        <div className='modal'>
+          <div className='modal-title'>game start</div>
+          {!matchWait ? (
+            <div className='modal-content'>
+              <fieldset>
+                <legend>game option</legend>
+                <RadioOption radioChange={radioChange} value='none' />
+                <RadioOption radioChange={radioChange} value='map' />
+                <RadioOption radioChange={radioChange} value='power' />
+              </fieldset>
               <div>
+                <span>비밀번호 </span>
                 <input
-                  type='radio'
-                  name='drone'
-                  id='none'
-                  value='none'
-                  onChange={() => radioChange('none')}
-                ></input>
-                <label>none</label>
+                  placeholder={'비밀번호 입력'}
+                  onChange={(e) => setInputValue(e.target.value)}
+                />
               </div>
-              <div>
-                <input
-                  type='radio'
-                  name='drone'
-                  id='map'
-                  value='map'
-                  onChange={() => radioChange('map')}
-                ></input>
-                <label>map option</label>
-              </div>
-              <div>
-                <input
-                  type='radio'
-                  name='drone'
-                  id='power'
-                  value='power'
-                  onChange={() => radioChange('power')}
-                ></input>
-                <label>power option</label>
-              </div>
-            </fieldset>
-            <div>
-              <span>비밀번호 </span>
-              <input
-                placeholder={'비밀번호 입력'}
-                onChange={(e) => setInputValue(e.target.value)}
-              />
             </div>
+          ) : (
+            <div className='modal-content'>
+              <div>대기중입니다..</div>
+            </div>
+          )}
+          <div className='modal-select'>
+            <button onClick={matchRequest}>regist</button>
+            <button onClick={closeModal}>close</button>
           </div>
-        ) : (
-          <div className='modal-content'>
-            <div>대기중입니다..</div>
-          </div>
-        )}
-        <div className='modal-select'>
-          <button onClick={matchRequest}>regist</button>
-          <button onClick={closeModal}>close</button>
         </div>
-      </div>
-    );
-  }
+      )}
+    </>
+  );
 }
 
 export default GameStartModal;

@@ -29,29 +29,27 @@ function PasswordSubmitModal() {
       }
     );
   }
-  if (passwordCorrect === true) {
-    closeModal();
-    return <Navigate to={'/channel/' + channelInfo.channelId} />;
-  } else {
-    return (
-      <div className='modal'>
-        <div className='modal-title'>비밀번호 제출</div>
-        <div className='modal-content'>
-          <div>
-            <span>password </span>
-            <input
-              placeholder={'비밀번호 입력'}
-              onChange={(e) => setInputValue(e.target.value)}
-            />
-          </div>
-        </div>
-        <div className='modal-select'>
-          <button onClick={submitPassword}>제출</button>
-          <button onClick={closeModal}>close</button>
+
+  return passwordCorrect ? (
+    <Navigate to={'/channel/' + channelInfo.channelId} />
+  ) : (
+    <div className='modal'>
+      <div className='modal-title'>비밀번호 제출</div>
+      <div className='modal-content'>
+        <div>
+          <span>password </span>
+          <input
+            placeholder={'비밀번호 입력'}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
         </div>
       </div>
-    );
-  }
+      <div className='modal-select'>
+        <button onClick={submitPassword}>제출</button>
+        <button onClick={closeModal}>close</button>
+      </div>
+    </div>
+  );
 }
 
 export default PasswordSubmitModal;

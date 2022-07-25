@@ -12,17 +12,15 @@ function UserList() {
 
   return (
     <div>
-      {dummy.map((element, index) => {
-        return (
-          <div
-            key={index}
-            className='userlist-row'
-            onClick={() => ProfileModalOpen(element)}
-          >
-            {element}
-          </div>
-        );
-      })}
+      {dummy.map((element, index) => (
+        <div
+          key={index}
+          className='userlist-row'
+          onClick={() => ProfileModalOpen(element)}
+        >
+          {element}
+        </div>
+      ))}
     </div>
   );
 }

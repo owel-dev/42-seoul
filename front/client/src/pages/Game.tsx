@@ -11,7 +11,7 @@ function Game() {
 
   useEffect(() => {
     setModalInfo({ modalName: null });
-  }, []);
+  }, [setModalInfo]);
 
   return (
     <div className='game-area'>

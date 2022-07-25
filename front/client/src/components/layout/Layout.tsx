@@ -21,6 +21,7 @@ function Layout({ children }: LayoutProps) {
   const [myData, setMyData] = useRecoilState<myData>(myDataState);
 
   useEffect(() => {
+    console.log('test');
     getMyData();
   }, []);
 

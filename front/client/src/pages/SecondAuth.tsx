@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { myData } from 'types/myDataTypes';
 import { myDataState } from 'utils/recoil/myData';
 import instance from 'utils/axios';
@@ -13,21 +13,22 @@ function SecondAuth() {
 
   const sendEmail = async () => {
     try {
-      console.log(myData.nickName);
-      // await instance.post(`/oauth/sendEmail?id=${myData.nickName}`, {
-      await instance.post(`/oauth/sendEmail?id=ulee`, {
+      console.log(myData);
+      await instance.post(`/oauth/sendEmail?id=${myData.nickName}`, {
         email: emailInput,
       });
     } catch (e) {}
   };
   const submitCode = async () => {
     try {
-      console.log(myData.nickName);
-      // await instance.post(`/oauth/validEmail?id=${myData.nickName}`, {
-      const res = await instance.post(`/oauth/validEmail?id=ulee`, {
-        code: codeInput,
-      });
+      const res = await instance.post(
+        `/oauth/validEmail?id=${myData.nickName}`,
+        {
+          code: codeInput,
+        }
+      );
       setMyData(res?.data);
+      console.log(myData);
     } catch (e) {}
   };
 

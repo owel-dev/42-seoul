@@ -1,10 +1,10 @@
-import { socket } from 'App';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Navigate } from 'react-router-dom';
 import { modalState } from 'utils/recoil/modal';
 import { channelState } from 'utils/recoil/gameState';
 import { myDataState } from 'utils/recoil/myData';
+import { socket } from 'components/layout/Layout';
 import { myData } from 'types/myDataTypes';
 import RadioOption from 'components/modal/RadioOption';
 import 'styles/modal/Modal.css';

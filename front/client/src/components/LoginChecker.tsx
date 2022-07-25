@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { loginState } from 'utils/recoil/login';
 import Login from 'pages/Login';
-import styles from 'styles/login/login.css';
 
 interface LoginCheckerProps {
   children: React.ReactNode;

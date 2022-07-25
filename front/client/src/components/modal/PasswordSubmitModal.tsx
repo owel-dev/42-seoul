@@ -1,4 +1,4 @@
-import { socket } from 'App';
+import { socket } from 'components/layout/Layout';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';

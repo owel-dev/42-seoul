@@ -1,4 +1,4 @@
-import { socket } from 'App';
+import { socket } from 'components/layout/Layout';
 import { MouseEvent, useEffect, useRef } from 'react';
 import { useRecoilState } from 'recoil';
 import { countState, gameState } from 'utils/recoil/gameState';

@@ -98,6 +98,7 @@ function ProfileModal() {
             </section>
             <section>
               <button>같이하기</button>
+              <button>귓말하기</button>
               <input
                 type='button'
                 onClick={userData.friend ? delFriend : addFriend}

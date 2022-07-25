@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { myData } from 'types/myDataTypes';
 import { myDataState } from 'utils/recoil/myData';
 import instance from 'utils/axios';
@@ -7,23 +7,27 @@ import styles from 'styles/login/login.module.css';
 import 'styles/login/SecondAuth.css';
 
 function SecondAuth() {
-  const myData = useRecoilValue<myData>(myDataState);
+  const [myData, setMyData] = useRecoilState<myData>(myDataState);
   const [emailInput, setEmailInput] = useState<string>('');
   const [codeInput, setCodeInput] = useState<string>('');
 
   const sendEmail = async () => {
     try {
-      await instance.post(`/users/${myData.nickName}/email`, {
-        id: myData.nickName,
+      console.log(myData.nickName);
+      // await instance.post(`/oauth/sendEmail?id=${myData.nickName}`, {
+      await instance.post(`/oauth/sendEmail?id=ulee`, {
         email: emailInput,
       });
     } catch (e) {}
   };
   const submitCode = async () => {
     try {
-      await instance.post(`/users/${myData.nickName}/email`, {
+      console.log(myData.nickName);
+      // await instance.post(`/oauth/validEmail?id=${myData.nickName}`, {
+      const res = await instance.post(`/oauth/validEmail?id=ulee`, {
         code: codeInput,
       });
+      setMyData(res?.data);
     } catch (e) {}
   };
 

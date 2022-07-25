@@ -32,12 +32,17 @@
   position: sticky;
 }
 
+.userlist-row {
+  height: 2rem;
+  border: 1px grey solid;
+}
+
 .chatContainer {
   display: flex;
   flex-direction: column;
   height: 55%;
 }
-.chat-list {
+.chatList {
   height: 100%;
 }
 
@@ -52,9 +57,10 @@
 }
 
 .chat {
+  display: flex;
+  flex-direction: column;
   height: 84%;
   overflow-y: scroll;
-  position: sticky;
 }
 
 .messageContainer {
@@ -62,9 +68,22 @@
   justify-content: space-between;
 }
 
+.messageList {
+  height: auto;
+  margin: 0.2rem 0;
+  font-size: 1.2rem;
+}
+
+.directMessage {
+  height: auto;
+  margin: 0.2rem 0;
+  font-size: 1.2rem;
+  color: purple;
+}
+
 .message {
   height: 1.4rem;
-  width: 15rem;
+  width: 14.8rem;
   border: 1px #00babc solid;
   font-size: 1rem;
   font-weight: 400;
@@ -72,10 +91,5 @@
 
 .button {
   height: 1.7rem;
-  width: 3rem;
-}
-
-.userlist-row {
-  height: 2rem;
-  border: 1px grey solid;
+  width: auto;
 }

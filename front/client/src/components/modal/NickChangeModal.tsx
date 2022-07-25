@@ -27,7 +27,6 @@ function NickChangeModal() {
     try {
       const res = await instance.get(`/users/navi`);
       setMyData(res?.data);
-      console.log('getData', myData);
     } catch (e) {}
   };
 

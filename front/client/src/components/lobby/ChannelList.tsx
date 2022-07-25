@@ -1,4 +1,4 @@
-import { socket } from 'App';
+import { socket } from 'components/layout/Layout';
 import { useState, useEffect } from 'react';
 import { channelListTypes, channelTypes } from 'types/LobbyTypes';
 import ChannelListRow from 'components/lobby/ChannelListRow';

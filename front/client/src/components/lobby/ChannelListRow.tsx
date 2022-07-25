@@ -1,4 +1,4 @@
-import { socket } from 'App';
+import { socket } from 'components/layout/Layout';
 import { Link } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { channelTypes } from 'types/LobbyTypes';

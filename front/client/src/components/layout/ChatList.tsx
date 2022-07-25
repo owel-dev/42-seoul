@@ -1,16 +1,18 @@
-const dummy = ['message01', 'message02', 'message03'];
+import { chat } from 'types/chatTypes';
 
-function ChatList() {
+function ChatList({ chatList }: { chatList: chat[] }) {
   return (
-    <div className='chat-list'>
-      {dummy.map((element, index) => {
-        return (
-          <div className='userlist-row' key={index}>
-            {element}
-          </div>
-        );
-      })}
-    </div>
+    <>
+      {chatList?.map((element, index) => (
+        <div
+          className={element.isDM ? 'directMessage' : 'messageList'}
+          key={index}
+        >
+          {`${element.nickName} - ${element.message}`}
+        </div>
+      ))}
+    </>
   );
 }
+
 export default ChatList;

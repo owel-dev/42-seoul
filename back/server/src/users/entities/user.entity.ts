@@ -24,6 +24,9 @@ export class User {
 	@Column()
 	channel_id: string;
 
+	@Column({ default: false })
+	is_second_auth: boolean;
+
 	@OneToOne(() => Stat, (stat) => stat.user, {
 		cascade: ["remove", "insert", "update"],
 	})

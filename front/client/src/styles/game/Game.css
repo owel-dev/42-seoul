@@ -6,20 +6,30 @@
 
 .player-game-area {
   display: flex;
+  align-items: center;
   height: 90%;
 }
 
 .player {
+  color: black;
   flex: 1;
   text-align: center;
-  border: 1px black solid;
+}
+.player-name {
+  font-weight: bold;
 }
 
-.player-image {
-  width: 100%;
-}
 .game-content {
   flex: 5;
   text-align: center;
-  border: 1px black solid;
+}
+
+#game-setting {
+  all: none;
+
+  height: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  background-color: #00babc;
 }

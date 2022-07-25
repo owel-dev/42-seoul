@@ -9,22 +9,30 @@ function Nav(props: { nickName: string; avatar: string }) {
   return (
     <div>
       <header className='nav'>
-        <Link to='/' className='logo'>
-          <img src='/42.png' width='80vw' alt='logoImg' />
+        <Link to='/'>
+          <img src='/42.png' width='80vw' alt='logoImg' id='logo' />
         </Link>
-        <div className='blank'>
+        <div id='blank'>
           <Link to='/ranking'>
-            <div className='ranking'>🏆</div>
+            <img src='/ranking.png' alt='rankImg' id='ranking'></img>
           </Link>
         </div>
-        <Link to={`/users/${props.nickName}/mypage`} className='myPage'>
-          <img src={props.avatar} height='60vh' width='75vw' alt='avatar' />
+        <Link to={`/users/${props.nickName}/mypage`} id='avatar'>
+          <img
+            src={props.avatar}
+            height='60vh'
+            width='75vw'
+            alt='avatar'
+            id='avatar-image'
+          />
         </Link>
-        <div
-          className='logout'
-          onClick={() => setModalInfo({ modalName: 'LOGOUT' })}
-        >
-          logout
+        <div>
+          <img
+            src='/logout.png'
+            alt='logoutImg'
+            id='logout'
+            onClick={() => setModalInfo({ modalName: 'LOGOUT' })}
+          ></img>
         </div>
       </header>
     </div>

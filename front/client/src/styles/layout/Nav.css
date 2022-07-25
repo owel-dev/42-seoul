@@ -1,36 +1,47 @@
 .nav {
   background-color: #292d39;
-  color: #efefef;
+  height: 10vh;
   display: flex;
   justify-content: space-evenly;
-  height: 8vh;
 }
 
-.logo {
-  width: 7vw;
-  margin: 12px;
-}
-.blank {
-  display: flex;
-  flex-direction: row-reverse;
-  width: 73vw;
+#logo {
+  margin-top: 0.5rem;
+  margin-left: 1rem;
+  flex: 1;
+  height: 75%;
 }
 
-.ranking {
-  padding: 10%;
-  font-size: 3.3rem;
+#blank {
+  flex: 5;
 }
 
-.myPage {
-  width: 75px;
-  margin: 10px 25px;
-  border: solid 1px white;
-  border-radius: 50%;
+#ranking {
+  margin-top: 0.5rem;
+  margin-right: 1rem;
+  flex: 1;
+  height: 75%;
+  filter: invert(100%);
+}
+
+#avatar {
   overflow: hidden;
 }
+#avatar-image {
+  margin-top: 0.5rem;
+  margin-right: 1rem;
+  flex: 1;
+  height: 80%;
+  border: solid 1px white;
+  border-radius: 50%;
+}
 
-.logout {
-  display: flex;
+#logout {
+  margin-top: 0.5rem;
+  margin-right: 1rem;
+  flex: 1;
+  height: 75%;
+  filter: invert(100%);
   cursor: pointer;
   align-items: flex-end;
 }

@@ -25,9 +25,7 @@ function ChatList({ chatList }: { chatList: chat[] }) {
           >
             {`${element.nickName} `}
           </span>
-          {/* <span className={element.isDM ? 'directMessage' : 'messageList'}> */}
           {`- ${element.message}`}
-          {/* </span> */}
         </div>
       ))}
     </>

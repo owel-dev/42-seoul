@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { modalState } from 'utils/recoil/modal';
 import { userData } from 'types/userTypes';
 import { myDataState } from 'utils/recoil/myData';
+import { messageState } from 'utils/recoil/chat';
 import instance from 'utils/axios';
 import 'styles/modal/Modal.css';
 
@@ -11,6 +12,7 @@ function ProfileModal() {
   const myData = useRecoilValue(myDataState);
   const [userData, setUserData] = useState<userData>();
   const [modalInfo, setModalInfo] = useRecoilState(modalState);
+  const setMessage = useSetRecoilState(messageState);
 
   useEffect(() => {
     getUserData();
@@ -24,7 +26,6 @@ function ProfileModal() {
   };
 
   const moveProfile = () => {
-    // window.location.replace(`/users/${modalInfo.user}/mypage`);
     setModalInfo({ modalName: null });
   };
 
@@ -80,6 +81,11 @@ function ProfileModal() {
     }
   };
 
+  const sendDM = () => {
+    setMessage(`#${userData?.nickName} `);
+    setModalInfo({ modalName: null });
+  };
+
   return (
     <>
       {userData?.nickName && (
@@ -96,20 +102,24 @@ function ProfileModal() {
               <span>{`${userData.lose} 패`} </span>
               <span>{`승률 ${userData.win}%`}</span>
             </section>
-            <section>
-              <button>같이하기</button>
-              <button>귓말하기</button>
-              <input
-                type='button'
-                onClick={userData.friend ? delFriend : addFriend}
-                value={userData.friend ? '친구삭제' : '친구추가'}
-              />
-              <input
-                type='button'
-                onClick={userData.ban ? banCancel : banUser}
-                value={userData.ban ? '차단해제' : '차단하기'}
-              />
-            </section>
+            <>
+              {userData.nickName !== myData.nickName && (
+                <section>
+                  <button>같이하기</button>
+                  <input type='button' onClick={sendDM} value='DM보내기' />
+                  <input
+                    type='button'
+                    onClick={userData.friend ? delFriend : addFriend}
+                    value={userData.friend ? '친구삭제' : '친구추가'}
+                  />
+                  <input
+                    type='button'
+                    onClick={userData.ban ? banCancel : banUser}
+                    value={userData.ban ? '차단해제' : '차단하기'}
+                  />
+                </section>
+              )}
+            </>
           </div>
           <div className='modal-select'>
             <button

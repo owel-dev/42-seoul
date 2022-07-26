@@ -22,7 +22,7 @@ function UserList() {
       {userList?.map((element, index) => (
         <div
           key={index}
-          className='userlist-row'
+          className='userList'
           onClick={() => ProfileModalOpen(element)}
         >
           {element}

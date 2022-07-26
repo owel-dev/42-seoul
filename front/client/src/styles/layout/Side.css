@@ -32,9 +32,12 @@
   position: sticky;
 }
 
-.userlist-row {
-  height: 2rem;
-  border: 1px grey solid;
+.userList {
+  height: auto;
+  width: fit-content;
+  margin: 0.2rem 0;
+  font-size: 1.2rem;
+  cursor: pointer;
 }
 
 .chatContainer {
@@ -42,6 +45,7 @@
   flex-direction: column;
   height: 55%;
 }
+
 .chatList {
   height: 100%;
 }
@@ -68,6 +72,20 @@
   justify-content: space-between;
 }
 
+.myNick {
+  height: auto;
+  margin: 0.2rem 0;
+  font-size: 1.2rem;
+  color: cadetblue;
+}
+
+.userNick {
+  height: auto;
+  margin: 0.2rem 0;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
 .messageList {
   height: auto;
   margin: 0.2rem 0;
@@ -83,7 +101,7 @@
 
 .message {
   height: 1.4rem;
-  width: 14.8rem;
+  width: 14.6rem;
   border: 1px #00babc solid;
   font-size: 1rem;
   font-weight: 400;

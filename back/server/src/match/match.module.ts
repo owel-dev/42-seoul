@@ -7,14 +7,14 @@ import { userProviders } from 'src/users/users.providers';
 import { statProviders } from 'src/stats/stats.providers';
 import { AuthService } from 'src/auth/auth.service';
 import { AuthModule } from 'src/auth/auth.module';
+import { UsersModule } from 'src/users/users.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Match } from './entities/match.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Module({
-	imports: [DatabaseModule, AuthModule],
-	controllers: [MatchController],
-	providers: [
-		...userProviders,
-		...matchProviders,
-		MatchService,
-	],
+  imports: [TypeOrmModule.forFeature([Match, User]), AuthModule],
+  controllers: [MatchController],
+  providers: [MatchService],
 })
-export class MatchModule { }
+export class MatchModule {}

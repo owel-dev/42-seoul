@@ -1,4 +1,5 @@
 import { ConsoleLogger, Inject, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Server, Socket } from 'socket.io';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/users/entities/user.entity';
@@ -13,7 +14,7 @@ export class ChatService {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UsersService,
-    @Inject('USER_REPOSITORY')
+    @InjectRepository(User)
     private userRepository: Repository<User>,
   ) {}
 
@@ -27,6 +28,9 @@ export class ChatService {
     const client = await this.userRepository.findOneBy({
       nickname: clientNick,
     });
+    // if (ChatService.users.some((user) => user.intraId === client.intra_id)) {
+    //   return;
+    // }
     ChatService.users.push(new ChatUser(client.intra_id, socket));
     socket.join(client.intra_id);
     this.joinChannel(socket, { channelId: '0' }, server);
@@ -60,6 +64,7 @@ export class ChatService {
       server.to(sendTo.intra_id).emit('message', {
         nickName: data.nickName,
         message: data.message,
+        isDM: true,
       });
       client.leave(sendTo.intra_id);
     }
@@ -72,6 +77,7 @@ export class ChatService {
     server.to(user.curChannel).emit('message', {
       nickName: data.nickName,
       message: data.message,
+      isDM: false,
     });
   }
 
@@ -144,6 +150,9 @@ export class ChatService {
 
   async muteUser(client: Socket, data: any, server: Server) {
     console.log('muteUser');
+    // const userClient = ChatService.users.find(
+    //   (user) => user.socket.id === client.id,
+    // );
     const curChannel = ChatService.users.find(
       (user) => user.socket.id === client.id,
     ).curChannel;

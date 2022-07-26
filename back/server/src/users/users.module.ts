@@ -9,13 +9,15 @@ import { AuthModule } from 'src/auth/auth.module';
 import { AuthService } from 'src/auth/auth.service';
 
 @Module({
-	imports: [DatabaseModule, AuthModule],
-	controllers: [UsersController],
-	providers: [
-		...userProviders,
-		...friendProviders,
-		...banProviders,
-		UsersService,
-	],
+  imports: [DatabaseModule, AuthModule],
+  controllers: [UsersController],
+  providers: [
+    ...userProviders,
+    ...friendProviders,
+    ...banProviders,
+    UsersService,
+    AuthService,
+  ],
+  exports: [UsersService, ...userProviders],
 })
-export class UsersModule { }
+export class UsersModule {}

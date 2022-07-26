@@ -16,7 +16,6 @@ export class ChannelController {
   @Get()
   async getAllChannelList() {
     console.log("channel_get");
-    console.log({channelList : await this.channelService.getAllChannelList()});
     return {channelList : await this.channelService.getAllChannelList()};
   }
 

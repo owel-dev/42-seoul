@@ -1,4 +1,11 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
 import { Ban } from 'src/ban/entities/ban.entity';
 import { Friend } from 'src/friend/entities/friend.entity';
@@ -14,11 +21,11 @@ import { User } from './entities/user.entity';
 @Injectable()
 export class UsersService {
   constructor(
-    @Inject('USER_REPOSITORY')
+    @InjectRepository(User)
     private userRepository: Repository<User>,
-    @Inject('FRIEND_REPOSITORY')
+    @InjectRepository(Friend)
     private friendRepository: Repository<Friend>,
-    @Inject('BAN_REPOSITORY')
+    @InjectRepository(Ban)
     private banRepository: Repository<Ban>,
     private readonly authService: AuthService,
   ) {}
@@ -76,7 +83,10 @@ export class UsersService {
     return resUserNavi;
   }
 
-  async isFriend(requester: string, friendList: Friend[]): Promise<boolean> {
+  private async isFriend(
+    requester: string,
+    friendList: Friend[],
+  ): Promise<boolean> {
     for (let i = 0; i < friendList.length; i++) {
       const friend = await this.friendRepository.findOne({
         relations: ['friend_1', 'friend_2'],
@@ -87,7 +97,7 @@ export class UsersService {
     return false;
   }
 
-  async isBan(requester: string, banList: Ban[]): Promise<boolean> {
+  private async isBan(requester: string, banList: Ban[]): Promise<boolean> {
     for (let i = 0; i < banList.length; i++) {
       const ban = await this.banRepository.findOne({
         relations: ['ban_1', 'ban_2'],

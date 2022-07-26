@@ -15,13 +15,14 @@ import { User } from 'src/users/entities/user.entity';
 import * as bcrypt from 'bcryptjs';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ResUserNavi } from 'src/users/dto/res-user-navi.dto';
+import { InjectRepository } from '@nestjs/typeorm';
 
 const hashedCodes = {};
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject('USER_REPOSITORY')
+    @InjectRepository(User)
     private userRepository: Repository<User>,
     private mailerService: MailerService,
   ) {}

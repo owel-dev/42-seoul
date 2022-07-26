@@ -83,10 +83,7 @@ export class UsersService {
     return resUserNavi;
   }
 
-  private async isFriend(
-    requester: string,
-    friendList: Friend[],
-  ): Promise<boolean> {
+  async isFriend(requester: string, friendList: Friend[]): Promise<boolean> {
     for (let i = 0; i < friendList.length; i++) {
       const friend = await this.friendRepository.findOne({
         relations: ['friend_1', 'friend_2'],
@@ -97,7 +94,7 @@ export class UsersService {
     return false;
   }
 
-  private async isBan(requester: string, banList: Ban[]): Promise<boolean> {
+  async isBan(requester: string, banList: Ban[]): Promise<boolean> {
     for (let i = 0; i < banList.length; i++) {
       const ban = await this.banRepository.findOne({
         relations: ['ban_1', 'ban_2'],

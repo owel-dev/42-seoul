@@ -17,6 +17,7 @@ function SecondAuth() {
       });
     } catch (e) {}
   };
+  
   const submitCode = async () => {
     try {
       const res = await instance.post(

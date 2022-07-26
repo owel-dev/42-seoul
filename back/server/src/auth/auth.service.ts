@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import * as bcrypt from 'bcryptjs';
 import { MailerService } from '@nestjs-modules/mailer';
+import { ResUserNavi } from 'src/users/dto/res-user-navi.dto';
 
 
 let hashedCodes = {};
@@ -118,18 +119,18 @@ export class AuthService {
 		});
 	}
 
-	async validEmail(id: string, code: string): Promise<boolean> {
+	async validEmail(id: string, code: string): Promise<ResUserNavi> {
 		const userFind = await this.userRepository.findOneBy({ intra_id: id });
 		if (!userFind)
 			throw new NotFoundException("잘못된 id 입니다.");
 
-		console.log(code);
 		if (hashedCodes[id] === code) {
 			userFind.is_second_auth = true;
 			await this.userRepository.save(userFind);
 			delete hashedCodes[id];
-			return true;
 		}
-		return false;
+
+		const resDto = new ResUserNavi(userFind);
+		return resDto;
 	}
 }

@@ -10,29 +10,29 @@ import { AuthService } from 'src/auth/auth.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(
-	private readonly usersService: UsersService,
-	) {}
+	constructor(
+		private readonly usersService: UsersService,
+	) { }
 
 	@Post()
 	@UseInterceptors(FileInterceptor('avatar', multerOptions('avatar')))
 	create(
 		@Body() createUserDto: CreateUserDto,
 		@UploadedFile() file: Express.Multer.File
-		) {
-			console.log(createUserDto);
-			return this.usersService.create(createUserDto, file);
-		}
-	
+	) {
+		console.log(createUserDto);
+		return this.usersService.create(createUserDto, file);
+	}
+
 	@Get('/:nickname/mypage')
 	@UseGuards(AuthGuard)
-	findOneMyPage(@Param('nickname') nickName : string) {
+	findOneMyPage(@Param('nickname') nickName: string) {
 		return (this.usersService.findOneMyPage(nickName));
 	}
 
 	@Get('/:nickname/modal')
 	@UseGuards(AuthGuard)
-	findOneModal(@Param('nickname') nickName : string, @Token() token : string) {
+	findOneModal(@Param('nickname') nickName: string, @Token() token: string) {
 		console.log("findOneModal");
 		console.log(nickName, token);
 		return (this.usersService.findOneModal(token, nickName))
@@ -41,7 +41,7 @@ export class UsersController {
 	@UseGuards(AuthGuard)
 	@Get('/navi')
 	findOneNavi(@Token() token) {
-		console.log(token);
+		console.log("token: ", token);
 		return (this.usersService.findOneNavi(token));
 	}
 
@@ -53,14 +53,14 @@ export class UsersController {
 		@Body() updateUserDto: UpdateUserDto,
 		@Headers() header: string,
 		@UploadedFile() file: Express.Multer.File,
-		) {
-			console.log(header);
-			console.log(updateUserDto);
-			console.log(updateUserDto.avatar);
-			console.log(file);
-			return this.usersService.update(nickName, updateUserDto, file);
-		}
-	
+	) {
+		console.log(header);
+		console.log(updateUserDto);
+		console.log(updateUserDto.avatar);
+		console.log(file);
+		return this.usersService.update(nickName, updateUserDto, file);
+	}
+
 	@UseGuards(AuthGuard)
 	@Delete(':nickname')
 	delete(@Param() nickName: string) {

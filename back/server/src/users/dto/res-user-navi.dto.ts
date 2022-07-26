@@ -4,9 +4,11 @@ export class ResUserNavi {
 	nickName: string;
 	avatar: string;
 	admin: boolean;
-	constructor (user: User) {
+	isSecondAuth: boolean;
+	constructor(user: User) {
 		this.nickName = user.nickname;
 		this.avatar = user.avatar;
 		this.admin = true;
+		this.isSecondAuth = user.is_second_auth;
 	}
 }

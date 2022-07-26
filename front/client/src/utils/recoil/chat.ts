@@ -5,3 +5,8 @@ export const chatScrollState = atom<boolean>({
   key: `chatScrollState/${v1()}`,
   default: false,
 });
+
+export const messageState = atom<string>({
+  key: `messageState/${v1()}`,
+  default: '',
+});

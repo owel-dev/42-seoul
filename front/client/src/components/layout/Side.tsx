@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { socket } from 'components/layout/Layout';
 import { myDataState } from 'utils/recoil/myData';
+import { messageState } from 'utils/recoil/chat';
 import { chat } from 'types/chatTypes';
 import UserList from './UserList';
 import ChatList from './ChatList';
@@ -10,9 +11,14 @@ import 'styles/layout/Side.css';
 function Side() {
   const myData = useRecoilValue(myDataState);
   const chatScroll = useRef<HTMLInputElement>(null);
-  const [message, setMessage] = useState('');
+  const chatInput = useRef<HTMLInputElement>(null);
+  const [message, setMessage] = useRecoilState(messageState);
   const [scrollState, setScrollState] = useState(true); // 자동 스크롤 여부
   const [chatList, setChatList] = useState<chat[]>([]); // 채팅 텍스트 list
+
+  useEffect(() => {
+    if (message.length) chatInput.current?.focus();
+  }, [message]);
 
   useEffect(() => {
     socket.on('message', (data) => {
@@ -24,12 +30,16 @@ function Side() {
     }
   });
 
-  const sendMessgae = () => {
-    if (message.length) {
+  const sendMessage = () => {
+    if (message.indexOf('#') === 0 && message.indexOf(' ') !== -1) {
+      socket.emit('direct-message', {
+        nickName: message.slice(1, message.indexOf(' ')),
+        message: message.slice(message.indexOf(' ') + 1),
+      });
+    } else if (message.length) {
       socket.emit('message', {
         nickName: myData.nickName,
         message: message,
-        isDM: false,
       });
     }
     setMessage('');
@@ -77,26 +87,21 @@ function Side() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              {
-                message.length &&
-                  socket.emit('message', {
-                    nickName: myData.nickName,
-                    message: message,
-                  });
-                setMessage('');
-              }
+              sendMessage();
+              setMessage('');
             }}
           >
             <input
               className='message'
               value={message}
+              ref={chatInput}
               onChange={(e) => setMessage(e.target.value)}
             />
             <input
               type='button'
               value='보내기'
               className='button'
-              onClick={sendMessgae}
+              onClick={sendMessage}
             />
           </form>
         </div>

@@ -1,13 +1,23 @@
-import { useEffect } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { socket } from 'components/layout/Layout';
 import { modalState } from 'utils/recoil/modal';
 import { channelState } from 'utils/recoil/gameState';
+import { myDataState } from 'utils/recoil/myData';
 import GameModule from 'components/game/GameModule';
 import 'styles/game/Game.css';
 
 function Game() {
   const setModalInfo = useSetRecoilState(modalState);
+  const myData = useRecoilValue(myDataState);
   const [channelInfo] = useRecoilState(channelState);
+  const [admin, setAdmin] = useState<string>('');
+
+  useEffect(() => {
+    socket.on('admin-changed', (data) => {
+      setAdmin(data);
+    });
+  });
 
   useEffect(() => {
     setModalInfo({ modalName: null });
@@ -15,12 +25,14 @@ function Game() {
 
   return (
     <div className='game-area'>
-      <button
-        onClick={() => setModalInfo({ modalName: 'GAME-SETTING' })}
-        id='game-setting'
-      >
-        Game Setting
-      </button>
+      {admin === myData.nickName && (
+        <button
+          onClick={() => setModalInfo({ modalName: 'GAME-SETTING' })}
+          id='game-setting'
+        >
+          Game Setting
+        </button>
+      )}
       <div className='player-game-area'>
         <div className='player'>
           <div>Player1</div>

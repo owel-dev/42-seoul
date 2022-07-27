@@ -1,15 +1,15 @@
-import { socket } from 'components/layout/Layout';
 import { useEffect, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { modalState } from 'utils/recoil/modal';
+import { socket } from 'components/layout/Layout';
 
-export type User = {
+type userListType = {
   nickName: string;
   admin: boolean;
 };
 
 function UserList() {
-  const [userList, setUserList] = useState<User[]>();
+  const [userList, setUserList] = useState<userListType[]>();
   const setModalInfo = useSetRecoilState(modalState);
 
   useEffect(() => {

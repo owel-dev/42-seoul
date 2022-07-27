@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { socket } from 'components/layout/Layout';
 import { modalState } from 'utils/recoil/modal';
 import { channelState } from 'utils/recoil/gameState';
+import { myDataState } from 'utils/recoil/myData';
 import GameModule from 'components/game/GameModule';
 import 'styles/game/Game.css';
-import { socket } from 'components/layout/Layout';
-import { myDataState } from 'utils/recoil/myData';
 
 function Game() {
   const setModalInfo = useSetRecoilState(modalState);

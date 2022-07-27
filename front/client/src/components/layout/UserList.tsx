@@ -3,8 +3,13 @@ import { useEffect, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { modalState } from 'utils/recoil/modal';
 
+export type User = {
+  nickName: string;
+  admin: boolean;
+};
+
 function UserList() {
-  const [userList, setUserList] = useState<string[]>();
+  const [userList, setUserList] = useState<User[]>();
   const setModalInfo = useSetRecoilState(modalState);
 
   useEffect(() => {
@@ -23,9 +28,10 @@ function UserList() {
         <div
           key={index}
           className='userList'
-          onClick={() => ProfileModalOpen(element)}
+          onClick={() => ProfileModalOpen(element.nickName)}
         >
-          {element}
+          {element.nickName}
+          {element.admin && ' 👑'}
         </div>
       ))}
     </div>

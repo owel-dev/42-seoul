@@ -7,6 +7,7 @@ import { myDataState } from 'utils/recoil/myData';
 import { messageState } from 'utils/recoil/chat';
 import instance from 'utils/axios';
 import 'styles/modal/Modal.css';
+import { socket } from 'components/layout/Layout';
 
 function ProfileModal() {
   const myData = useRecoilValue(myDataState);
@@ -81,6 +82,18 @@ function ProfileModal() {
     }
   };
 
+  const mute = () => {
+    socket.emit('mute', userData?.nickName);
+    alert(`${userData?.nickName}이 30초간 음소거 되었습니다.`);
+    setModalInfo({ modalName: null });
+  };
+
+  const setAdmin = () => {
+    socket.emit('admin', userData?.nickName);
+    alert(`${userData?.nickName}에게 방장을 위임하였습니다.`);
+    setModalInfo({ modalName: null });
+  };
+
   const sendDM = () => {
     setMessage(`#${userData?.nickName} `);
     setModalInfo({ modalName: null });
@@ -117,6 +130,16 @@ function ProfileModal() {
                     onClick={userData.ban ? banCancel : banUser}
                     value={userData.ban ? '차단해제' : '차단하기'}
                   />
+                  {myData.admin && (
+                    <>
+                      <input type='button' onClick={mute} value='음소거' />
+                      <input
+                        type='button'
+                        onClick={setAdmin}
+                        value='방장위임'
+                      />
+                    </>
+                  )}
                 </section>
               )}
             </>

@@ -12,7 +12,7 @@ function AvatarChangeModal() {
   const [previewImg, setPreviewImg] = useState(myData.avatar);
   const setModalInfo = useSetRecoilState(modalState);
 
-  const CloseModal = () => {
+  const closeModal = () => {
     setModalInfo({ modalName: null });
   };
 
@@ -23,7 +23,7 @@ function AvatarChangeModal() {
     }
   }, [isChange]);
 
-  const UploadAvatar = (e: any) => {
+  const uploadAvatar = (e: any) => {
     const rd = new FileReader();
 
     if (e.target.files[0] !== null) {
@@ -38,7 +38,7 @@ function AvatarChangeModal() {
     }
   };
 
-  const PostAvatar = () => {
+  const postAvatar = () => {
     const fetchData = async () => {
       try {
         await axios.patch(
@@ -62,7 +62,7 @@ function AvatarChangeModal() {
       <div className='modalTitle'>avatar change</div>
       <div className='modalContent'>
         <div>
-          <input type='file' accept='image/*' onChange={UploadAvatar} />
+          <input type='file' accept='image/*' onChange={uploadAvatar} />
           <img
             src={previewImg}
             alt='프로필 이미지'
@@ -72,10 +72,10 @@ function AvatarChangeModal() {
         </div>
       </div>
       <div className='modalSelect'>
-        <button onClick={PostAvatar} className='modalButton'>
+        <button onClick={postAvatar} className='modalButton'>
           change
         </button>
-        <button onClick={CloseModal} className='modalButton'>
+        <button onClick={closeModal} className='modalButton'>
           close
         </button>
       </div>

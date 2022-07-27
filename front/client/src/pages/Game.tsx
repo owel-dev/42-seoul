@@ -15,31 +15,23 @@ function Game() {
 
   return (
     <div className='game-area'>
-      <button onClick={() => setModalInfo({ modalName: 'GAME-SETTING' })}>
-        채널설정
+      <button
+        onClick={() => setModalInfo({ modalName: 'GAME-SETTING' })}
+        id='game-setting'
+      >
+        Game Setting
       </button>
       <div className='player-game-area'>
         <div className='player'>
-          플레이어1
-          <img
-            src={'https://cdn.intra.42.fr/users/norminet.jpeg'}
-            alt=''
-            className='player-image'
-          ></img>
-          <label>{channelInfo.firstPlayer}</label>
+          <div>Player1</div>
+          <div className='player-name'>{channelInfo.firstPlayer}</div>
         </div>
         <div className='game-content'>
-          게임영역
           <GameModule />
         </div>
         <div className='player'>
-          플레이어2
-          <img
-            src={'https://cdn.intra.42.fr/users/norminet.jpeg'}
-            alt=''
-            className='player-image'
-          ></img>
-          <label>{channelInfo.secondPlayer}</label>
+          <div>Player2</div>
+          <div className='player-name'>{channelInfo.secondPlayer}</div>
         </div>
       </div>
     </div>

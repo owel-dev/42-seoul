@@ -4,6 +4,7 @@ import { useSetRecoilState } from 'recoil';
 import { channelTypes } from 'types/LobbyTypes';
 import { modalState } from 'utils/recoil/modal';
 import { channelState } from 'utils/recoil/gameState';
+import 'styles/Lobby/Lobby.css';
 
 function ChannelListRow({ props }: { props: channelTypes }) {
   const { channelId, player1, player2, curNumUser, password } = props;
@@ -28,29 +29,25 @@ function ChannelListRow({ props }: { props: channelTypes }) {
   }
 
   return (
-    <div className='channel-list-row'>
+    <div className='channelListRow'>
       {password !== '' ? (
-        <span
-          style={{ backgroundColor: '#ffff66' }}
-          onClick={activePasswordSubmitModal}
-        >
+        <span onClick={activePasswordSubmitModal} className='rowFirstElement'>
           입장{' '}
         </span>
       ) : (
-        <Link to={'/channel/' + channelId}>
-          <span
-            style={{ backgroundColor: '#ffff66' }}
-            onClick={spectateRequest}
-          >
+        <Link to={'/channel/' + channelId} className='rowFirstElement'>
+          <span onClick={spectateRequest} className='rowFirstElement'>
             입장{' '}
           </span>
         </Link>
       )}
-      <span>player1 : {player1} </span>
-      <span>player2 : {player2} </span>
-      <span>Headcount : {curNumUser} </span>
-      <span>비밀방 : </span>
-      {password ? <span>🔒</span> : <></>}
+      <span className='rowElseElement'>player1 : {player1} </span>
+      <span className='rowElseElement'>player2 : {player2} </span>
+      <span className='blank'></span>
+      <span className='rowElseElement'>인원 : {curNumUser} </span>
+      <span className='rowElseElement'>
+        비밀방 :{password ? <span>🔒</span> : <></>}
+      </span>
     </div>
   );
 }

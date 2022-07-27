@@ -20,10 +20,14 @@ function UserInfo() {
   return (
     <div className='user-info'>
       <div id='user-info-left'>
-        <img src={profileData?.avatar} id='avatar' alt='프로필사진'></img>
-        {myData.nickName === profileData.nickName ? (
-          <button onClick={openAvatarModal}>change</button>
-        ) : null}
+        <img src={profileData?.avatar} id='user-avatar' alt='프로필사진'></img>
+        <div>
+          {myData.nickName === profileData.nickName ? (
+            <button onClick={openAvatarModal} className='userChangeButton'>
+              change
+            </button>
+          ) : null}
+        </div>
       </div>
       <div id='user-info-right'>
         <div className='user-info-line'>
@@ -34,7 +38,9 @@ function UserInfo() {
           <span className='user-label'>nickname </span>
           <span> {profileData?.nickName}</span>
           {myData.nickName === profileData.nickName ? (
-            <button onClick={openNickModal}>change</button>
+            <button onClick={openNickModal} className='userChangeButton'>
+              change
+            </button>
           ) : null}
         </div>
         <div className='user-info-line'>

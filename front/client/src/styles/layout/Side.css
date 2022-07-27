@@ -5,8 +5,7 @@
   float: right;
   display: flex;
   flex-direction: column;
-  margin-bottom: 2%;
-  height: 91vh;
+  height: 90vh;
   width: 30vh;
 }
 
@@ -109,5 +108,10 @@
 
 .button {
   height: 1.7rem;
-  width: auto;
+  width: 3rem;
+}
+
+.userlist-row {
+  height: 2rem;
+  margin-left: 1rem;
 }

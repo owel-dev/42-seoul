@@ -1,21 +1,42 @@
 .modal {
   background-color: white;
-  border: 1px black solid;
   position: absolute;
-  height: 200px;
-  width: 150px;
+  min-width: 150px;
+  min-height: 220px;
+
+  height: 30vh;
+  width: 12.5vw;
   color: black;
 }
 
-.modal-title {
-  background-color: aqua;
+.modalTitle {
+  background-color: #00babc;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  height: 15%;
+}
+.modalContent {
+  padding: 5%;
+  overflow: hidden;
 }
 
-.modal-select {
-  background-color: aquamarine;
+.modalSelect {
   position: absolute;
   bottom: 0px;
+  height: 15%;
   width: inherit;
+  text-align: right;
+  white-space: nowrap;
+}
+.modalButton {
+  background-color: white;
+  margin: 2%;
+  color: #00babc;
+  border: 1px rgb(196, 196, 196) solid;
+  height: 80%;
+  font-size: 1rem;
 }
 
 .selectButton {

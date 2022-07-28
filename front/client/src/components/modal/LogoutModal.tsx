@@ -2,6 +2,7 @@ import { useSetRecoilState } from 'recoil';
 import { modalState } from 'utils/recoil/modal';
 import { loginState } from 'utils/recoil/login';
 import 'styles/modal/LogoutModal.css';
+import { socket } from 'components/layout/Layout';
 
 function LogoutModal() {
   const setModalInfo = useSetRecoilState(modalState);
@@ -12,6 +13,7 @@ function LogoutModal() {
   };
 
   const onLogout = () => {
+    socket.disconnect();
     localStorage.removeItem('trans-token');
     setIsLoggedIn(false);
     setModalInfo({ modalName: null });

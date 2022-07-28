@@ -19,7 +19,7 @@ function App() {
                 <Route path='/ranking' element={<Rank />} />
                 <Route path='/users/:nickName/mypage' element={<UserPage />} />
                 <Route path='/' element={<Lobby />} />
-                <Route path='/game/:channelId' element={<Game />} />
+                <Route path='/channel/:channelId' element={<Game />} />
               </Routes>
             </Layout>
             <ModalProvider />

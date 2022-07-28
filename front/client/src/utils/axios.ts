@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-// const baseURL: any = `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}`;
-const baseURL: any = `http://10.19.236.57:3000`;
+const baseURL: any = `${process.env.REACT_APP_SERVERIP}`;
 
 const instance = axios.create({ baseURL });
 

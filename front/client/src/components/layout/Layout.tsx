@@ -9,8 +9,10 @@ import instance from 'utils/axios';
 import SecondAuth from 'pages/SecondAuth';
 import 'styles/layout/Content.css';
 
-export const socket = io(
-  `http://10.19.236.57:3000?token=${window.localStorage.getItem('trans-token')}`
+export let socket = io(
+  `${process.env.REACT_APP_SERVERIP}?token=${window.localStorage.getItem(
+    'trans-token'
+  )}`
 );
 
 type LayoutProps = {
@@ -21,8 +23,24 @@ function Layout({ children }: LayoutProps) {
   const [myData, setMyData] = useRecoilState<myData>(myDataState);
 
   useEffect(() => {
+    if (socket.connected === false) {
+      socket = io(
+        `${process.env.REACT_APP_SERVERIP}?token=${window.localStorage.getItem(
+          'trans-token'
+        )}`
+      );
+    }
+  }, []);
+
+  useEffect(() => {
     getMyData();
   }, []);
+
+  useEffect(() => {
+    if (!window.localStorage.getItem('trans-token')) {
+      window.location.reload();
+    }
+  }, [socket]);
 
   const getMyData = async () => {
     try {
@@ -31,17 +49,19 @@ function Layout({ children }: LayoutProps) {
     } catch (e) {}
   };
 
-  return myData?.isSecondAuth ? (
+  //return myData?.isSecondAuth ? (
+  return (
     <div>
       <Nav nickName={myData?.nickName} avatar={myData?.avatar} />
       <Side />
       <div className='content'>{children}</div>
     </div>
-  ) : (
-    <div>
-      <SecondAuth />
-    </div>
   );
+  // ) : (
+  //   <div>
+  //     <SecondAuth />
+  //   </div>
+  // );
 }
 
 export default Layout;

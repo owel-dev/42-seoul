@@ -12,11 +12,10 @@ function Nav(props: { nickName: string; avatar: string }) {
         <Link to='/'>
           <img src='/42.png' width='80vw' alt='logoImg' id='logo' />
         </Link>
-        <div id='blank'>
-          <Link to='/ranking'>
-            <img src='/ranking.png' alt='rankImg' id='ranking'></img>
-          </Link>
-        </div>
+        <div id='blank' />
+        <Link to='/ranking'>
+          <img src='/ranking.png' alt='rankImg' id='ranking'></img>
+        </Link>
         <Link to={`/users/${props.nickName}/mypage`} id='avatar'>
           <img
             src={props.avatar}

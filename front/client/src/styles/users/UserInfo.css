@@ -3,7 +3,6 @@
   margin: 2%;
   height: 25vh;
   display: flex;
-  border: 1px solid black;
   color: black;
 }
 
@@ -28,7 +27,8 @@
 }
 
 #user-avatar {
-  height: 80%;
+  height: 18vh;
+  width: 15vw;
   object-fit: cover;
 }
 .userChangeButton {

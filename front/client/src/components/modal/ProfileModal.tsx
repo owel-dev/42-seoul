@@ -108,35 +108,54 @@ function ProfileModal() {
             <section>
               <span>{modalInfo.user}</span>
               <Link to={`/users/${modalInfo.user}/mypage`}>
-                <input type='button' onClick={moveProfile} value='프로필' />
+                <input
+                  type='button'
+                  onClick={moveProfile}
+                  value='프로필'
+                  className='modalButtonInner'
+                />
               </Link>
               <br />
               <span>{`${userData.win} 승`} </span>
               <span>{`${userData.lose} 패`} </span>
               <span>{`승률 ${userData.win}%`}</span>
             </section>
+            <br />
             <>
               {userData.nickName !== myData.nickName && (
                 <section>
-                  <button>같이하기</button>
-                  <input type='button' onClick={sendDM} value='DM보내기' />
+                  <button className='modalButtonInner'>같이하기</button>
                   <input
                     type='button'
+                    onClick={sendDM}
+                    value='귓말하기'
+                    className='modalButtonInner'
+                  />
+                  <input
+                    type='button'
+                    className='modalButtonInner'
                     onClick={userData.friend ? delFriend : addFriend}
                     value={userData.friend ? '친구삭제' : '친구추가'}
                   />
                   <input
                     type='button'
+                    className='modalButtonInner'
                     onClick={userData.ban ? banCancel : banUser}
                     value={userData.ban ? '차단해제' : '차단하기'}
                   />
                   {myData.admin && (
                     <>
-                      <input type='button' onClick={mute} value='음소거' />
+                      <input
+                        type='button'
+                        onClick={mute}
+                        value='음소거'
+                        className='modalButtonInner'
+                      />
                       <input
                         type='button'
                         onClick={setAdmin}
                         value='방장위임'
+                        className='modalButtonInner'
                       />
                     </>
                   )}

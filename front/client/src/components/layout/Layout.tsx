@@ -49,19 +49,21 @@ function Layout({ children }: LayoutProps) {
     } catch (e) {}
   };
 
-  // return myData?.isSecondAuth ? (
-  return (
+  return myData?.isSecondAuth ? (
     <div>
       <Nav nickName={myData?.nickName} avatar={myData?.avatar} />
       <Side />
       <div className='content'>{children}</div>
     </div>
+  ) : (
+    <>
+      {myData.nickName && (
+        <div>
+          <SecondAuth />
+        </div>
+      )}
+    </>
   );
-  // ) : (
-  //   <div>
-  //     <SecondAuth />
-  //   </div>
-  // );
 }
 
 export default Layout;

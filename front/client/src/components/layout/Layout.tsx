@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { myDataState } from 'utils/recoil/myData';
 import { myData } from 'types/myDataTypes';
@@ -42,13 +42,10 @@ function Layout({ children }: LayoutProps) {
     getMyData();
   }, []);
 
-  const [loading, setLoading] = useState<boolean>(false);
-
   const getMyData = async () => {
     try {
       const res = await instance.get(`/users/navi`);
       setMyData(res?.data);
-      setLoading(true);
     } catch (e) {}
   };
 
@@ -58,12 +55,14 @@ function Layout({ children }: LayoutProps) {
       <Side />
       <div className='content'>{children}</div>
     </div>
-  ) : loading ? (
-    <div>
-      <SecondAuth />
-    </div>
   ) : (
-    <div>로딩중입니다</div>
+    <>
+      {myData.nickName && (
+        <div>
+          <SecondAuth />
+        </div>
+      )}
+    </>
   );
 }
 

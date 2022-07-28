@@ -128,7 +128,7 @@ function ProfileModal() {
                   <input
                     type='button'
                     onClick={sendDM}
-                    value='DM보내기'
+                    value='귓말하기'
                     className='modalButtonInner'
                   />
                   <input

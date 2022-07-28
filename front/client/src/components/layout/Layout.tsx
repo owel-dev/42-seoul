@@ -33,14 +33,14 @@ function Layout({ children }: LayoutProps) {
   }, []);
 
   useEffect(() => {
-    getMyData();
-  }, []);
-
-  useEffect(() => {
     if (!window.localStorage.getItem('trans-token')) {
       window.location.reload();
     }
   }, [socket]);
+
+  useEffect(() => {
+    getMyData();
+  }, []);
 
   const getMyData = async () => {
     try {
@@ -49,7 +49,7 @@ function Layout({ children }: LayoutProps) {
     } catch (e) {}
   };
 
-  //return myData?.isSecondAuth ? (
+  // return myData?.isSecondAuth ? (
   return (
     <div>
       <Nav nickName={myData?.nickName} avatar={myData?.avatar} />

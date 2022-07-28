@@ -14,9 +14,14 @@ import { User } from './entities/user.entity';
 import { Friend } from 'src/friend/entities/friend.entity';
 import { Ban } from 'src/ban/entities/ban.entity';
 import { Match } from 'src/match/entities/match.entity';
+import { ChatModule } from 'src/chat/chat.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Friend, Ban, Match]), AuthModule],
+  imports: [
+    TypeOrmModule.forFeature([User, Friend, Ban, Match]),
+    AuthModule,
+    forwardRef(() => ChatModule),
+  ],
   controllers: [UsersController],
   providers: [UsersService],
   exports: [UsersService],

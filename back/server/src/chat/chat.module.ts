@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
 import { AuthService } from 'src/auth/auth.service';
@@ -11,7 +11,12 @@ import { ChatGateway } from './chat.gateway';
 import { ChatService } from './chat.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), AuthModule, UsersModule],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    AuthModule,
+    forwardRef(() => UsersModule),
+  ],
   providers: [ChatGateway, ChatService],
+  exports: [ChatService],
 })
 export class ChatModule {}

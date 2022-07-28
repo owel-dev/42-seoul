@@ -8,6 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
 import { Ban } from 'src/ban/entities/ban.entity';
+import { ChatService } from 'src/chat/chat.service';
 import { Friend } from 'src/friend/entities/friend.entity';
 import { Stat } from 'src/stats/entities/stat.entity';
 import { Repository } from 'typeorm';
@@ -64,6 +65,7 @@ export class UsersService {
     const resUserModal = new ResUserModal(userRepo);
     resUserModal.setFriend = await this.isFriend(reqNick, userRepo.friend_2);
     resUserModal.setBan = await this.isBan(reqNick, userRepo.ban_2);
+    resUserModal.setAdmin = await this.isAdmin(reqNick);
     console.log(resUserModal.friend);
     console.log(resUserModal.ban);
     return resUserModal;
@@ -103,6 +105,16 @@ export class UsersService {
       if (ban.ban_1.nickname == requester) return true;
     }
     return false;
+  }
+
+  async isAdmin(requester: string): Promise<boolean> {
+    const findUser = await this.userRepository.findOneBy({
+      nickname: requester,
+    });
+    const curChannel = ChatService.users.find(
+      (user) => user.intraId === findUser.intra_id,
+    ).curChannel;
+    return ChatService.channels.get(curChannel).admin === findUser.intra_id;
   }
 
   create(createUserDto: CreateUserDto, file: Express.Multer.File) {

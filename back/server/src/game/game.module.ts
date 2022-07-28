@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
 import { GetChannelDto } from 'src/channel/dto/get-channelList.dto';
+import { ChatModule } from 'src/chat/chat.module';
 import { GameGateway } from './game.gateway';
 import { GameService } from './game.service';
 
 @Module({
-    imports: [],
-    controllers: [],
-    providers: [GameGateway, GameService, GetChannelDto],
+  imports: [ChatModule],
+  controllers: [],
+  providers: [GameGateway, GameService, GetChannelDto],
 })
-export class GameModule {
-
-}
+export class GameModule {}

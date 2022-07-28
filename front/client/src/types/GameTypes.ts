@@ -1,7 +1,7 @@
 export type channelType = {
-  channelId: string | null;
-  firstPlayer: string | null;
-  secondPlayer: string | null;
+  channelId: string;
+  firstPlayer: string;
+  secondPlayer: string;
 };
 
 export type gameType = {

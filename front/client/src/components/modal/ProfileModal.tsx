@@ -5,14 +5,16 @@ import { modalState } from 'utils/recoil/modal';
 import { userData } from 'types/userTypes';
 import { myDataState } from 'utils/recoil/myData';
 import { messageState } from 'utils/recoil/chat';
+import { socket } from 'components/layout/Layout';
+import { channelState } from 'utils/recoil/gameState';
 import instance from 'utils/axios';
 import 'styles/modal/Modal.css';
-import { socket } from 'components/layout/Layout';
 
 function ProfileModal() {
   const myData = useRecoilValue(myDataState);
   const [userData, setUserData] = useState<userData>();
   const [modalInfo, setModalInfo] = useRecoilState(modalState);
+  const [channelInfo, setChannelInfo] = useRecoilState(channelState);
   const setMessage = useSetRecoilState(messageState);
 
   useEffect(() => {
@@ -27,6 +29,14 @@ function ProfileModal() {
   };
 
   const moveProfile = () => {
+    if (channelInfo.channelId !== '') {
+      setChannelInfo({
+        channelId: '',
+        firstPlayer: '',
+        secondPlayer: '',
+      });
+      socket.emit('join-channel', { channelId: '0' });
+    }
     setModalInfo({ modalName: null });
   };
 

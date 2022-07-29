@@ -39,7 +39,7 @@ export class ChatGateway
 
   @SubscribeMessage('create-channel')
   createChannel(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
-    return this.chatService.createChannel(client, this.server);
+    return this.chatService.createChannel(client, data.channelId, this.server);
   }
 
   @SubscribeMessage('join-channel')
@@ -67,8 +67,8 @@ export class ChatGateway
     return this.chatService.muteUser(client, data, this.server);
   }
 
-  @SubscribeMessage('unmute')
-  unmuteUser(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
-    return this.chatService.unmuteUser(client, data, this.server);
+  @SubscribeMessage('admin')
+  setAdmin(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
+    return this.chatService.setAdmin(client, data, this.server);
   }
 }

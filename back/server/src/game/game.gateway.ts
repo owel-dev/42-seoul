@@ -1,4 +1,6 @@
 import {
+  ConnectedSocket,
+  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
@@ -14,13 +16,12 @@ import { GameService } from './game.service';
     origin: '*',
   },
 })
-
-export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
+export class GameGateway
+  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
+{
   @WebSocketServer()
   server: Server;
-  constructor(
-    private readonly gameService: GameService,
-  ) { }
+  constructor(private readonly gameService: GameService) {}
 
   afterInit() {
     this.gameService.setGameData(this.server);
@@ -36,12 +37,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
   @SubscribeMessage('match-request')
   matchRequest(socket: Socket, data: any): void {
-    this.gameService.matchRequest(socket, data);
+    this.gameService.matchRequest(socket, data, this.server);
   }
 
   @SubscribeMessage('spectate-request')
   spectateRequest(socket: Socket, data: any): void {
-    this.gameService.spectateRequest(socket, data);
+    this.gameService.spectateRequest(socket, data, this.server);
   }
 
   @SubscribeMessage('gamelist-request')
@@ -63,5 +64,4 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   getPing(soket: Socket) {
     return true;
   }
-
 }

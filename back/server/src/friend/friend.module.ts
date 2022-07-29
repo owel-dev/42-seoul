@@ -15,6 +15,6 @@ import { User } from 'src/users/entities/user.entity';
   imports: [TypeOrmModule.forFeature([Friend, User]), AuthModule],
   controllers: [FriendController],
   providers: [FriendService],
-  exports: [],
+  exports: [FriendService],
 })
 export class FriendModule {}

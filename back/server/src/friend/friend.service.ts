@@ -25,23 +25,22 @@ export class FriendService {
     private readonly authService: AuthService,
   ) {}
 
-  async create(token: string, nickName: string) {
+  async create(token: string, createFriendDto: CreateFriendDto) {
     console.log('Friend created');
-    const reqUser = await this.authService.getUserNickByToken(token);
     const friend1 = await this.userRepository.findOne({
-      where: { nickname: reqUser },
+      where: { nickname: createFriendDto.player1 },
     });
     const friend2 = await this.userRepository.findOne({
-      where: { nickname: nickName },
+      where: { nickname: createFriendDto.player2 },
     });
-    if (friend1 === null)
+    if (!friend1)
       throw new HttpException(
-        `${reqUser}: Cannot find user`,
+        `${createFriendDto.player1}: Cannot find user`,
         HttpStatus.BAD_REQUEST,
       );
-    if (friend2 === null)
+    if (!friend2)
       throw new HttpException(
-        `${nickName}: Cannot find user`,
+        `${createFriendDto.player2}: Cannot find user`,
         HttpStatus.BAD_REQUEST,
       );
 

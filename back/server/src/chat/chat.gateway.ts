@@ -71,4 +71,12 @@ export class ChatGateway
   setAdmin(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
     return this.chatService.setAdmin(client, data, this.server);
   }
+
+  @SubscribeMessage('friend-start')
+  updateFriendList(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: any,
+  ) {
+    return this.chatService.updateFriendList(client, data, this.server);
+  }
 }

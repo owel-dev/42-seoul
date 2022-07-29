@@ -81,8 +81,6 @@ function ProfileModal() {
       }
       setModalInfo({ modalName: null });
     }
-    if (window.location.pathname === `/users/${myData.nickName}/mypage`)
-      window.location.reload();
   };
 
   const delFriend = async () => {
@@ -103,8 +101,6 @@ function ProfileModal() {
       }
       setModalInfo({ modalName: null });
     }
-    if (window.location.pathname === `/users/${myData.nickName}/mypage`)
-      window.location.reload();
   };
 
   const banUser = async () => {

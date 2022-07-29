@@ -3,19 +3,25 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { modalState } from 'utils/recoil/modal';
 import { channelState } from 'utils/recoil/gameState';
 import { socket } from './Layout';
+import { friendState } from 'utils/recoil/friend';
 import 'styles/layout/Nav.css';
 
 function Nav(props: { nickName: string; avatar: string }) {
   const setModalInfo = useSetRecoilState(modalState);
   const [channelInfo, setChannelInfo] = useRecoilState(channelState);
+  const [friend, setFriend] = useRecoilState(friendState);
 
-  const exitChannel = () => {
+  const movePage = () => {
     if (channelInfo.channelId !== '') {
       setChannelInfo({
         channelId: '',
         firstPlayer: '',
         secondPlayer: '',
       });
+      if (friend) {
+        setFriend(false);
+        socket.emit('friend-end');
+      }
       socket.emit('join-channel', { channelId: '0' });
     }
   };
@@ -29,7 +35,7 @@ function Nav(props: { nickName: string; avatar: string }) {
             width='80vw'
             alt='logoImg'
             id='logo'
-            onClick={exitChannel}
+            onClick={movePage}
           />
         </Link>
         <div id='blank' />
@@ -38,7 +44,7 @@ function Nav(props: { nickName: string; avatar: string }) {
             src='/ranking.png'
             alt='rankImg'
             id='ranking'
-            onClick={exitChannel}
+            onClick={movePage}
           />
         </Link>
         <Link to={`/users/${props.nickName}/mypage`} id='avatar'>
@@ -48,7 +54,7 @@ function Nav(props: { nickName: string; avatar: string }) {
             width='75vw'
             alt='avatar'
             id='avatar-image'
-            onClick={exitChannel}
+            onClick={movePage}
           />
         </Link>
         <div>

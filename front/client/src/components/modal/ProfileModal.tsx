@@ -7,6 +7,7 @@ import { myDataState } from 'utils/recoil/myData';
 import { messageState } from 'utils/recoil/chat';
 import { socket } from 'components/layout/Layout';
 import { channelState } from 'utils/recoil/gameState';
+import { friendState } from 'utils/recoil/friend';
 import instance from 'utils/axios';
 import 'styles/modal/Modal.css';
 
@@ -15,6 +16,7 @@ function ProfileModal() {
   const [userData, setUserData] = useState<userData>();
   const [modalInfo, setModalInfo] = useRecoilState(modalState);
   const [channelInfo, setChannelInfo] = useRecoilState(channelState);
+  const [friend, setFriend] = useRecoilState(friendState);
   const setMessage = useSetRecoilState(messageState);
 
   useEffect(() => {
@@ -36,6 +38,10 @@ function ProfileModal() {
         secondPlayer: '',
       });
       socket.emit('join-channel', { channelId: '0' });
+    }
+    if (friend) {
+      setFriend(false);
+      socket.emit('friend-end');
     }
     setModalInfo({ modalName: null });
   };

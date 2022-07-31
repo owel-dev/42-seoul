@@ -7,6 +7,7 @@ import ProfileModal from './ProfileModal';
 import LogoutModal from './LogoutModal';
 import ChannelSettingModal from './ChannelSettingModal';
 import PasswordSubmitModal from './PasswordSubmitModal';
+import { socket } from 'components/layout/Layout';
 import 'styles/modal/Modal.css';
 
 export default function ModalProvider() {
@@ -16,6 +17,7 @@ export default function ModalProvider() {
     if (e.target instanceof HTMLDivElement && e.target.id === 'modalOutside') {
       setModalInfo({ modalName: null });
     }
+    if (modalInfo.modalName === 'MAIN-START') socket.emit('match-cancel');
   };
 
   const findModal = () => {

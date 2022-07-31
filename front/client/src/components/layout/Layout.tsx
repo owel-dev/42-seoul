@@ -9,11 +9,7 @@ import instance from 'utils/axios';
 import SecondAuth from 'pages/SecondAuth';
 import 'styles/layout/Content.css';
 
-export let socket = io(
-  `${process.env.REACT_APP_SERVERIP}?token=${window.localStorage.getItem(
-    'trans-token'
-  )}`
-);
+export let socket = io();
 
 type LayoutProps = {
   children: React.ReactNode;

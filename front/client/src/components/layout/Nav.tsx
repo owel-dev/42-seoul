@@ -22,7 +22,7 @@ function Nav(props: { nickName: string; avatar: string }) {
         setFriend(false);
         socket.emit('friend-end');
       }
-      socket.emit('join-channel', { channelId: '0' });
+      socket.emit('leave-channel');
     }
   };
 

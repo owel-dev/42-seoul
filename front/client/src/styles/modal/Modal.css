@@ -38,6 +38,10 @@
   height: 80%;
   font-size: 1rem;
 }
+.modalButton:disabled {
+  background-color: rgb(190, 190, 190);
+  color: grey;
+}
 .modalButtonInner {
   background-color: #00babc;
   margin: 2%;

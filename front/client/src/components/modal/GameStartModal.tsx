@@ -17,7 +17,13 @@ function GameStartModal() {
   const setModalInfo = useSetRecoilState(modalState);
   const myData = useRecoilValue<myData>(myDataState);
 
+  const [disable, SetDisable] = useState<boolean>(false);
+
   function closeModal() {
+    if (matchWait === true) {
+      socket.emit('match-cancel');
+    }
+
     setModalInfo({ modalName: null });
   }
 
@@ -26,9 +32,10 @@ function GameStartModal() {
   }
 
   function matchRequest() {
+    SetDisable(true);
     socket.emit('match-request', {
       mode: radioValue,
-      username: myData.nickName,
+      nickName: myData.nickName,
       password: inputValue,
     });
     setMatchWait(true);
@@ -70,7 +77,11 @@ function GameStartModal() {
             </div>
           )}
           <div className='modalSelect'>
-            <button onClick={matchRequest} className='modalButton'>
+            <button
+              disabled={disable}
+              onClick={matchRequest}
+              className='modalButton'
+            >
               regist
             </button>
             <button onClick={closeModal} className='modalButton'>

@@ -5,18 +5,18 @@ import { UpdateChannelDto } from './dto/update-channel.dto';
 
 @Controller('channel')
 export class ChannelController {
-  constructor(private readonly channelService: ChannelService) {}
+  constructor(private readonly channelService: ChannelService) { }
 
   @Post()
   createChannel(@Body() postChannelDto: PostChannelDto) {
-    console.log("channel_post");
+    // console.log("channel_post");
     return this.channelService.createChannel(postChannelDto);
   }
 
   @Get()
   async getAllChannelList() {
-    console.log("channel_get");
-    return {channelList : await this.channelService.getAllChannelList()};
+    // console.log("channel_get");
+    return { channelList: await this.channelService.getAllChannelList() };
   }
 
   @Get(':channelid')
@@ -32,8 +32,7 @@ export class ChannelController {
   }
 
   @Patch(':channelid/entry')
-  updateCurNumUser(@Param('channelid') channelid: number)
-  {
+  updateCurNumUser(@Param('channelid') channelid: number) {
     console.log("updateCurNumUser");
     return this.channelService.updateCurNumUser(channelid);
   }

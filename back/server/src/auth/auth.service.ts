@@ -109,30 +109,36 @@ export class AuthService {
         avatar: newUser.avatar,
         status: 'online',
         channel_id: '0',
+        socket_id: null,
         stats: new Stat(),
         is_second_auth: false,
       };
       user = await this.userRepository.save(userEntity);
+      console.log(user);
     }
     AuthService.tokens.set(newUser.access_token, user.intra_id);
     return response.redirect(
-      'http://localhost:3000' + '?token=' + newUser.access_token,
+      'http://10.19.233.86:3000' + '?token=' + newUser.access_token,
     );
   }
 
   async getUserNickByToken(token: string): Promise<string> {
     const user = AuthService.tokens.get(token);
+    console.log('@@@@ token: ', token);
+    console.log('@@@@ user: ', user);
     if (!user) {
       return undefined;
     }
     const userFind = await this.userRepository.findOne({
       where: {
-        intra_id: user,
+        nickname: user,
       },
     });
+
     if (!userFind) {
       return undefined;
     }
+    console.log('.nickname: ', userFind.nickname);
     return userFind.nickname;
   }
 

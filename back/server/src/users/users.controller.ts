@@ -20,7 +20,7 @@ export class UsersController {
 		@Body() createUserDto: CreateUserDto,
 		@UploadedFile() file: Express.Multer.File
 	) {
-		console.log(createUserDto);
+		// console.log(createUserDto);
 		return this.usersService.create(createUserDto, file);
 	}
 
@@ -33,15 +33,15 @@ export class UsersController {
 	@Get('/:nickname/modal')
 	@UseGuards(AuthGuard)
 	findOneModal(@Param('nickname') nickName: string, @Token() token: string) {
-		console.log("findOneModal");
-		console.log(nickName, token);
+		// console.log("findOneModal");
+		// console.log(nickName, token);
 		return (this.usersService.findOneModal(token, nickName))
 	}
 
 	@UseGuards(AuthGuard)
 	@Get('/navi')
 	findOneNavi(@Token() token) {
-		console.log("token: ", token);
+		// console.log("token: ", token);
 		return (this.usersService.findOneNavi(token));
 	}
 
@@ -54,10 +54,10 @@ export class UsersController {
 		@Headers() header: string,
 		@UploadedFile() file: Express.Multer.File,
 	) {
-		console.log(header);
-		console.log(updateUserDto);
-		console.log(updateUserDto.avatar);
-		console.log(file);
+		// console.log(header);
+		// console.log(updateUserDto);
+		// console.log(updateUserDto.avatar);
+		// console.log(file);
 		return this.usersService.update(nickName, updateUserDto, file);
 	}
 

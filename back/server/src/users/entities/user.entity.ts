@@ -24,6 +24,9 @@ export class User {
 	@Column()
 	channel_id: string;
 
+	@Column({ default: null })
+	socket_id: string | null;
+
 	@Column({ default: false })
 	is_second_auth: boolean;
 

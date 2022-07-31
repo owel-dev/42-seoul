@@ -17,7 +17,7 @@ function ChannelListRow({ props }: { props: channelTypes }) {
       firstPlayer: player1,
       secondPlayer: player2,
     });
-    socket.emit('spectate-request', { gameId: channelId });
+    socket.emit('spectate-request', { channelId: channelId });
   }
   function activePasswordSubmitModal() {
     setChannelInfo({

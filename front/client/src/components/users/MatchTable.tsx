@@ -1,19 +1,23 @@
 import { useState, useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { matchList } from 'types/profileTypes';
 import { profileState } from 'utils/recoil/profileData';
+import { errorState } from 'utils/recoil/error';
 import instance from 'utils/axios';
 import 'styles/users/MatchList.css';
 
 function MatchTable() {
   const profileData = useRecoilValue(profileState);
   const [matchList, setMatchList] = useState<matchList | null>(null);
+  const setErrorMessage = useSetRecoilState(errorState);
 
   const getData = async () => {
     try {
       const getAPI = await instance.get(`/match/` + profileData.nickName);
       setMatchList(getAPI.data);
-    } catch (e) {}
+    } catch (e) {
+      setErrorMessage('MT01');
+    }
   };
 
   useEffect(() => {

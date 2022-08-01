@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { modalState } from 'utils/recoil/modal';
 import { myDataState } from 'utils/recoil/myData';
+import { errorState } from 'utils/recoil/error';
 import 'styles/modal/Modal.css';
 
 function AvatarChangeModal() {
@@ -11,6 +12,7 @@ function AvatarChangeModal() {
   const [isChange, setIsChange] = useState<boolean>();
   const [previewImg, setPreviewImg] = useState(myData.avatar);
   const setModalInfo = useSetRecoilState(modalState);
+  const setErrorMessage = useSetRecoilState(errorState);
 
   const closeModal = () => {
     setModalInfo({ modalName: null });
@@ -47,12 +49,18 @@ function AvatarChangeModal() {
           {
             headers: {
               'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${localStorage.getItem('tran-token')}`, // 로그인 후 처리
+              Authorization: `Bearer ${localStorage.getItem('trans-token')}`, // 로그인 후 처리
             },
           }
         );
         setIsChange(true);
-      } catch (e) {}
+      } catch (e: any) {
+        if (e.response.data.statusCode === 'AC01')
+          alert('jpg, jpeg, png, gif 파일만 등록 가능합니다.');
+        else if (e.response.data.statusCode === 'AC02')
+          alert('10MB 이하의 파일만 등록 가능합니다.');
+        else setErrorMessage('AM01');
+      }
     };
     fetchData();
   };

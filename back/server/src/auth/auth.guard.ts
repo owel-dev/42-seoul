@@ -5,7 +5,7 @@ import { AuthService } from "./auth.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService) { }
+	constructor(private authService: AuthService) { }
 
 	canActivate(
 		context: ExecutionContext,
@@ -16,9 +16,8 @@ export class AuthGuard implements CanActivate {
 
 	private validateRequest(request: Request) {
 		const tokenString = request.headers.authorization.split('Bearer ')[1];
-		console.log(tokenString);
-		if (AuthService.tokens.has(tokenString))
-		{
+		// console.log(tokenString);
+		if (AuthService.tokens.has(tokenString)) {
 			return true;
 		}
 		else

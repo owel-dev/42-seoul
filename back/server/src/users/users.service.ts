@@ -32,7 +32,7 @@ export class UsersService {
   ) {}
 
   async findOneMyPage(nickName: string) {
-    console.log('user findOneMyPage');
+    // console.log('user findOneMyPage');
     const userRepo = await this.userRepository.findOne({
       relations: ['stats'],
       where: {
@@ -56,7 +56,7 @@ export class UsersService {
         nickname: nickName,
       },
     });
-    console.log(userRepo);
+    // console.log(userRepo);
     if (userRepo == undefined)
       throw new HttpException(
         `${nickName}: Cannot find user`,
@@ -74,13 +74,13 @@ export class UsersService {
   async findOneNavi(token: string) {
     console.log('findOneNavi');
     const userNick = await this.authService.getUserNickByToken(token);
-    console.log('userNick', userNick);
+    // console.log('userNick', userNick);
     const userRepo = await this.userRepository.findOne({
       where: {
         nickname: userNick,
       },
     });
-    console.log('userRepo', userRepo);
+    // console.log('userRepo', userRepo);
     const resUserNavi = new ResUserNavi(userRepo);
     return resUserNavi;
   }
@@ -136,7 +136,7 @@ export class UsersService {
     const ipv4 = await this.getIpAdrress();
     if (updateUserDto.nickName !== undefined) {
       if (await this.isNickAvailable(updateUserDto.nickName)) {
-        console.log('nickname updated');
+        // console.log('nickname updated');
         this.userRepository.update(
           { nickname: nickName },
           { nickname: updateUserDto.nickName },
@@ -144,7 +144,7 @@ export class UsersService {
       }
     }
     if (file !== undefined) {
-      console.log('avatar updated');
+      // console.log('avatar updated');
       this.userRepository.update(nickName, {
         avatar: `http://${ipv4}:3000/public/avatar/${file.filename}`,
       });
@@ -182,8 +182,8 @@ export class UsersService {
         nickname: nickName,
       },
     });
-    console.log(nickName);
-    console.log(users);
+    // console.log(nickName);
+    // console.log(users);
     if (users.length === 0) {
       return true;
     } else {

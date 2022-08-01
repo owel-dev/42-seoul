@@ -2,6 +2,7 @@ import { socket } from 'components/layout/Layout';
 import { MouseEvent, useEffect, useRef } from 'react';
 import { useRecoilState } from 'recoil';
 import { countState, gameState } from 'utils/recoil/gameState';
+import 'styles/game/Game.css';
 
 let mouseState = 0;
 let pingTime = 0;
@@ -11,11 +12,20 @@ function GameModule() {
     ctx: any,
     canvasEle: any,
     width: number,
-    height: number
+    height: number,
+    img: string | null
   ) {
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, width, height);
+    if (img === null) {
+      const image = new Image();
+      image.src =
+        'https://img.freepik.com/premium-vector/space-background-with-abstract-shape-and-stars_189033-30.jpg?w=2000';
+      image.onload = function () {
+        ctx.drawImage(image, 0, 0, width, height);
+      };
+    } else {
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, width, height);
+    }
   }
 
   function draw_ball(ctx: any, x: number, y: number) {
@@ -56,6 +66,13 @@ function GameModule() {
   const [gameData, setGameData] = useRecoilState(gameState);
   const [countData, setCountData] = useRecoilState(countState);
 
+  const background: any = useRef();
+  useEffect(() => {
+    const canvasEle: any = background.current;
+    const ctx = canvasEle.getContext('2d');
+    draw_background(ctx, canvasEle, canvasEle.width, canvasEle.height, null);
+  }, []);
+
   useEffect(() => {
     socket.on('count-down', (data) => {
       setCountData(data);
@@ -78,11 +95,11 @@ function GameModule() {
 
   useEffect(() => {
     const canvasEle: any = canvas.current;
-    const ctx = canvasEle.getContext('2d', { alpha: 'false' });
+    const ctx = canvasEle.getContext('2d');
     const displayWidth = canvasEle.width;
     const displayHeight = canvasEle.height;
 
-    draw_background(ctx, canvasEle, displayWidth, displayHeight);
+    ctx.clearRect(0, 0, displayWidth, displayHeight);
     draw_ball(
       ctx,
       Math.floor((gameData.ball.x / 100) * displayWidth),
@@ -122,7 +139,7 @@ function GameModule() {
     const displayWidth = canvasEle.width;
     const displayHeight = canvasEle.height;
 
-    draw_background(ctx, canvasEle, displayWidth, displayHeight);
+    ctx.clearRect(0, 0, displayWidth, displayHeight);
     draw_text(
       ctx,
       countData,
@@ -134,11 +151,17 @@ function GameModule() {
   return (
     <div>
       <canvas
-        ref={canvas}
-        height='500px'
+        ref={background}
+        height='400px'
         width='700px'
-        style={{ height: '100%', width: '100%' }}
+        id='background-layer'
+      />
+      <canvas
+        ref={canvas}
+        height='400px'
+        width='700px'
         onMouseMove={saveMouseState}
+        id='game-layer'
       />
       <div>ping : {pingTime}</div>
     </div>

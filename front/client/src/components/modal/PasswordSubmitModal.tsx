@@ -22,7 +22,7 @@ function PasswordSubmitModal() {
       (data: boolean) => {
         if (data === true) {
           setPasswordCorrect(true);
-          socket.emit('spectate-request', { gameId: channelInfo.channelId });
+          socket.emit('spectate-request', { channelId: channelInfo.channelId });
         } else {
           alert('password가 틀렸습니다.');
         }

@@ -14,10 +14,10 @@ export class BanService {
     private banRepository: Repository<Ban>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async create(createBanDto: CreateBanDto) {
-    console.log('Ban created');
+    // console.log('Ban created');
     const ban1 = await this.userRepository.findOne({
       where: { nickname: createBanDto.player1 },
     });
@@ -41,7 +41,7 @@ export class BanService {
         ban_2: ban2,
       },
     });
-    console.log(alreadyBan);
+    // console.log(alreadyBan);
     if (alreadyBan !== null)
       throw new HttpException(`Already Banned`, HttpStatus.BAD_REQUEST);
     const ban = new Ban();
@@ -72,7 +72,7 @@ export class BanService {
   }
 
   async deleteBan(player1: string, player2: string) {
-    console.log('delete ban');
+    // console.log('delete ban');
     const findBan = await this.banRepository.findOne({
       relations: ['ban_1', 'ban_2'],
       where: {

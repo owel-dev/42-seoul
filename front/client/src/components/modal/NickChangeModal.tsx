@@ -34,7 +34,7 @@ function NickChangeModal() {
       } catch (e: any) {
         if (e.response.data.statusCode === 'NC01')
           alert('이미 존재하는 닉네임입니다!');
-        else setErrorMessage('NC01');
+        else setErrorMessage('NM01');
       }
     };
     fetchData();

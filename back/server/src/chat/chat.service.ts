@@ -11,6 +11,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { WsException } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { AuthService } from 'src/auth/auth.service';
+import { ResFriend } from 'src/friend/dto/res-friend.dto';
+import { Friend } from 'src/friend/entities/friend.entity';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
@@ -27,6 +29,8 @@ export class ChatService {
     private readonly userService: UsersService,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(Friend)
+    private friendRepository: Repository<Friend>,
   ) {}
 
   static channels = new Map([['0', new Channel()]]);
@@ -244,5 +248,47 @@ export class ChatService {
       .to(channelId)
       .emit('user-list', await this.getChannelUserList(channelId));
     server.to(channelId).emit('admin-changed', findUser.nickname);
+  }
+
+  async updateFriendList(client: Socket, data: any, server: Server) {
+    // console.log('updateFriendList');
+    const user = ChatService.users.find((user) => user.socket.id === client.id);
+
+    const timeId = setInterval(async () => {
+      const friendList = await this.friendRepository.find({
+        relations: {
+          friend_1: true,
+          friend_2: true,
+        },
+        where: { friend_1: { nickname: data } },
+      });
+      const resFriendList = await Promise.all(
+        friendList.map(async (friend) => {
+          const friendList = await this.friendRepository.find({
+            relations: {
+              friend_1: true,
+              friend_2: true,
+            },
+            where: { friend_1: { nickname: data } },
+          });
+          const status = await this.getStatus(friend.friend_2.intra_id);
+          return new ResFriend(friend.friend_2.nickname, status);
+        }),
+      );
+      client.emit('friend', { friendList: resFriendList });
+    }, 1000);
+    client.on('friend-end', () => {
+      clearTimeout(timeId);
+    });
+  }
+
+  async getStatus(intraId: string): Promise<string> {
+    const user = ChatService.users.find((user) => user.intraId === intraId);
+    if (!user) return 'offline';
+    else if (
+      ChatService.channels.get('0').players.some((user) => user === intraId)
+    )
+      return 'online';
+    else return 'playing';
   }
 }

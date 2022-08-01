@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { myDataState } from 'utils/recoil/myData';
+import { errorState } from 'utils/recoil/error';
 import instance from 'utils/axios';
 import styles from 'styles/login/login.module.css';
 import 'styles/login/SecondAuth.css';
@@ -9,15 +10,18 @@ function SecondAuth() {
   const [myData, setMyData] = useRecoilState(myDataState);
   const [emailInput, setEmailInput] = useState<string>('');
   const [codeInput, setCodeInput] = useState<string>('');
+  const setErrorMessage = useSetRecoilState(errorState);
 
   const sendEmail = async () => {
     try {
       await instance.post(`/oauth/sendEmail?id=${myData.nickName}`, {
         email: emailInput,
       });
-    } catch (e) {}
+    } catch (e) {
+      setErrorMessage('SA01');
+    }
   };
-  
+
   const submitCode = async () => {
     try {
       const res = await instance.post(
@@ -27,7 +31,10 @@ function SecondAuth() {
         }
       );
       setMyData(res?.data);
-    } catch (e) {}
+    } catch (e: any) {
+      if (e.response.data.statusCode === 'SC01') alert('잘못된 코드입니다.');
+      else setErrorMessage('SA02');
+    }
   };
 
   return (

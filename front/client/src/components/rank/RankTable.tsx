@@ -1,11 +1,16 @@
 import { useState, useEffect } from 'react';
+import { useSetRecoilState } from 'recoil';
 import { userRank } from 'types/RankTypes';
+import { loginState } from 'utils/recoil/login';
+import { errorState } from 'utils/recoil/error';
 import RankRow from 'components/rank/RankRow';
 import instance from 'utils/axios';
 import RankTitleRow from './RankTitleRow';
 
 function RankTable() {
   const [rank, setRank] = useState<userRank | null>(null);
+  const setIsLoggedIn = useSetRecoilState(loginState);
+  const setErrorMessage = useSetRecoilState(errorState);
 
   useEffect(() => {
     getData();
@@ -15,7 +20,16 @@ function RankTable() {
     try {
       const getAPI = await instance.get(`/stat`);
       setRank(getAPI.data);
-    } catch (e) {}
+    } catch (e: any) {
+      if (e.response.status === 403) {
+        alert('다시 로그인 해주세요!!');
+        localStorage.removeItem('trans-token');
+        setIsLoggedIn(false);
+        window.location.replace('/');
+      } else {
+        setErrorMessage('RT01');
+      }
+    }
   };
 
   return (

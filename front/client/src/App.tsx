@@ -5,8 +5,10 @@ import Rank from 'pages/Rank';
 import UserPage from 'pages/Users';
 import Lobby from 'pages/Lobby';
 import Game from 'pages/Game';
+import Error404 from 'pages/Error404';
 import ModalProvider from 'components/modal/ModalProvider';
 import LoginChecker from 'components/LoginChecker';
+import ErrorChecker from 'components/ErrorChecker';
 
 function App() {
   return (
@@ -14,15 +16,21 @@ function App() {
       <RecoilRoot>
         <Router>
           <LoginChecker>
-            <Layout>
-              <Routes>
-                <Route path='/ranking' element={<Rank />} />
-                <Route path='/users/:nickName/mypage' element={<UserPage />} />
-                <Route path='/' element={<Lobby />} />
-                <Route path='/channel/:channelId' element={<Game />} />
-              </Routes>
-            </Layout>
-            <ModalProvider />
+            <ErrorChecker>
+              <Layout>
+                <Routes>
+                  <Route path='/ranking' element={<Rank />} />
+                  <Route
+                    path='/users/:nickName/mypage'
+                    element={<UserPage />}
+                  />
+                  <Route path='/' element={<Lobby />} />
+                  <Route path='/channel/:channelId' element={<Game />} />
+                  <Route path='*' element={<Error404 />} />
+                </Routes>
+              </Layout>
+              <ModalProvider />
+            </ErrorChecker>
           </LoginChecker>
         </Router>
       </RecoilRoot>

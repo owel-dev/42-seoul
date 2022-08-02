@@ -10,10 +10,11 @@ import { UsersModule } from 'src/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Stat } from './entities/stat.entity';
 import { User } from 'src/users/entities/user.entity';
+import { AuthJwtModule } from 'src/auth-jwt/auth-jwt.module';
 
 @Global()
 @Module({
-  imports: [TypeOrmModule.forFeature([Stat, User]), AuthModule],
+  imports: [TypeOrmModule.forFeature([Stat, User]), AuthJwtModule],
   controllers: [StatsController],
   providers: [StatsService],
 })

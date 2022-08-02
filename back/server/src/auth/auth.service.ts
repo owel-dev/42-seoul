@@ -1,7 +1,6 @@
 import {
 	HttpException,
 	HttpStatus,
-	Inject,
 	Injectable,
 	NotFoundException,
 	Res,
@@ -16,6 +15,8 @@ import * as bcrypt from 'bcryptjs';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ResUserNavi } from 'src/users/dto/res-user-navi.dto';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AuthJwtService } from 'src/auth-jwt/auth-jwt.service';
+
 
 const hashedCodes = {};
 
@@ -25,9 +26,9 @@ export class AuthService {
 		@InjectRepository(User)
 		private userRepository: Repository<User>,
 		private mailerService: MailerService,
-	) { }
+		private authJwtService: AuthJwtService,
 
-	static tokens = new Map();
+	) { }
 
 	async getAccessToken(code: string): Promise<string> {
 		console.log('code=', code);
@@ -38,7 +39,7 @@ export class AuthService {
 			client_secret:
 				'813cf74e92c49fd3c4afadf409bd6eb818fe985a11aefbfb4579bfcf0c032d96',
 			redirect_uri: 'http://10.19.236.57:3000/oauth/login',
-			code,
+			code
 		};
 
 		let ret: string;
@@ -98,7 +99,7 @@ export class AuthService {
 			throw new HttpException('Invalid User', HttpStatus.BAD_REQUEST);
 		}
 		let user = await this.userRepository.findOneBy({
-			intra_id: newUser.intraId,
+			intra_id: newUser.intraId
 		});
 		if (!user) {
 			let userEntity = new User();
@@ -113,20 +114,33 @@ export class AuthService {
 				is_second_auth: false,
 			};
 			user = await this.userRepository.save(userEntity);
-			console.log(user);
 		}
-		AuthService.tokens.set(newUser.access_token, user.intra_id);
-		return response.redirect(
-			'http://localhost:3000' + '?token=' + newUser.access_token,
+
+		
+		const jwtToken = this.login(user.intra_id);
+		response.cookie(
+			"acessToken", (await jwtToken).acessToken,
+			{
+				httpOnly: true,
+				maxAge: 24 * 60 * 60 * 1000
+			}
 		);
+		response.cookie(
+			"refreshToken", (await jwtToken).refreshToken,
+			{
+				httpOnly: true,
+				maxAge: 24 * 60 * 60 * 1000
+			}
+		);
+		return (response.redirect('http://localhost:3000' + '?AcessToken=' + (await jwtToken).acessToken + '?refreshToken=' + (await jwtToken).refreshToken));
 	}
 
 	async getUserNickByToken(token: string): Promise<string> {
-		const user = AuthService.tokens.get(token);
+		const user = this.authJwtService.jwtVerify(token);
 		const userFind = await this.userRepository.findOne({
 			where: {
-				intra_id: user,
-			},
+				intra_id: user
+			}
 		});
 		return userFind.nickname;
 	}
@@ -161,5 +175,19 @@ export class AuthService {
 
 		const resDto = new ResUserNavi(userFind);
 		return resDto;
+	}
+
+	async login(intra_id: string) {
+		const acessToken = this.authJwtService.createAcessJwt(intra_id);
+		const refreshToken = this.authJwtService.createRefreshJwt(intra_id);
+
+		return ({
+			acessToken: acessToken,
+			refreshToken: refreshToken
+		})
+	}
+
+	async logout() {
+		//소켓 연결 끊기 
 	}
 }

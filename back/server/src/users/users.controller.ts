@@ -4,9 +4,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/multer';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '@nestjs/passport';
 import { Token } from 'src/auth/auth.decorator';
-import { AuthService } from 'src/auth/auth.service';
 
 @Controller('users')
 export class UsersController {
@@ -25,34 +24,34 @@ export class UsersController {
 	}
 
 	@Get('/:nickname/mypage')
-	@UseGuards(AuthGuard)
+	@UseGuards(AuthGuard('jwt-acess-token'))
 	findOneMyPage(@Param('nickname') nickName: string) {
 		return (this.usersService.findOneMyPage(nickName));
 	}
 
 	@Get('/:nickname/modal')
-	@UseGuards(AuthGuard)
+	@UseGuards(AuthGuard('jwt-acess-token'))
 	findOneModal(@Param('nickname') nickName: string, @Token() token: string) {
 		console.log("findOneModal");
 		console.log(nickName, token);
 		return (this.usersService.findOneModal(token, nickName))
 	}
 
-	@UseGuards(AuthGuard)
+	@UseGuards(AuthGuard('jwt-acess-token'))
 	@Get('/navi')
 	findOneNavi(@Token() token) {
 		console.log("token: ", token);
 		return (this.usersService.findOneNavi(token));
 	}
 
-	@UseGuards(AuthGuard)
+	@UseGuards(AuthGuard('jwt-acess-token'))
 	@Patch('/:nickname')
 	@UseInterceptors(FileInterceptor('avatar', multerOptions('avatar')))
 	update(
 		@Param('nickname') nickName: string,
 		@Body() updateUserDto: UpdateUserDto,
 		@Headers() header: string,
-		@UploadedFile() file: Express.Multer.File,
+		@UploadedFile() file: Express.Multer.File
 	) {
 		console.log(header);
 		console.log(updateUserDto);
@@ -61,7 +60,7 @@ export class UsersController {
 		return this.usersService.update(nickName, updateUserDto, file);
 	}
 
-	@UseGuards(AuthGuard)
+	@UseGuards(AuthGuard('jwt-acess-token'))
 	@Delete(':nickname')
 	delete(@Param() nickName: string) {
 		return this.usersService.delete(nickName);

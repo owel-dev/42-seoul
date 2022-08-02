@@ -10,9 +10,10 @@ import { UsersModule } from 'src/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Friend } from './entities/friend.entity';
 import { User } from 'src/users/entities/user.entity';
+import { AuthJwtModule } from 'src/auth-jwt/auth-jwt.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Friend, User]), AuthModule],
+  imports: [TypeOrmModule.forFeature([Friend, User]),AuthModule ,AuthJwtModule],
   controllers: [FriendController],
   providers: [FriendService],
   exports: [],

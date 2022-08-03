@@ -9,7 +9,7 @@ import { myData } from 'types/myDataTypes';
 import RadioOption from 'components/modal/RadioOption';
 import 'styles/modal/Modal.css';
 
-function GameStartModal() {
+function GameInviteModal() {
   const [matchWait, setMatchWait] = useState<boolean>(false);
   const [channelInfo, setChannelInfo] = useRecoilState(channelState);
   const [inputValue, setInputValue] = useState('');
@@ -94,4 +94,4 @@ function GameStartModal() {
   );
 }
 
-export default GameStartModal;
+export default GameInviteModal;

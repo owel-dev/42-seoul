@@ -44,7 +44,7 @@ function AvatarChangeModal() {
     const fetchData = async () => {
       try {
         await axios.patch(
-          'http://10.19.236.57:3000/users/' + myData.nickName,
+          `${process.env.REACT_APP_SERVERIP}/users/` + myData.nickName,
           postImg,
           {
             headers: {

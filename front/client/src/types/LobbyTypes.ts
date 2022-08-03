@@ -6,7 +6,7 @@ export type channelTypes = {
   maxUser: number;
   password: string | null;
   type: number;
-  mode: number;
+  gameMode: number;
 };
 
 export type channelListTypes = {

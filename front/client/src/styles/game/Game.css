@@ -6,7 +6,8 @@
 .player-game-area {
   display: flex;
   align-items: center;
-  height: 75vh;
+  height: 55vh;
+  width: 75vw;
 }
 .game-setting-area {
   height: 8vh;
@@ -24,7 +25,8 @@
 
 .game-content {
   flex: 5;
-  text-align: center;
+  height: 100%;
+  text-align: right;
 }
 
 .game-setting {

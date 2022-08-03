@@ -14,3 +14,10 @@ export type gameType = {
     y: number;
   };
 };
+
+export type inviteType = {
+  gameMode: string;
+  nickName: string;
+  password: string;
+  oppNickName: string;
+};

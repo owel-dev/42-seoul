@@ -173,7 +173,9 @@ function GameModule(props: { gameMode: string }) {
         onMouseMove={saveMouseState}
         id='game-layer'
       />
-      <div>ping : {pingTime}</div>
+      <div style={{ position: 'absolute', top: '70%', left: '35%' }}>
+        ping : {pingTime}
+      </div>
     </div>
   );
 }

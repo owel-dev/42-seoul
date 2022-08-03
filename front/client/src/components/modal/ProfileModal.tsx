@@ -168,9 +168,8 @@ function ProfileModal() {
   };
 
   const sendInvite = () => {
-    //지금 모달 대신 초대하기 모달로 State 바꿔주기
-    //setModalInfo({ modalName: 초대하기모달 });
-    //초대하기 모달에서 방 설정, 비밀번호 설정 다 해서 보내기
+    console.log('sendInvite : ', modalInfo.user);
+    setModalInfo({ modalName: 'GAME-INVITE', user: modalInfo.user });
   };
 
   return (

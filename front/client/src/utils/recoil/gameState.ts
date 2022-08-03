@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 import { v1 } from 'uuid';
-import { gameType, channelType } from 'types/GameTypes';
+import { gameType, channelType, inviteType } from 'types/GameTypes';
 
 export const channelState = atom<channelType>({
   key: `channelState/${v1()}`,
@@ -27,5 +27,15 @@ export const gameState = atom<gameType>({
       x: 0,
       y: 0,
     },
+  },
+});
+
+export const inviteState = atom<inviteType>({
+  key: `inviteState/${v1()}`,
+  default: {
+    gameMode: '',
+    nickName: '',
+    password: '',
+    oppNickName: '',
   },
 });

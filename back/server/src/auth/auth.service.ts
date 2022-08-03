@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Inject,
@@ -167,8 +168,12 @@ export class AuthService {
       userFind.is_second_auth = true;
       await this.userRepository.save(userFind);
       delete hashedCodes[id];
+    } else {
+      throw new HttpException(
+        { statusCode: 'SC01', error: '잘못된 코드입니다.' },
+        HttpStatus.BAD_REQUEST,
+      );
     }
-
     const resDto = new ResUserNavi(userFind);
     return resDto;
   }

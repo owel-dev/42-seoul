@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Inject,
@@ -40,10 +41,7 @@ export class StatsService {
       where: { nickname: nickName },
     });
     if (user === undefined)
-      throw new HttpException(
-        `${nickName}: Cannot find user`,
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException(`${nickName}: Cannot find user`);
 
     const statUpdate = await this.statRepository.findOne({
       relations: ['user'],

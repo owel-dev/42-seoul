@@ -136,12 +136,6 @@ export class UsersService {
       }
     }
     if (file !== undefined) {
-
-      // console.log('avatar updated');
-      this.userRepository.update(nickName, {
-        avatar: `http://${ipv4}:3000/public/avatar/${file.filename}`,
-      });
-
       //   console.log('avatar updated');
       this.userRepository.update(
         { nickname: nickName },

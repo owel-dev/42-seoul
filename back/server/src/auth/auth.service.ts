@@ -211,5 +211,4 @@ export class AuthService {
 	async logout() {
 		//소켓 연결 끊기 
 	}
-
 }

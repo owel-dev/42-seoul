@@ -9,19 +9,19 @@ export class BanController {
   constructor(private readonly banService: BanService) {}
 
 	@Post()
-	@UseGuards(AuthGuard('jwt'))
+	@UseGuards(AuthGuard('jwt-access-token'))
 	create(@Body() createBanDto: CreateBanDto) {
 		return this.banService.create(createBanDto);
 	}
 
 	@Get(':nickname')
-	@UseGuards(AuthGuard('jwt'))
+	@UseGuards(AuthGuard('jwt-access-token'))
 	findOne(@Param('nickname') nickName: string) {
 		return this.banService.getBanListOne(nickName);
 	}
 
 	@Delete()
-	@UseGuards(AuthGuard('jwt'))
+	@UseGuards(AuthGuard('jwt-access-token'))
 	@HttpCode(204)
 	deleteBan(@Query('player1') player1: string, @Query('player2') player2) {
 		return this.banService.deleteBan(player1, player2);

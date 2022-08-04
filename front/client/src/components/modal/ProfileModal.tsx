@@ -168,7 +168,6 @@ function ProfileModal() {
   };
 
   const sendInvite = () => {
-    console.log('sendInvite : ', modalInfo.user);
     setModalInfo({ modalName: 'GAME-INVITE', user: modalInfo.user });
   };
 

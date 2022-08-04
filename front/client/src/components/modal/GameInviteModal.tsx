@@ -9,14 +9,13 @@ import { myData } from 'types/myDataTypes';
 import RadioOption from 'components/modal/RadioOption';
 import 'styles/modal/Modal.css';
 
-function GameStartModal() {
+function GameInviteModal() {
   const [matchWait, setMatchWait] = useState<boolean>(false);
   const [channelInfo, setChannelInfo] = useRecoilState(channelState);
   const [inputValue, setInputValue] = useState('');
   const [radioValue, setRadioValue] = useState('none');
-  const setModalInfo = useSetRecoilState(modalState);
+  const [modalInfo, setModalInfo] = useRecoilState(modalState);
   const myData = useRecoilValue<myData>(myDataState);
-
   const [disable, SetDisable] = useState<boolean>(false);
 
   function closeModal() {
@@ -33,11 +32,13 @@ function GameStartModal() {
 
   function matchRequest() {
     SetDisable(true);
-    socket.emit('match-request', {
+    socket.emit('together-request', {
       gameMode: radioValue,
       nickName: myData.nickName,
       password: inputValue,
+      oppNickName: modalInfo.user,
     });
+
     setMatchWait(true);
   }
 
@@ -54,7 +55,7 @@ function GameStartModal() {
         <Navigate to={'/channel/' + channelInfo.channelId} />
       ) : (
         <div className='modal'>
-          <div className='modalTitle'>game start</div>
+          <div className='modalTitle'>게임 초대</div>
           {!matchWait ? (
             <div className='modalContent'>
               <fieldset>
@@ -94,4 +95,4 @@ function GameStartModal() {
   );
 }
 
-export default GameStartModal;
+export default GameInviteModal;

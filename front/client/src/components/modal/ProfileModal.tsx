@@ -168,12 +168,7 @@ function ProfileModal() {
   };
 
   const sendInvite = () => {
-    //지금 모달 대신 초대하기 모달로 State 바꿔주기
-    //setModalInfo({ modalName: 초대하기모달 });
-    //초대하기 모달에서 방 설정, 비밀번호 설정 다 해서 보내기
-    //GameStartModal에 state하나 더 추가해서 초대인지, 방만들기인지 구분해서 서버에 메시지 따로 보내기??
-    //지금 userData.nickName을 같이 보낼 수 있는 방법 없나?
-    //
+    setModalInfo({ modalName: 'GAME-INVITE', user: modalInfo.user });
   };
 
   return (

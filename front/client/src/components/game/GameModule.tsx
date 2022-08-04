@@ -7,21 +7,24 @@ import 'styles/game/Game.css';
 let mouseState = 0;
 let pingTime = 0;
 
-function GameModule() {
+function GameModule(props: { gameMode: string }) {
   function draw_background(
     ctx: any,
     canvasEle: any,
     width: number,
     height: number,
-    img: string | null
+    img: string
   ) {
-    if (img === null) {
+    if (img === 'map') {
       const image = new Image();
-      image.src =
-        'https://img.freepik.com/premium-vector/space-background-with-abstract-shape-and-stars_189033-30.jpg?w=2000';
+      image.src = '/galaxy.jpg';
       image.onload = function () {
         ctx.drawImage(image, 0, 0, width, height);
       };
+    } else if (img === 'power') {
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, width, height);
+      draw_text(ctx, 'POWER!', Math.floor(width / 2), 50);
     } else {
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, width, height);
@@ -70,7 +73,14 @@ function GameModule() {
   useEffect(() => {
     const canvasEle: any = background.current;
     const ctx = canvasEle.getContext('2d');
-    draw_background(ctx, canvasEle, canvasEle.width, canvasEle.height, null);
+
+    draw_background(
+      ctx,
+      canvasEle,
+      canvasEle.width,
+      canvasEle.height,
+      props.gameMode
+    );
   }, []);
 
   useEffect(() => {
@@ -163,7 +173,9 @@ function GameModule() {
         onMouseMove={saveMouseState}
         id='game-layer'
       />
-      <div>ping : {pingTime}</div>
+      <div style={{ position: 'absolute', top: '70%', left: '35%' }}>
+        ping : {pingTime}
+      </div>
     </div>
   );
 }

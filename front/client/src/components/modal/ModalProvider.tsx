@@ -9,6 +9,8 @@ import ChannelSettingModal from './ChannelSettingModal';
 import PasswordSubmitModal from './PasswordSubmitModal';
 import { socket } from 'components/layout/Layout';
 import 'styles/modal/Modal.css';
+import GameInviteModal from './GameInviteModal';
+import InviteAcceptModal from './InviteAcceptModal';
 
 export default function ModalProvider() {
   const [modalInfo, setModalInfo] = useRecoilState(modalState);
@@ -37,6 +39,10 @@ export default function ModalProvider() {
         return <ChannelSettingModal />;
       case 'GAME-PASSWORD':
         return <PasswordSubmitModal />;
+      case 'GAME-INVITE':
+        return <GameInviteModal />;
+      case 'GAME-ACCEPT':
+        return <InviteAcceptModal />;
       default:
         return null;
     }

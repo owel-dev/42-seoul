@@ -9,6 +9,9 @@ import Nav from 'components/layout/Nav';
 import Side from 'components/layout/Side';
 import instance from 'utils/axios';
 import SecondAuth from 'pages/SecondAuth';
+import { modalState } from 'utils/recoil/modal';
+import { inviteType } from 'types/GameTypes';
+import { inviteState } from 'utils/recoil/gameState';
 import 'styles/layout/Content.css';
 
 export let socket = io();
@@ -21,6 +24,8 @@ function Layout({ children }: LayoutProps) {
   const [myData, setMyData] = useRecoilState<myData>(myDataState);
   const setIsLoggedIn = useSetRecoilState(loginState);
   const [errorMessage, setErrorMessage] = useRecoilState(errorState);
+  const setModalInfo = useSetRecoilState(modalState);
+  const setInviteData = useSetRecoilState<inviteType>(inviteState);
 
   useEffect(() => {
     if (socket.connected === false) {
@@ -40,6 +45,10 @@ function Layout({ children }: LayoutProps) {
 
   useEffect(() => {
     getMyData();
+    socket.on('together-request', (data) => {
+      setInviteData(data);
+      setModalInfo({ modalName: 'GAME-ACCEPT' });
+    });
   }, []);
 
   const getMyData = async () => {

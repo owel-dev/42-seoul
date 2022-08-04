@@ -4,5 +4,7 @@ import { ModalInfo } from 'types/modalTypes';
 
 export const modalState = atom<ModalInfo>({
   key: `modalState/${v1()}`,
-  default: { modalName: null },
+  default: {
+    modalName: null,
+  },
 });

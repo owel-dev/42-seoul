@@ -10,7 +10,7 @@ export class AuthJwtController {
 
   @Get("access/:intra_id")
   createaccessJwt(@Param("intra_id") intra_id:string) {
-    return this.authJwtService.createaccessJwt(intra_id);
+    return this.authJwtService.createAccessJwt(intra_id);
   }
 
   @Get("access/:intra_id")

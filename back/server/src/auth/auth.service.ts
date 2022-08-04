@@ -199,7 +199,7 @@ export class AuthService {
   }
 
 	async login(intra_id: string) {
-		const accessToken = await this.authJwtService.createaccessJwt(intra_id);
+		const accessToken = await this.authJwtService.createAccessJwt(intra_id);
 		const refreshToken = await this.authJwtService.createRefreshJwt(intra_id);
 
 		return ({

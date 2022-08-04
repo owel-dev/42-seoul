@@ -8,7 +8,7 @@ export class AuthJwtService {
     private jwtService: JwtService
   ) { }
 
-  async createaccessJwt(intra_id: string) {
+  async createAccessJwt(intra_id: string) {
     const payload = { intra_id };
     const accessToken = this.jwtService.sign(payload,
       {

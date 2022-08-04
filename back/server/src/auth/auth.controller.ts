@@ -29,7 +29,7 @@ export class AuthController {
 	}
 
 	// @Redirect('https://api.intra.42.fr/oauth/authorize?client_id=10fd003cd72e573d39cefc1302e9a5c3a9722ad06f7bffe91bf3b3587ace5036&redirect_uri=http%3A%2F%2F10.19.236.57%3A3000%2Foauth%2Flogin&response_type=code', 301)
-  @Redirect('https://api.intra.42.fr/oauth/authorize?client_id=ed7c75ff5c1b092be1782335c06bed873fe064ef1e9eb82256f6ec202c8c1047&redirect_uri=http%3A%2F%2F10.19.247.186%3A3000%2Foauth%2Flogin&response_type=code', 301)
+  @Redirect('https://api.intra.42.fr/oauth/authorize?client_id=ed7c75ff5c1b092be1782335c06bed873fe064ef1e9eb82256f6ec202c8c1047&redirect_uri=http%3A%2F%2F10.19.247.186%3A3000%2Foauth%2Flogin&response_type=code', 302)
   @Get('42')
 	getOauthPage() {
 		console.log("authorization/42");

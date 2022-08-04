@@ -20,8 +20,8 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'jwt-access-to
     async validate(payload: any) {
         const { intra_id } = payload;
         const user = await this.userRepository.findOneBy({ intra_id: intra_id });
-        console.log("JwtaccessStrategy 확인");
-        console.log(payload);
+        // console.log("JwtaccessStrategy 확인");
+        // console.log(payload);
         return "JwtaccessStrategy 확인";
     }
 }

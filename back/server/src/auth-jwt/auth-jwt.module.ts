@@ -13,7 +13,7 @@ import { JwtRefreshStrategy } from './auth-jwt.stategyRefresh';
     TypeOrmModule.forFeature([User]),
     PassportModule.register({defaultStrategy:'jwt'}),
     JwtModule.register({
-      secret: "Secret1234",
+      secret: "JWT_DEFAULT_SECRET",
       signOptions:{
         expiresIn: 60 * 60 * 10
       }

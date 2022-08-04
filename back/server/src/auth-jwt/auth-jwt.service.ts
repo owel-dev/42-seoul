@@ -1,19 +1,21 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
 
 @Injectable()
 export class AuthJwtService {
   constructor(
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private config: ConfigService
   ) { }
 
   async createAccessJwt(intra_id: string) {
     const payload = { intra_id };
     const accessToken = this.jwtService.sign(payload,
       {
-        secret: "accessJwt",
-        expiresIn: 60 * 10
+        secret: this.config.get("JWT_SECRET_ACCESS"),
+        expiresIn: 60 * 60
       });
     return accessToken;
   }
@@ -22,16 +24,16 @@ export class AuthJwtService {
     const payload = { intra_id };
     const refreshToken = this.jwtService.sign(payload,
       {
-        secret: "RefreshJwt",
+        secret: this.config.get("JWT_SECRET_REFRESH"),
         expiresIn: 60 * 60 * 24 * 7
       });
     return refreshToken;
   }
 
-  jwtVerify(token: string) {
-    return this.jwtService.verify(token,
+  async jwtVerify(token: string) {
+    return await this.jwtService.verify(token,
       {
-        secret: "accessJwt"
+        secret: this.config.get("JWT_SECRET_ACCESS"),
       });
   }
 }

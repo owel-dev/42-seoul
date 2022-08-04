@@ -62,8 +62,7 @@ export class AuthService {
         ret = res.data.access_token;
       })
       .catch((err) => {
-        console.log("에버발생!");
-        // console.log(err);
+        console.log(err);
       });
     return ret;
   }
@@ -132,30 +131,34 @@ export class AuthService {
 		response.cookie(
 			"accessToken", (await jwtToken).accessToken,
 			{
-				// httpOnly: true,
+        sameSite:'lax',
+				httpOnly: true,
+        path : '/',
 				maxAge: 24 * 60 * 60 * 1000
 			}
 		);
 		response.cookie(
 			"refreshToken", (await jwtToken).refreshToken,
 			{
-				// httpOnly: true,
+        sameSite:'lax',
+				httpOnly: true,
+        path : '/',
 				maxAge: 24 * 60 * 60 * 1000
 			}
 		);
     // response.redirect('http://10.19.247.186:3000/oauth/test');
-    // response.redirect('http://10.19.247.186:3001' + '?AccessToken=' + (await jwtToken).accessToken + '&refreshToken=' + (await jwtToken).refreshToken);
-    response.redirect('http://10.19.247.186:3001' + '?token=' + (await jwtToken).accessToken);
+    // response.redirect('http://10.19.234.199:3001/' + '?accessToken=' + (await jwtToken).accessToken + '&refreshToken=' + (await jwtToken).refreshToken);
+    response.redirect('http://10.19.247.186:3001' + '?token=' + (await jwtToken).accessToken, 302);
+    console.log("++++토큰", (await jwtToken).accessToken);
+    console.log("++++토큰", (await jwtToken).refreshToken);
+
     return (response)
 	}
 
 	async getUserNickByToken(token: string): Promise<string> {
-		const user = this.authJwtService.jwtVerify(token);
-		const userFind = await this.userRepository.findOne({
-			where: {
-				intra_id: user
-			}
-		});
+		const user = await this.authJwtService.jwtVerify(token);
+    console.log("+++getUserNickByToken", user);
+		const userFind = await this.userRepository.findOneBy({intra_id : user.intra_id});
     if (!userFind) {
       return undefined;
     }

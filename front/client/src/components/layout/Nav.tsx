@@ -1,15 +1,17 @@
 import { Link } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import { socket } from './Layout';
 import { modalState } from 'utils/recoil/modal';
 import { channelState } from 'utils/recoil/gameState';
-import { socket } from './Layout';
 import { friendState } from 'utils/recoil/friend';
+import { chatListState } from 'utils/recoil/chat';
 import 'styles/layout/Nav.css';
 
 function Nav(props: { nickName: string; avatar: string }) {
   const setModalInfo = useSetRecoilState(modalState);
   const [channelInfo, setChannelInfo] = useRecoilState(channelState);
   const [friend, setFriend] = useRecoilState(friendState);
+  const setChatList = useSetRecoilState(chatListState);
 
   const movePage = () => {
     if (channelInfo.channelId !== '') {
@@ -18,6 +20,7 @@ function Nav(props: { nickName: string; avatar: string }) {
         firstPlayer: '',
         secondPlayer: '',
       });
+      setChatList([]);
       socket.emit('leave-channel');
     }
     if (friend) {

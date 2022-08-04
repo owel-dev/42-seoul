@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { socket } from 'components/layout/Layout';
 import { modalState } from 'utils/recoil/modal';
 import { channelState } from 'utils/recoil/gameState';
 import { myDataState } from 'utils/recoil/myData';
+import { chatListState } from 'utils/recoil/chat';
 import GameModule from 'components/game/GameModule';
 import 'styles/game/Game.css';
-import { Link } from 'react-router-dom';
 
 function Game() {
   const setModalInfo = useSetRecoilState(modalState);
   const myData = useRecoilValue(myDataState);
   const [channelInfo, setChannelInfo] = useRecoilState(channelState);
   const [admin, setAdmin] = useState<string>('');
+  const setChatList = useSetRecoilState(chatListState);
 
   useEffect(() => {
     socket.on('admin-changed', (data) => {
@@ -22,6 +24,7 @@ function Game() {
 
   useEffect(() => {
     setModalInfo({ modalName: null });
+    setChatList([]);
   }, [setModalInfo]);
 
   const exitChannel = () => {
@@ -33,6 +36,7 @@ function Game() {
       });
       socket.emit('leave-channel');
     }
+    setChatList([]);
   };
 
   return (

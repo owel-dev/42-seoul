@@ -2,8 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { socket } from 'components/layout/Layout';
 import { myDataState } from 'utils/recoil/myData';
-import { messageState } from 'utils/recoil/chat';
-import { chat } from 'types/chatTypes';
+import { messageState, chatListState } from 'utils/recoil/chat';
 import UserList from './UserList';
 import ChatList from './ChatList';
 import 'styles/layout/Side.css';
@@ -14,7 +13,7 @@ function Side() {
   const chatInput = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useRecoilState(messageState);
   const [scrollState, setScrollState] = useState(true); // 자동 스크롤 여부
-  const [chatList, setChatList] = useState<chat[]>([]); // 채팅 텍스트 list
+  const [chatList, setChatList] = useRecoilState(chatListState); // 채팅 텍스트 list
 
   useEffect(() => {
     if (message.length) chatInput.current?.focus();

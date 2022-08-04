@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { modalState } from 'utils/recoil/modal';
 import { userData } from 'types/userTypes';
 import { myDataState } from 'utils/recoil/myData';
-import { messageState } from 'utils/recoil/chat';
+import { chatListState, messageState } from 'utils/recoil/chat';
 import { socket } from 'components/layout/Layout';
 import { channelState } from 'utils/recoil/gameState';
 import { friendState } from 'utils/recoil/friend';
@@ -20,6 +20,7 @@ function ProfileModal() {
   const [friend, setFriend] = useRecoilState(friendState);
   const setMessage = useSetRecoilState(messageState);
   const setErrorMessage = useSetRecoilState(errorState);
+  const setChatList = useSetRecoilState(chatListState);
 
   useEffect(() => {
     getUserData();
@@ -47,6 +48,7 @@ function ProfileModal() {
         firstPlayer: '',
         secondPlayer: '',
       });
+      setChatList([]);
       socket.emit('leave-channel');
     }
     if (friend) {

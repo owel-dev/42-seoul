@@ -1,25 +1,52 @@
 .game-area {
   background-color: white;
-  width: 90%;
-  height: 90%;
+  width: 95%;
 }
 
 .player-game-area {
   display: flex;
-  height: 90%;
+  align-items: center;
+  height: 75vh;
+}
+.game-setting-area {
+  height: 8vh;
+  text-align: right;
 }
 
 .player {
+  color: black;
   flex: 1;
   text-align: center;
-  border: 1px black solid;
+}
+.player-name {
+  font-weight: bold;
 }
 
-.player-image {
-  width: 100%;
-}
 .game-content {
   flex: 5;
   text-align: center;
-  border: 1px black solid;
+}
+
+.game-setting {
+  all: none;
+
+  height: 2rem;
+  margin: 1rem;
+  font-size: 1rem;
+  background-color: #00babc;
+  color: white;
+}
+
+canvas {
+  position: absolute;
+  top: 20%;
+  left: 15%;
+  height: 50%;
+  width: 50%;
+}
+#background-layer {
+  z-index: 1;
+}
+#game-layer {
+  z-index: 2;
 }

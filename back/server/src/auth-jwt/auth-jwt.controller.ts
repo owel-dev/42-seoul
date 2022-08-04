@@ -8,12 +8,12 @@ export class AuthJwtController {
   constructor(
     private readonly authJwtService: AuthJwtService) {}
 
-  @Get("acess/:intra_id")
-  createAcessJwt(@Param("intra_id") intra_id:string) {
-    return this.authJwtService.createAcessJwt(intra_id);
+  @Get("access/:intra_id")
+  createaccessJwt(@Param("intra_id") intra_id:string) {
+    return this.authJwtService.createaccessJwt(intra_id);
   }
 
-  @Get("acess/:intra_id")
+  @Get("access/:intra_id")
   createRefreshJwt(@Param("intra_id") intra_id:string) {
     return this.authJwtService.createRefreshJwt(intra_id);
   }
@@ -24,10 +24,10 @@ export class AuthJwtController {
     return ("refresh 성공");
   }
 
-  @Get("acess")
-  @UseGuards(AuthGuard('jwt-acess-token'))
-  acess() {
-    return "acess 성공";
+  @Get("access")
+  @UseGuards(AuthGuard('jwt-access-token'))
+  access() {
+    return "access 성공";
   }
 
   @Get("test")

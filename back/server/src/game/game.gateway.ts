@@ -1,7 +1,9 @@
+import { Param } from '@nestjs/common';
 import {
+  ConnectedSocket,
+  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -14,17 +16,11 @@ import { GameService } from './game.service';
     origin: '*',
   },
 })
+export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  constructor(private readonly gameService: GameService) {}
 
-export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer()
   server: Server;
-  constructor(
-    private readonly gameService: GameService,
-  ) { }
-
-  afterInit() {
-    this.gameService.setGameData(this.server);
-  }
 
   handleConnection(socket: Socket) {
     this.gameService.handleConnection(socket);
@@ -36,17 +32,23 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
   @SubscribeMessage('match-request')
   matchRequest(socket: Socket, data: any): void {
-    this.gameService.matchRequest(socket, data);
+    // console.log("match-request");
+    this.gameService.matchRequest(socket, data, this.server);
+  }
+
+  @SubscribeMessage('match-cancel')
+  matchCancel(socket: Socket): void {
+    this.gameService.matchCancel();
   }
 
   @SubscribeMessage('spectate-request')
   spectateRequest(socket: Socket, data: any): void {
-    this.gameService.spectateRequest(socket, data);
+    this.gameService.spectateRequest(socket, data, this.server);
   }
 
   @SubscribeMessage('gamelist-request')
   gamelistRequest(): any {
-    return this.gameService.gamelistRequest();
+    return { channelList: this.gameService.gamelistRequest() };
   }
 
   @SubscribeMessage('change-password')
@@ -54,9 +56,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     return this.gameService.changePassword(data);
   }
 
-  @SubscribeMessage('submit-password')
+  @SubscribeMessage('spectate-password')
   submitPassword(socket: Socket, data: any): boolean {
-    return this.gameService.submitPassword(data);
+    return this.gameService.spectatePassword(data);
   }
 
   @SubscribeMessage('get-ping')
@@ -64,4 +66,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     return true;
   }
 
+  @SubscribeMessage('leave-channel')
+  clientLeave(socket: Socket): any {
+    //게임 방 목록에서 해당 소켓에 대한 유저를 지우고,
+    //만약 더 남은 유저가 없으면 방 폭파
+    this.gameService.clientLeave(socket, this.server);
+  }
 }

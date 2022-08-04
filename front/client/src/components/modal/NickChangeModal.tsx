@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSetRecoilState, useRecoilState } from 'recoil';
 import { modalState } from 'utils/recoil/modal';
 import { myDataState } from 'utils/recoil/myData';
+import { errorState } from 'utils/recoil/error';
 import instance from 'utils/axios';
 import 'styles/modal/Modal.css';
 
@@ -10,25 +11,18 @@ function NickChangeModal() {
   const [myData, setMyData] = useRecoilState(myDataState);
   const [inputValue, setInputValue] = useState('');
   const [isChange, setIsChange] = useState<boolean>();
+  const setErrorMessage = useSetRecoilState(errorState);
 
   const CloseModal = () => {
     setModalInfo({ modalName: null });
   };
 
   useEffect(() => {
-    getMyData();
     if (isChange) {
       window.location.replace(`/users/${myData.nickName}/mypage`);
       setIsChange(false);
     }
   }, [isChange && myData]);
-
-  const getMyData = async () => {
-    try {
-      const res = await instance.get(`/users/navi`);
-      setMyData(res?.data);
-    } catch (e) {}
-  };
 
   function PostNickName() {
     const fetchData = async () => {
@@ -37,8 +31,10 @@ function NickChangeModal() {
           nickName: inputValue,
         });
         setIsChange(true);
-      } catch (e) {
-        alert('이미 존재하는 닉네임입니다!');
+      } catch (e: any) {
+        if (e.response.data.statusCode === 'NC01')
+          alert('이미 존재하는 닉네임입니다!');
+        else setErrorMessage('NM01');
       }
     };
     fetchData();
@@ -46,8 +42,8 @@ function NickChangeModal() {
 
   return (
     <div className='modal'>
-      <div className='modal-title'>nickname change</div>
-      <div className='modal-content'>
+      <div className='modalTitle'>nickname change</div>
+      <div className='modalContent'>
         <div>
           <span>nickname </span>
           <input
@@ -56,9 +52,13 @@ function NickChangeModal() {
           />
         </div>
       </div>
-      <div className='modal-select'>
-        <button onClick={PostNickName}>change</button>
-        <button onClick={CloseModal}>close</button>
+      <div className='modalSelect'>
+        <button onClick={PostNickName} className='modalButton'>
+          change
+        </button>
+        <button onClick={CloseModal} className='modalButton'>
+          close
+        </button>
       </div>
     </div>
   );

@@ -3,8 +3,8 @@ import 'styles/users/MatchList.css';
 
 function MatchList() {
   return (
-    <div className='match-list'>
-      <h3>Match history</h3>
+    <div className='matchList'>
+      <div className='matchTitle'>Match history</div>
       <MatchTable />
     </div>
   );

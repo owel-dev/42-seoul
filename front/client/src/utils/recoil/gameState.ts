@@ -5,9 +5,9 @@ import { gameType, channelType } from 'types/GameTypes';
 export const channelState = atom<channelType>({
   key: `channelState/${v1()}`,
   default: {
-    channelId: null,
-    firstPlayer: null,
-    secondPlayer: null,
+    channelId: '',
+    firstPlayer: '',
+    secondPlayer: '',
   },
 });
 

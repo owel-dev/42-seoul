@@ -8,11 +8,11 @@ export class AuthJwtService {
     private jwtService: JwtService
   ) { }
 
-  async createAcessJwt(intra_id: string) {
+  async createaccessJwt(intra_id: string) {
     const payload = { intra_id };
     const accessToken = this.jwtService.sign(payload,
       {
-        secret: "AcessJwt",
+        secret: "accessJwt",
         expiresIn: 60 * 10
       });
     return accessToken;
@@ -31,7 +31,7 @@ export class AuthJwtService {
   jwtVerify(token: string) {
     return this.jwtService.verify(token,
       {
-        secret: "AcessJwt"
+        secret: "accessJwt"
       });
   }
 }

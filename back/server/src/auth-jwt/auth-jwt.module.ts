@@ -3,7 +3,7 @@ import { AuthJwtService } from './auth-jwt.service';
 import { AuthJwtController } from './auth-jwt.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { JwtAcessStrategy } from './auth-jwt.stategyAcess';
+import { JwtAccessStrategy } from './auth-jwt.stategyAccess';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from "src/users/entities/user.entity";
 import { JwtRefreshStrategy } from './auth-jwt.stategyRefresh';
@@ -21,9 +21,9 @@ import { JwtRefreshStrategy } from './auth-jwt.stategyRefresh';
   ],
   controllers: [AuthJwtController],
   providers: [
-     AuthJwtService, JwtAcessStrategy, JwtRefreshStrategy
+     AuthJwtService, JwtAccessStrategy, JwtRefreshStrategy
   ],
-  exports: [AuthJwtService, JwtAcessStrategy, JwtRefreshStrategy, PassportModule]
+  exports: [AuthJwtService, JwtAccessStrategy, JwtRefreshStrategy, PassportModule]
 })
 
 export class AuthJwtModule {}

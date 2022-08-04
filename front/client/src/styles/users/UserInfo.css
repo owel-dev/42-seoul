@@ -1,37 +1,40 @@
-.user-info{
-    padding : 2%;
-    margin : 2%;
-    height : 30%;
-    display: flex;
+.user-info {
+  padding: 2%;
+  margin: 2%;
+  height: 25vh;
+  display: flex;
+  color: black;
 }
 
-.user-info-line
-{
-    font-size: large;
-    height : 15%;
+.user-info-line {
+  font-size: large;
+  height: 5vh;
 }
-.user-label
-{
-    /* border: 1px brown solid; */
-    font-weight: bold;
-    width: 100%;
+.user-label {
+  font-weight: bold;
+  width: 100%;
 }
 
-#user-info-left
-{
-
-    flex : 1;
-    text-align: center;
-    padding: 1%;
+#user-info-left {
+  flex: 2;
+  text-align: center;
+  padding: 1%;
+  overflow: hidden;
 }
-#user-info-right
-{
-    flex : 5;
+#user-info-right {
+  flex: 5;
+  text-align: left;
 }
 
-
-#avatar{
-    max-width: 100%;
-    width: auto;
-    height : 90%;
+#user-avatar {
+  height: 18vh;
+  width: 15vw;
+  object-fit: cover;
+}
+.userChangeButton {
+  all: none;
+  height: 2rem;
+  font-size: 1rem;
+  background-color: #00babc;
+  color: white;
 }

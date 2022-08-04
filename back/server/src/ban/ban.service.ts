@@ -17,7 +17,7 @@ export class BanService {
   ) {}
 
   async create(createBanDto: CreateBanDto) {
-    console.log('Ban created');
+    // console.log('Ban created');
     const ban1 = await this.userRepository.findOne({
       where: { nickname: createBanDto.player1 },
     });
@@ -26,12 +26,18 @@ export class BanService {
     });
     if (ban1 === null)
       throw new HttpException(
-        `${createBanDto.player1}: Cannot find user`,
+        {
+          statusCode: 'BA02',
+          error: `${createBanDto.player1}: Cannot find user`,
+        },
         HttpStatus.BAD_REQUEST,
       );
     if (ban2 === null)
       throw new HttpException(
-        `${createBanDto.player2}: Cannot find user`,
+        {
+          statusCode: 'BA02',
+          error: `${createBanDto.player1}: Cannot find user`,
+        },
         HttpStatus.BAD_REQUEST,
       );
     const alreadyBan = await this.banRepository.findOne({
@@ -41,9 +47,12 @@ export class BanService {
         ban_2: ban2,
       },
     });
-    console.log(alreadyBan);
+    // console.log(alreadyBan);
     if (alreadyBan !== null)
-      throw new HttpException(`Already Banned`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        { statusCode: 'BA01', error: `Already Banned` },
+        HttpStatus.BAD_REQUEST,
+      );
     const ban = new Ban();
     ban.ban_1 = ban1;
     ban.ban_2 = ban2;
@@ -56,7 +65,10 @@ export class BanService {
       undefined
     )
       throw new HttpException(
-        `${nickName}: Cannot find user`,
+        {
+          statusCode: 'BA02',
+          error: `${nickName}: Cannot find user`,
+        },
         HttpStatus.BAD_REQUEST,
       );
     const banRepo = await this.banRepository.find({
@@ -72,7 +84,7 @@ export class BanService {
   }
 
   async deleteBan(player1: string, player2: string) {
-    console.log('delete ban');
+    // console.log('delete ban');
     const findBan = await this.banRepository.findOne({
       relations: ['ban_1', 'ban_2'],
       where: {
@@ -81,7 +93,10 @@ export class BanService {
       },
     });
     if (findBan === null)
-      throw new HttpException('Not Banned', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        { statusCode: 'BD01', error: 'Not Banned' },
+        HttpStatus.BAD_REQUEST,
+      );
     await this.banRepository.delete(findBan);
   }
 }

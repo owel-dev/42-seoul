@@ -8,7 +8,7 @@ import { AuthGuard } from '@nestjs/passport';
 export class MatchController {
   constructor(private readonly matchService: MatchService) {}
 
-	@UseGuards(AuthGuard('jwt-acess-token'))
+	@UseGuards(AuthGuard('jwt-access-token'))
 	@Post()
   	create(@Body() createMatchDto: CreateMatchDto) {
 	return this.matchService.create(createMatchDto);
@@ -19,7 +19,7 @@ export class MatchController {
 //     return this.matchService.findAll();
 //   }
 
-	@UseGuards(AuthGuard('jwt-acess-token'))
+	@UseGuards(AuthGuard('jwt-access-token'))
 	@Get(':nickname')
 	getMatchListOne(@Param('nickname') nickName: string) {
 	return this.matchService.getMatchListOne(nickName);

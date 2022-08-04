@@ -1,45 +1,68 @@
-import { useEffect } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { socket } from 'components/layout/Layout';
 import { modalState } from 'utils/recoil/modal';
 import { channelState } from 'utils/recoil/gameState';
+import { myDataState } from 'utils/recoil/myData';
 import GameModule from 'components/game/GameModule';
 import 'styles/game/Game.css';
+import { Link } from 'react-router-dom';
 
 function Game() {
   const setModalInfo = useSetRecoilState(modalState);
-  const [channelInfo] = useRecoilState(channelState);
+  const myData = useRecoilValue(myDataState);
+  const [channelInfo, setChannelInfo] = useRecoilState(channelState);
+  const [admin, setAdmin] = useState<string>('');
+
+  useEffect(() => {
+    socket.on('admin-changed', (data) => {
+      setAdmin(data);
+    });
+  });
 
   useEffect(() => {
     setModalInfo({ modalName: null });
   }, [setModalInfo]);
 
+  const exitChannel = () => {
+    if (channelInfo.channelId !== '') {
+      setChannelInfo({
+        channelId: '',
+        firstPlayer: '',
+        secondPlayer: '',
+      });
+      socket.emit('leave-channel');
+    }
+  };
+
   return (
     <div className='game-area'>
-      <button onClick={() => setModalInfo({ modalName: 'GAME-SETTING' })}>
-        채널설정
-      </button>
+      <div className='game-setting-area'>
+        {admin === myData.nickName && (
+          <button
+            onClick={() => setModalInfo({ modalName: 'GAME-SETTING' })}
+            className='game-setting'
+          >
+            Game Setting
+          </button>
+        )}
+        <Link to='/'>
+          <button className='game-setting' onClick={exitChannel}>
+            나가기
+          </button>
+        </Link>
+      </div>
       <div className='player-game-area'>
         <div className='player'>
-          플레이어1
-          <img
-            src={'https://cdn.intra.42.fr/users/norminet.jpeg'}
-            alt=''
-            className='player-image'
-          ></img>
-          <label>{channelInfo.firstPlayer}</label>
+          <div>Player1</div>
+          <div className='player-name'>{channelInfo.firstPlayer}</div>
         </div>
         <div className='game-content'>
-          게임영역
           <GameModule />
         </div>
         <div className='player'>
-          플레이어2
-          <img
-            src={'https://cdn.intra.42.fr/users/norminet.jpeg'}
-            alt=''
-            className='player-image'
-          ></img>
-          <label>{channelInfo.secondPlayer}</label>
+          <div>Player2</div>
+          <div className='player-name'>{channelInfo.secondPlayer}</div>
         </div>
       </div>
     </div>

@@ -1,27 +1,21 @@
-import { Friend } from "../entities/friend.entity";
+import { Friend } from '../entities/friend.entity';
 
-class	ResFriend {
-	nickName: string;
-	status: string;
+export class ResFriend {
+  nickName: string;
+  status: string;
 
-	constructor (
-		_nickName: string,
-		_status: string,
-		) {
-		this.nickName = _nickName;
-		this.status = _status;
-	}
+  constructor(_nickName: string, _status: string) {
+    this.nickName = _nickName;
+    this.status = _status;
+  }
 }
 
 export class ResFriendListDto {
-	friendList: ResFriend[];
+  friendList: ResFriend[];
 
-	friendToResFriendArr(friendRepository: Friend[])
-	{
-		this.friendList = friendRepository.map(
-			(friend, index, array) => {
-				return new ResFriend(friend.friend_2.nickname, friend.friend_2.status);
-			}
-		);
-	}
+  friendToResFriendArr(friendRepository: Friend[]) {
+    this.friendList = friendRepository.map((friend, index, array) => {
+      return new ResFriend(friend.friend_2.nickname, friend.friend_2.status);
+    });
+  }
 }

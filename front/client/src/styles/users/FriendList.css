@@ -1,5 +1,32 @@
-.friend-list{
-    width : 50%;
-    flex : 1;
-    padding : 2%;
+.friendList {
+  width: 50%;
+  flex: 1;
+  padding: 2%;
+}
+.friendTitle {
+  font-size: larger;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.friendTable {
+  border: 1px #00babc solid;
+  color: black;
+  overflow-y: scroll;
+  height: 40vh;
+}
+.friendRow {
+  font-size: large;
+  height: 15%;
+  display: flex;
+  align-items: center;
+}
+.friendNickname {
+  flex: 1;
+  text-align: left;
+  margin-left: 1rem;
+}
+.friendStatus {
+  flex: 1;
+  text-align: right;
+  margin-right: 1rem;
 }

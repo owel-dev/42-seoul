@@ -1,9 +1,11 @@
 import {
+  BadRequestException,
   forwardRef,
   HttpException,
   HttpStatus,
   Inject,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
@@ -25,26 +27,30 @@ export class FriendService {
     private readonly authService: AuthService,
   ) {}
 
-  async create(token: string, nickName: string) {
+  async create(token: string, createFriendDto: CreateFriendDto) {
     console.log('Friend created');
-    const reqUser = await this.authService.getUserNickByToken(token);
     const friend1 = await this.userRepository.findOne({
-      where: { nickname: reqUser },
+      where: { nickname: createFriendDto.player1 },
     });
     const friend2 = await this.userRepository.findOne({
-      where: { nickname: nickName },
+      where: { nickname: createFriendDto.player2 },
     });
-    if (friend1 === null)
+    if (!friend1)
       throw new HttpException(
-        `${reqUser}: Cannot find user`,
+        {
+          statusCode: 'FA02',
+          error: `${createFriendDto.player1}: Cannot find user`,
+        },
         HttpStatus.BAD_REQUEST,
       );
-    if (friend2 === null)
+    if (!friend2)
       throw new HttpException(
-        `${nickName}: Cannot find user`,
+        {
+          statusCode: 'FA02',
+          error: `${createFriendDto.player1}: Cannot find user`,
+        },
         HttpStatus.BAD_REQUEST,
       );
-
     const alreadyFriend = await this.friendRepository.findOne({
       relations: ['friend_1', 'friend_2'],
       where: {
@@ -53,7 +59,13 @@ export class FriendService {
       },
     });
     if (alreadyFriend !== null)
-      throw new HttpException(`Already friend`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        {
+          statusCode: 'FA01',
+          error: `Already Friend`,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
     const friend = new Friend();
     friend.friend_1 = friend1;
     friend.friend_2 = friend2;
@@ -66,7 +78,10 @@ export class FriendService {
       undefined
     )
       throw new HttpException(
-        `${nickName}: Cannot find user`,
+        {
+          statusCode: 'FA02',
+          error: `${nickName}: Cannot find user`,
+        },
         HttpStatus.BAD_REQUEST,
       );
     const friendRepo = await this.friendRepository.find({
@@ -91,8 +106,11 @@ export class FriendService {
         friend_2: { nickname: nickName },
       },
     });
-    if (findFriend === null)
-      throw new HttpException('Not friend', HttpStatus.BAD_REQUEST);
+    if (!findFriend)
+      throw new HttpException(
+        { statusCode: 'FD01', error: 'Not friend' },
+        HttpStatus.BAD_REQUEST,
+      );
     await this.friendRepository.delete(findFriend);
   }
 }

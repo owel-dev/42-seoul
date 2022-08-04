@@ -5,7 +5,7 @@ import { AuthService } from "./auth.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService) { }
+	constructor(private authService: AuthService) { }
 
 	canActivate(
 		context: ExecutionContext,

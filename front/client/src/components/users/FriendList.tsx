@@ -3,8 +3,8 @@ import 'styles/users/FriendList.css';
 
 function FriendList() {
   return (
-    <div className='friend-list'>
-      <h3>Friends</h3>
+    <div className='friendList'>
+      <div className='friendTitle'>Friends</div>
       <FriendTable />
     </div>
   );

@@ -19,13 +19,13 @@ export class StatsController {
   constructor(private readonly statsService: StatsService) {}
 
 	@Get()
-	@UseGuards(AuthGuard('jwt-acess-token'))
+	@UseGuards(AuthGuard('jwt-access-token'))
 	getRanking(@Query() query: GetRankingQuery) {
 		return this.statsService.getRanking(query.n);
 	}
 
 	@Patch(':nickname')
-	@UseGuards(AuthGuard('jwt-acess-token'))
+	@UseGuards(AuthGuard('jwt-access-token'))
 	update(@Param('nickname') nickName: string, @Body() updateStatDto: UpdateStatDto) {
 		return this.statsService.update(nickName, updateStatDto);
 	}

@@ -19,32 +19,32 @@ export class UsersController {
 		@Body() createUserDto: CreateUserDto,
 		@UploadedFile() file: Express.Multer.File
 	) {
-		console.log(createUserDto);
+		// console.log(createUserDto);
 		return this.usersService.create(createUserDto, file);
 	}
 
 	@Get('/:nickname/mypage')
-	@UseGuards(AuthGuard('jwt-acess-token'))
+	@UseGuards(AuthGuard('jwt-access-token'))
 	findOneMyPage(@Param('nickname') nickName: string) {
 		return (this.usersService.findOneMyPage(nickName));
 	}
 
 	@Get('/:nickname/modal')
-	@UseGuards(AuthGuard('jwt-acess-token'))
+	@UseGuards(AuthGuard('jwt-access-token'))
 	findOneModal(@Param('nickname') nickName: string, @Token() token: string) {
-		console.log("findOneModal");
-		console.log(nickName, token);
+		// console.log("findOneModal");
+		// console.log(nickName, token);
 		return (this.usersService.findOneModal(token, nickName))
 	}
 
-	@UseGuards(AuthGuard('jwt-acess-token'))
+	@UseGuards(AuthGuard('jwt-access-token'))
 	@Get('/navi')
 	findOneNavi(@Token() token) {
-		console.log("token: ", token);
+		// console.log("token: ", token);
 		return (this.usersService.findOneNavi(token));
 	}
 
-	@UseGuards(AuthGuard('jwt-acess-token'))
+	@UseGuards(AuthGuard('jwt-access-token'))
 	@Patch('/:nickname')
 	@UseInterceptors(FileInterceptor('avatar', multerOptions('avatar')))
 	update(
@@ -53,14 +53,14 @@ export class UsersController {
 		@Headers() header: string,
 		@UploadedFile() file: Express.Multer.File
 	) {
-		console.log(header);
-		console.log(updateUserDto);
-		console.log(updateUserDto.avatar);
-		console.log(file);
+		// console.log(header);
+		// console.log(updateUserDto);
+		// console.log(updateUserDto.avatar);
+		// console.log(file);
 		return this.usersService.update(nickName, updateUserDto, file);
 	}
 
-	@UseGuards(AuthGuard('jwt-acess-token'))
+	@UseGuards(AuthGuard('jwt-access-token'))
 	@Delete(':nickname')
 	delete(@Param() nickName: string) {
 		return this.usersService.delete(nickName);

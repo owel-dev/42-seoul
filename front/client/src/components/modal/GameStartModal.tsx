@@ -17,7 +17,13 @@ function GameStartModal() {
   const setModalInfo = useSetRecoilState(modalState);
   const myData = useRecoilValue<myData>(myDataState);
 
+  const [disable, SetDisable] = useState<boolean>(false);
+
   function closeModal() {
+    if (matchWait === true) {
+      socket.emit('match-cancel');
+    }
+
     setModalInfo({ modalName: null });
   }
 
@@ -26,9 +32,10 @@ function GameStartModal() {
   }
 
   function matchRequest() {
+    SetDisable(true);
     socket.emit('match-request', {
       mode: radioValue,
-      username: myData.nickName,
+      nickName: myData.nickName,
       password: inputValue,
     });
     setMatchWait(true);
@@ -47,9 +54,9 @@ function GameStartModal() {
         <Navigate to={'/channel/' + channelInfo.channelId} />
       ) : (
         <div className='modal'>
-          <div className='modal-title'>game start</div>
+          <div className='modalTitle'>game start</div>
           {!matchWait ? (
-            <div className='modal-content'>
+            <div className='modalContent'>
               <fieldset>
                 <legend>game option</legend>
                 <RadioOption radioChange={radioChange} value='none' />
@@ -65,13 +72,21 @@ function GameStartModal() {
               </div>
             </div>
           ) : (
-            <div className='modal-content'>
+            <div className='modalContent'>
               <div>대기중입니다..</div>
             </div>
           )}
-          <div className='modal-select'>
-            <button onClick={matchRequest}>regist</button>
-            <button onClick={closeModal}>close</button>
+          <div className='modalSelect'>
+            <button
+              disabled={disable}
+              onClick={matchRequest}
+              className='modalButton'
+            >
+              regist
+            </button>
+            <button onClick={closeModal} className='modalButton'>
+              close
+            </button>
           </div>
         </div>
       )}

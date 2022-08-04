@@ -12,7 +12,6 @@ export default function LoginChecker({ children }: LoginCheckerProps) {
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
   const token = window.location.href.split('?token=')[1];
   const navigate = useNavigate();
-
   useEffect(() => {
     if (token) localStorage.setItem('trans-token', token);
     if (localStorage.getItem('trans-token')) setIsLoggedIn(true);

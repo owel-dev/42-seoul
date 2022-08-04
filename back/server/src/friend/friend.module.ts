@@ -16,6 +16,6 @@ import { AuthJwtModule } from 'src/auth-jwt/auth-jwt.module';
   imports: [TypeOrmModule.forFeature([Friend, User]),AuthModule ,AuthJwtModule],
   controllers: [FriendController],
   providers: [FriendService],
-  exports: [],
+  exports: [FriendService],
 })
 export class FriendModule {}

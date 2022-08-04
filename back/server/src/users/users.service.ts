@@ -1,11 +1,15 @@
 import {
+  BadRequestException,
+  forwardRef,
   HttpException,
   HttpStatus,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
 import { Ban } from 'src/ban/entities/ban.entity';
+import { ChatService } from 'src/chat/chat.service';
 import { Friend } from 'src/friend/entities/friend.entity';
 import { Stat } from 'src/stats/entities/stat.entity';
 import { Repository } from 'typeorm';
@@ -29,23 +33,19 @@ export class UsersService {
   ) {}
 
   async findOneMyPage(nickName: string) {
-    console.log('user findOneMyPage');
+    // console.log('user findOneMyPage');
     const userRepo = await this.userRepository.findOne({
       relations: ['stats'],
       where: {
         nickname: nickName,
       },
     });
-    if (userRepo == undefined)
-      throw new HttpException(
-        `${nickName}: Cannot find user`,
-        HttpStatus.BAD_REQUEST,
-      );
+    if (!userRepo) throw new NotFoundException(`${nickName}: Cannot find user`);
     return new ResUserMyPage(userRepo);
   }
 
   async findOneModal(token: string, nickName: string) {
-    console.log('user findOneModal');
+    // console.log('user findOneModal');
     const reqNick = await this.authService.getUserNickByToken(token);
     const userRepo = await this.userRepository.findOne({
       relations: ['stats', 'friend_1', 'friend_2', 'ban_1', 'ban_2'],
@@ -53,30 +53,28 @@ export class UsersService {
         nickname: nickName,
       },
     });
-    console.log(userRepo);
-    if (userRepo == undefined)
+    if (!userRepo)
       throw new HttpException(
-        `${nickName}: Cannot find user`,
+        { statusCode: 'PU01', error: `${nickName}: Cannot find user` },
         HttpStatus.BAD_REQUEST,
       );
     const resUserModal = new ResUserModal(userRepo);
     resUserModal.setFriend = await this.isFriend(reqNick, userRepo.friend_2);
     resUserModal.setBan = await this.isBan(reqNick, userRepo.ban_2);
-    console.log(resUserModal.friend);
-    console.log(resUserModal.ban);
+    resUserModal.setAdmin = await this.isAdmin(reqNick);
     return resUserModal;
   }
 
   async findOneNavi(token: string) {
     console.log('findOneNavi');
     const userNick = await this.authService.getUserNickByToken(token);
-    console.log('userNick', userNick);
+    // console.log('userNick', userNick);
     const userRepo = await this.userRepository.findOne({
       where: {
         nickname: userNick,
       },
     });
-    console.log('userRepo', userRepo);
+    if (!userRepo) throw new NotFoundException(`${userNick}: Cannot find user`);
     const resUserNavi = new ResUserNavi(userRepo);
     return resUserNavi;
   }
@@ -103,6 +101,18 @@ export class UsersService {
     return false;
   }
 
+  async isAdmin(requester: string): Promise<boolean> {
+    const findUser = await this.userRepository.findOneBy({
+      nickname: requester,
+    });
+    if (!findUser)
+      throw new NotFoundException(`${requester}: Cannot find user`);
+    const curChannel = ChatService.users.find(
+      (user) => user.intraId === findUser.intra_id,
+    ).curChannel;
+    return ChatService.channels.get(curChannel).admin === findUser.intra_id;
+  }
+
   create(createUserDto: CreateUserDto, file: Express.Multer.File) {
     return this.saveUser(createUserDto, file);
   }
@@ -115,14 +125,10 @@ export class UsersService {
     if (
       (await this.userRepository.findOneBy({ nickname: nickName })) == undefined
     )
-      throw new HttpException(
-        `${nickName}: Cannot find user`,
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new NotFoundException(`${nickName}: Cannot find user`);
     const ipv4 = await this.getIpAdrress();
     if (updateUserDto.nickName !== undefined) {
       if (await this.isNickAvailable(updateUserDto.nickName)) {
-        console.log('nickname updated');
         this.userRepository.update(
           { nickname: nickName },
           { nickname: updateUserDto.nickName },
@@ -130,12 +136,15 @@ export class UsersService {
       }
     }
     if (file !== undefined) {
-      console.log('avatar updated');
-      this.userRepository.update(nickName, {
-        avatar: `http://${ipv4}:3000/public/avatar/${file.filename}`,
-      });
+      //   console.log('avatar updated');
+      this.userRepository.update(
+        { nickname: nickName },
+        {
+          avatar: `http://${ipv4}:3000/public/avatar/${file.filename}`,
+        },
+      );
     }
-    return `update`;
+    return `http://${ipv4}:3000/public/avatar/${file.filename}`;
   }
 
   async delete(nickName: string) {
@@ -168,14 +177,12 @@ export class UsersService {
         nickname: nickName,
       },
     });
-    console.log(nickName);
-    console.log(users);
     if (users.length === 0) {
       return true;
     } else {
       throw new HttpException(
-        `${nickName}: Nickname already exist`,
-        HttpStatus.FORBIDDEN,
+        { statusCode: 'NC01', error: `${nickName}: Nickname already exist` },
+        HttpStatus.BAD_REQUEST,
       );
     }
   }

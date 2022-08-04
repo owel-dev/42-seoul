@@ -22,7 +22,7 @@ function PasswordSubmitModal() {
       (data: boolean) => {
         if (data === true) {
           setPasswordCorrect(true);
-          socket.emit('spectate-request', { gameId: channelInfo.channelId });
+          socket.emit('spectate-request', { channelId: channelInfo.channelId });
         } else {
           alert('password가 틀렸습니다.');
         }
@@ -34,8 +34,8 @@ function PasswordSubmitModal() {
     <Navigate to={'/channel/' + channelInfo.channelId} />
   ) : (
     <div className='modal'>
-      <div className='modal-title'>비밀번호 제출</div>
-      <div className='modal-content'>
+      <div className='modalTitle'>비밀번호 제출</div>
+      <div className='modalContent'>
         <div>
           <span>password </span>
           <input
@@ -44,9 +44,13 @@ function PasswordSubmitModal() {
           />
         </div>
       </div>
-      <div className='modal-select'>
-        <button onClick={submitPassword}>제출</button>
-        <button onClick={closeModal}>close</button>
+      <div className='modalSelect'>
+        <button onClick={submitPassword} className='modalButton'>
+          제출
+        </button>
+        <button onClick={closeModal} className='modalButton'>
+          close
+        </button>
       </div>
     </div>
   );

@@ -2,13 +2,13 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { MatchService } from './match.service';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('match')
 export class MatchController {
   constructor(private readonly matchService: MatchService) {}
 
-	@UseGuards(AuthGuard)
+	@UseGuards(AuthGuard('jwt-access-token'))
 	@Post()
   	create(@Body() createMatchDto: CreateMatchDto) {
 	return this.matchService.create(createMatchDto);
@@ -19,7 +19,7 @@ export class MatchController {
 //     return this.matchService.findAll();
 //   }
 
-	@UseGuards(AuthGuard)
+	@UseGuards(AuthGuard('jwt-access-token'))
 	@Get(':nickname')
 	getMatchListOne(@Param('nickname') nickName: string) {
 	return this.matchService.getMatchListOne(nickName);

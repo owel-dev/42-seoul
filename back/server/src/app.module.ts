@@ -17,6 +17,7 @@ import { Ban } from './ban/entities/ban.entity';
 import { Stat } from './stats/entities/stat.entity';
 import { Match } from './match/entities/match.entity';
 import { User } from './users/entities/user.entity';
+import { AuthJwtModule } from './auth-jwt/auth-jwt.module';
 import { ChatModule } from './chat/chat.module';
 
 @Module({
@@ -29,6 +30,7 @@ import { ChatModule } from './chat/chat.module';
     BanModule,
     GameModule,
     AuthModule,
+    AuthJwtModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

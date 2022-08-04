@@ -3,7 +3,6 @@ import {
   forwardRef,
   HttpException,
   HttpStatus,
-  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -69,7 +68,7 @@ export class UsersService {
   async findOneNavi(token: string) {
     console.log('findOneNavi');
     const userNick = await this.authService.getUserNickByToken(token);
-    // console.log('userNick', userNick);
+    console.log('userNick', userNick);
     const userRepo = await this.userRepository.findOne({
       where: {
         nickname: userNick,
@@ -77,6 +76,8 @@ export class UsersService {
     });
     if (!userRepo) throw new NotFoundException(`${userNick}: Cannot find user`);
     const resUserNavi = new ResUserNavi(userRepo);
+    console.log("+++userNick", userNick);
+    console.log("+++findOneNavi", resUserNavi);
     return resUserNavi;
   }
 

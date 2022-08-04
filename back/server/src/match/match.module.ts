@@ -11,9 +11,11 @@ import { UsersModule } from 'src/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Match } from './entities/match.entity';
 import { User } from 'src/users/entities/user.entity';
+import { AuthJwtModule } from 'src/auth-jwt/auth-jwt.module';
+
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Match, User]), AuthModule],
+  imports: [TypeOrmModule.forFeature([Match, User]), AuthJwtModule],
   controllers: [MatchController],
   providers: [MatchService],
 })

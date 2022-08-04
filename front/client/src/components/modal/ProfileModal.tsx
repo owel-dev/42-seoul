@@ -34,6 +34,7 @@ function ProfileModal() {
         alert('존재하지 않는 사용자입니다.');
         setModalInfo({ modalName: null });
       } else {
+        console.log(e);
         setModalInfo({ modalName: null });
         setErrorMessage('PM01');
       }

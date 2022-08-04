@@ -18,11 +18,11 @@ function Nav(props: { nickName: string; avatar: string }) {
         firstPlayer: '',
         secondPlayer: '',
       });
-      if (friend) {
-        setFriend(false);
-        socket.emit('friend-end');
-      }
       socket.emit('leave-channel');
+    }
+    if (friend) {
+      setFriend(false);
+      socket.emit('friend-end');
     }
   };
 

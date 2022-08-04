@@ -1,17 +1,20 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { modalState } from 'utils/recoil/modal';
 import { errorState } from 'utils/recoil/error';
 import styles from 'styles/error/error.module.css';
 
 export default function Error() {
   const [errorMessage, setErrorMessage] = useRecoilState(errorState);
+  const setModalInfo = useSetRecoilState(modalState);
   const navigate = useNavigate();
 
   useEffect(() => {}, []);
 
   const goHome = () => {
     setErrorMessage('');
+    setModalInfo({ modalName: null });
     navigate('');
   };
 

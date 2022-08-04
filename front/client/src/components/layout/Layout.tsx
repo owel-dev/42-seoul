@@ -36,7 +36,7 @@ function Layout({ children }: LayoutProps) {
     if (!window.localStorage.getItem('trans-token')) {
       window.location.reload();
     }
-  }, [socket]);
+  }, [socket, io]);
 
   useEffect(() => {
     getMyData();

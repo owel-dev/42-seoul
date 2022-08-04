@@ -31,7 +31,9 @@ function ProfileModal() {
       const res = await instance.get(`/users/${modalInfo.user}/modal`);
       setUserData(res?.data);
     } catch (e: any) {
-      if (e.response.data.statusCode === 'PU01') {
+      if (e.message === `Network Error`) {
+        setErrorMessage('E500');
+      } else if (e.response.data.statusCode === 'PU01') {
         alert('존재하지 않는 사용자입니다.');
         setModalInfo({ modalName: null });
       } else {
@@ -67,7 +69,9 @@ function ProfileModal() {
       alert('친구 추가가 완료되었습니다.');
       setModalInfo({ modalName: null });
     } catch (e: any) {
-      if (e.response.data.statusCode === 'FA01')
+      if (e.message === `Network Error`) {
+        setErrorMessage('E500');
+      } else if (e.response.data.statusCode === 'FA01')
         alert('이미 등록된 상태입니다.');
       else if (e.response.data.statusCode === 'FA02')
         alert('존재하지 않는 사용자입니다.');
@@ -87,7 +91,9 @@ function ProfileModal() {
       alert('친구 삭제가 완료되었습니다.');
       setModalInfo({ modalName: null });
     } catch (e: any) {
-      if (e.response.data.statusCode === 'FD01')
+      if (e.message === `Network Error`) {
+        setErrorMessage('E500');
+      } else if (e.response.data.statusCode === 'FD01')
         alert('친구 목록에 없는 유저입니다.');
       else if (e.response.data.statusCode === 'FD02')
         alert('존재하지 않는 사용자입니다.');
@@ -110,7 +116,9 @@ function ProfileModal() {
       alert('차단이 완료되었습니다.');
       setModalInfo({ modalName: null });
     } catch (e: any) {
-      if (e.response.data.statusCode === 'BA01')
+      if (e.message === `Network Error`) {
+        setErrorMessage('E500');
+      } else if (e.response.data.statusCode === 'BA01')
         alert('이미 차단된 상태입니다.');
       else if (e.response.data.statusCode === 'BA02')
         alert('존재하지 않는 사용자입니다.');
@@ -128,7 +136,9 @@ function ProfileModal() {
       alert('차단이 해제되었습니다.');
       setModalInfo({ modalName: null });
     } catch (e: any) {
-      if (e.response.data.statusCode === 'BD01')
+      if (e.message === `Network Error`) {
+        setErrorMessage('E500');
+      } else if (e.response.data.statusCode === 'BD01')
         alert('차단되지 않은 사용자입니다.');
       else if (e.response.data.statusCode === 'BD02')
         alert('존재하지 않는 사용자입니다.');

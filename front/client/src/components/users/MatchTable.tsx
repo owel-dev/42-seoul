@@ -15,8 +15,10 @@ function MatchTable() {
     try {
       const getAPI = await instance.get(`/match/` + profileData.nickName);
       setMatchList(getAPI.data);
-    } catch (e) {
-      setErrorMessage('MT01');
+    } catch (e: any) {
+      if (e.message === `Network Error`) {
+        setErrorMessage('E500');
+      } else setErrorMessage('MT01');
     }
   };
 

@@ -47,7 +47,10 @@ function Layout({ children }: LayoutProps) {
       const res = await instance.get(`/users/navi`);
       setMyData(res?.data);
     } catch (e: any) {
-      if (e.response.status === 403) {
+      console.log(e.message, 'Network Error', e);
+      if (e.message === `Network Error`) {
+        setErrorMessage('E500');
+      } else if (e.response.status === 403) {
         alert('다시 로그인 해주세요!!');
         localStorage.removeItem('trans-token');
         setIsLoggedIn(false);

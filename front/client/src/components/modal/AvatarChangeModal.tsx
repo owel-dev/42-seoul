@@ -55,7 +55,9 @@ function AvatarChangeModal() {
         );
         setIsChange(true);
       } catch (e: any) {
-        if (e.response.data.statusCode === 'AC01')
+        if (e.message === `Network Error`) {
+          setErrorMessage('E500');
+        } else if (e.response.data.statusCode === 'AC01')
           alert('jpg, jpeg, png, gif 파일만 등록 가능합니다.');
         else if (e.response.data.statusCode === 'AC02')
           alert('10MB 이하의 파일만 등록 가능합니다.');

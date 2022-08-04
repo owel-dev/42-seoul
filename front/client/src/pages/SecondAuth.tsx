@@ -17,8 +17,10 @@ function SecondAuth() {
       await instance.post(`/oauth/sendEmail?id=${myData.nickName}`, {
         email: emailInput,
       });
-    } catch (e) {
-      setErrorMessage('SA01');
+    } catch (e: any) {
+      if (e.message === `Network Error`) {
+        setErrorMessage('E500');
+      } else setErrorMessage('SA01');
     }
   };
 
@@ -32,7 +34,10 @@ function SecondAuth() {
       );
       setMyData(res?.data);
     } catch (e: any) {
-      if (e.response.data.statusCode === 'SC01') alert('잘못된 코드입니다.');
+      if (e.message === `Network Error`) {
+        setErrorMessage('E500');
+      } else if (e.response.data.statusCode === 'SC01')
+        alert('잘못된 코드입니다.');
       else setErrorMessage('SA02');
     }
   };

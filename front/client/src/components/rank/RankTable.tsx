@@ -21,7 +21,9 @@ function RankTable() {
       const getAPI = await instance.get(`/stat`);
       setRank(getAPI.data);
     } catch (e: any) {
-      if (e.response.status === 403) {
+      if (e.message === `Network Error`) {
+        setErrorMessage('E500');
+      } else if (e.response.status === 403) {
         alert('다시 로그인 해주세요!!');
         localStorage.removeItem('trans-token');
         setIsLoggedIn(false);

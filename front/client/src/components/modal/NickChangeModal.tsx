@@ -32,7 +32,9 @@ function NickChangeModal() {
         });
         setIsChange(true);
       } catch (e: any) {
-        if (e.response.data.statusCode === 'NC01')
+        if (e.message === `Network Error`) {
+          setErrorMessage('E500');
+        } else if (e.response.data.statusCode === 'NC01')
           alert('이미 존재하는 닉네임입니다!');
         else setErrorMessage('NM01');
       }

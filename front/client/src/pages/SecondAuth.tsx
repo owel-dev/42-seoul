@@ -13,14 +13,20 @@ function SecondAuth() {
   const setErrorMessage = useSetRecoilState(errorState);
 
   const sendEmail = async () => {
-    try {
-      await instance.post(`/oauth/sendEmail?id=${myData.nickName}`, {
-        email: emailInput,
-      });
-    } catch (e: any) {
-      if (e.message === `Network Error`) {
-        setErrorMessage('E500');
-      } else setErrorMessage('SA01');
+    if (emailInput.indexOf('@') === -1 || emailInput.indexOf('.') === -1) {
+      alert('이메일 양식을 확인해주세요');
+    } else if (emailInput === '') {
+      alert('이메일을 입력해주세요');
+    } else {
+      try {
+        await instance.post(`/oauth/sendEmail?id=${myData.nickName}`, {
+          email: emailInput,
+        });
+      } catch (e: any) {
+        if (e.message === `Network Error`) {
+          setErrorMessage('E500');
+        } else setErrorMessage('SA01');
+      }
     }
   };
 
@@ -49,6 +55,7 @@ function SecondAuth() {
         <div className='submitFrame'>
           <label className='submitLabel'>email</label>
           <input
+            placeholder='ex) marvin@student.42.fr'
             className='submitInput'
             onChange={(e) => setEmailInput(e.target.value)}
           />

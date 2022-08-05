@@ -60,7 +60,7 @@ function Game() {
   return (
     <div>
       {gameInfo.gameMode === '' ? (
-        <div></div>
+        <></>
       ) : (
         <div className='game-area'>
           <div className='game-setting-area'>

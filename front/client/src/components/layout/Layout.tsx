@@ -56,7 +56,6 @@ function Layout({ children }: LayoutProps) {
       const res = await instance.get(`/users/navi`);
       setMyData(res?.data);
     } catch (e: any) {
-      console.log(e.message, 'Network Error', e);
       if (e.message === `Network Error`) {
         setErrorMessage('E500');
       } else if (e.response.status === 403) {

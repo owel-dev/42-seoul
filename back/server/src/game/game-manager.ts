@@ -10,137 +10,170 @@ import { Game } from './game';
 
 @Injectable()
 export class GameManager {
-  constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
-    private chatService: ChatService,
-  ) {}
+    constructor(
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
+        @InjectRepository(Stat)
+        private statRepository: Repository<Stat>,
+        private chatService: ChatService,
+    ) { }
 
-  games = [];
-  gameChannelList = [];
+    games = [];
+    gameChannelList = [];
 
-  async addNewGame(data: any, server: Server) {
-    const game = new Game(data, server);
-    this.games.push(game);
-    this.chatService.createChannel(
-      game.firstPlayer.socket,
-      game.channelId,
-      server,
-    );
+    async addNewGame(data: any, server: Server) {
+        const game = new Game(data, server);
+        this.games.push(game);
 
-    this.chatService.joinChannel(
-      game.secondPlayer.socket,
-      { channelId: game.channelId },
-      server,
-    );
+        this.chatService.createChannel(
+            game.firstPlayer.socket,
+            game.channelId,
+            server,
+        );
 
-    await this.userRepository.update(
-      { nickname: data.firstNick },
-      { channel_id: game.channelId, status: 'gamming' },
-    );
-    await this.userRepository.update(
-      { nickname: data.secondNick },
-      { channel_id: game.channelId, status: 'gamming' },
-    );
+        this.chatService.joinChannel(
+            game.secondPlayer.socket,
+            { channelId: game.channelId },
+            server,
+        );
 
-    game.startGame().then(async (data) => {
-      await this.userRepository.update(
-        { nickname: game.firstPlayer.nickName },
-        { status: 'online' },
-      );
-      await this.userRepository.update(
-        { nickname: game.secondPlayer.nickName },
-        { status: 'online' },
-      );
-    });
+        await this.userRepository.update(
+            { nickname: data.firstNick },
+            { channel_id: game.channelId, status: 'gaming' },
+        );
 
-    // console.log("games", this.games);
+        await this.userRepository.update(
+            { nickname: data.secondNick },
+            { channel_id: game.channelId, status: 'gaming' },
+        );
 
-    const getChannelDto = new GetChannelDto();
-    getChannelDto.channelId = game.channelId;
-    getChannelDto.player1 = game.firstPlayer.nickName;
-    getChannelDto.player2 = game.secondPlayer.nickName;
-    getChannelDto.curNumUser = 2;
-    getChannelDto.maxUser = 10;
-    getChannelDto.password = game.password;
-    getChannelDto.type = 0;
-    // getChannelDto.mode = game.gameMode;
-    getChannelDto.mode = 'none';
+        game.startGame().then(async (data) => {
+            // const stat = this.statRepository.findOne({relations: ['user'], where: {
+            // }});
+            // stat.win++
+            // stat.intra_id =
 
-    this.gameChannelList.push(getChannelDto);
-  }
+            await await this.statRepository.save();
+            await this.userRepository.update(
+                { nickname: game.firstPlayer.nickName },
+                { status: 'online' },
+            );
+            await this.userRepository.update(
+                { nickname: game.secondPlayer.nickName },
+                { status: 'online' },
+            );
+        });
 
-  getChannelList() {
-    return this.gameChannelList;
-  }
+        // console.log("games", this.games);
 
-  closeGame(channelId: string) {
-    console.log('closegame');
-    // this.games.map((game) => {
-    //   if (game.channelId === channelId) {
-    //     game.stopSendData();
-    //   }
-    // });
-    this.games = this.games.filter((game) => game.gameId !== channelId);
-    this.gameChannelList = this.games.filter(
-      (gameChannel) => gameChannel.channelId !== channelId,
-    );
-    console.log(this.games);
-    console.log(this.gameChannelList);
-  }
+        const getChannelDto = new GetChannelDto();
+        getChannelDto.channelId = game.channelId;
+        getChannelDto.player1 = game.firstPlayer.nickName;
+        getChannelDto.player2 = game.secondPlayer.nickName;
+        getChannelDto.curNumUser = 2;
+        getChannelDto.maxUser = 10;
+        getChannelDto.password = game.password;
+        getChannelDto.type = 0;
+        getChannelDto.gameMode = game.gameMode;
+        // getChannelDto.mode = 'none';
 
-  changePassword(channelId: string, password: string) {
-    for (const game of this.games) {
-      if (game.channelId === channelId) {
-        game.password = password;
-        break;
-      }
+        this.gameChannelList.push(getChannelDto);
     }
-    for (const gameChannel of this.gameChannelList) {
-      if (gameChannel.channelId === channelId) {
-        gameChannel.password = password;
-        break;
-      }
-    }
-  }
 
-  changeSocket(channelId: string, nickName: string, socket: Socket) {
-    for (const game of this.games) {
-      if (game.channelId === channelId) {
-        if (game.firstPlayer.nickName === nickName) {
-          game.firstPlayer.socket = socket;
-          console.log('firstPlayer reload');
-          console.log('firstPlayer reload socket: ', socket.id);
-        } else if (game.secondPlayer.nickName === nickName) {
-          console.log('secondPlayer reload');
-          game.secondPlayer.socket = socket;
+    getChannelList() {
+        return this.gameChannelList;
+    }
+
+    closeGame(channelId: string) {
+        // console.log('closegame');
+
+        // this.games.map((game) => {
+        //   if (game.channelId === channelId) {
+        //     game.stopSendData();
+        //   }
+        // });
+        this.games = this.games.filter((game) => game.gameId !== channelId);
+        this.gameChannelList = this.games.filter(
+            (gameChannel) => gameChannel.channelId !== channelId,
+        );
+        // console.log(this.games);
+        // console.log(this.gameChannelList);
+    }
+
+    changePassword(channelId: string, password: string) {
+        for (let game of this.games) {
+            if (game.channelId === channelId) {
+                game.password = password;
+                break;
+            }
         }
-        break;
-      }
+        for (let gameChannel of this.gameChannelList) {
+            if (gameChannel.channelId === channelId) {
+                gameChannel.password = password;
+                break;
+            }
+        }
     }
-  }
 
-  async isPlayer(user: User): Promise<boolean> {
-    const curChannel = this.games.find(
-      (game) => game.channelId === user.channel_id,
-    );
-    if (
-      curChannel.firstPlayer === user.nickname ||
-      curChannel.secondPlayer === user.nickname
-    ) {
-      return true;
-    } else {
-      return false;
+    changeSocket(channelId: string, nickName: string, socket: Socket) {
+        for (let game of this.games) {
+            if (game.channelId === channelId) {
+                if (game.firstPlayer.nickName === nickName) {
+                    game.firstPlayer.socket = socket;
+                    // console.log('firstPlayer reload');
+                    // console.log('firstPlayer reload socket: ', socket.id);
+                } else if (game.secondPlayer.nickName === nickName) {
+                    // console.log('secondPlayer reload');
+                    game.secondPlayer.socket = socket;
+                }
+                break;
+            }
+        }
     }
-  }
 
-  // findUser(socketId: string, server: Server, socket: Socket) {
-  //     for (let game of this.games) {
-  //         if (game.firstPlayer.socketId === socketId ||
-  //             game.secondPlayer.socketId === socketId) {
-  //             return "player";
-  //         }
-  //     }
-  //     // const userList = server.sockets.adapter.rooms[]
-  // }
+    async isPlayer(user: User): Promise<boolean> {
+        const curChannel = this.games.find(
+            (game) => game.channelId === user.channel_id,
+        );
+        if (
+            curChannel.firstPlayer === user.nickname ||
+            curChannel.secondPlayer === user.nickname
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    getMode(channelId: string): string {
+        // console.log("games: ", this.games);
+        for (let game of this.games) {
+            if (game.channelId === channelId) {
+                // console.log("game.channelId", game.channelId);
+                return game.gameMode;
+            }
+        }
+        return undefined;
+    }
+
+    getPlayer(channelId: string): any {
+        for (let game of this.games) {
+            if (game.channelId === channelId) {
+                return {
+                    firstPlayer: game.firstPlayer.nickName,
+                    secondPlayer: game.secondPlayer.nickName
+                };
+            }
+        }
+        return undefined;
+    }
+
+    stopGame(channelId: string, user: String) {
+        for (let game of this.games) {
+            if (game.channelId === channelId) {
+                game.stopSignal(user);
+            }
+        }
+
+    }
 }

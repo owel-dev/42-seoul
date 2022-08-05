@@ -23,5 +23,5 @@ export class GetChannelDto {
     type: number;
 
     @ApiProperty({ description: ' ' })
-    mode: string;
+    gameMode: string;
 }

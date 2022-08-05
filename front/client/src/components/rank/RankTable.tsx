@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { userRank } from 'types/RankTypes';
+import { rankRowType, userRank } from 'types/RankTypes';
 import { loginState } from 'utils/recoil/login';
 import { errorState } from 'utils/recoil/error';
 import RankRow from 'components/rank/RankRow';
@@ -37,19 +37,9 @@ function RankTable() {
   return (
     <div className='rank-table'>
       <RankTitleRow />
-      {rank?.ranking.map((val: any, index: any) => {
+      {rank?.ranking.map((val: rankRowType, index: number) => {
         const row_type = index % 2 ? 'rank-row' : 'rank-row-gray';
-        return (
-          <RankRow
-            key={index}
-            rank={val.rank}
-            nickName={val.nickName}
-            win={val.win}
-            lose={val.lose}
-            winRate={val.winRate}
-            type={row_type}
-          />
-        );
+        return <RankRow key={index} rankrow={val} type={row_type} />;
       })}
     </div>
   );

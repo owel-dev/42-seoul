@@ -1,4 +1,4 @@
-function RadioOption(props: any) {
+function RadioOption(props: { radioChange: Function; value: string }) {
   return (
     <div>
       <input

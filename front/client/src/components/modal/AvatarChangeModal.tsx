@@ -9,10 +9,10 @@ import 'styles/modal/Modal.css';
 
 function AvatarChangeModal() {
   const [myData, setMyData] = useRecoilState(myDataState);
-  const [profileData, setProfileData] = useRecoilState(profileState);
   const [postImg, setPostImg] = useState<FormData>();
   const [isChange, setIsChange] = useState<boolean>();
   const [previewImg, setPreviewImg] = useState(myData.avatar);
+  const setProfileData = useSetRecoilState(profileState);
   const setModalInfo = useSetRecoilState(modalState);
   const setErrorMessage = useSetRecoilState(errorState);
 
@@ -27,26 +27,24 @@ function AvatarChangeModal() {
     }
   }, [isChange]);
 
-  const uploadAvatar = (e: any) => {
+  const uploadAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+
     const rd = new FileReader();
-
-    if (e.target.files[0] !== null) {
-      //미리보기
-      rd.readAsDataURL(e.target.files[0]);
-      setPreviewImg(URL.createObjectURL(e.target.files[0]));
-
-      //전송할 FormData
-      const img = new FormData();
-      img.append('avatar', e.target.files[0]);
-      setPostImg(img);
-    }
+    const file: Blob = e.target.files[0];
+    //미리보기
+    rd.readAsDataURL(file);
+    setPreviewImg(URL.createObjectURL(file));
+    //전송할 FormData
+    const img = new FormData();
+    img.append('avatar', file);
+    setPostImg(img);
   };
 
   const postAvatar = async () => {
     try {
       const res = await axios.patch(
         `${process.env.REACT_APP_SERVERIP}/users/` + myData.nickName,
-
         postImg,
         {
           headers: {

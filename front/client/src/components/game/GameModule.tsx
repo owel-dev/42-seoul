@@ -9,8 +9,7 @@ let pingTime = 0;
 
 function GameModule(props: { gameMode: string }) {
   function draw_background(
-    ctx: any,
-    canvasEle: any,
+    ctx: CanvasRenderingContext2D,
     width: number,
     height: number,
     img: string
@@ -31,7 +30,7 @@ function GameModule(props: { gameMode: string }) {
     }
   }
 
-  function draw_ball(ctx: any, x: number, y: number) {
+  function draw_ball(ctx: CanvasRenderingContext2D, x: number, y: number) {
     ctx.beginPath();
     ctx.arc(x, y, 10, 0, Math.floor(Math.PI * 2));
     ctx.fillStyle = 'white';
@@ -40,7 +39,7 @@ function GameModule(props: { gameMode: string }) {
   }
 
   function draw_paddle(
-    ctx: any,
+    ctx: CanvasRenderingContext2D,
     x: number,
     y: number,
     width: number,
@@ -50,7 +49,12 @@ function GameModule(props: { gameMode: string }) {
     ctx.fillRect(x, y, width, height);
   }
 
-  function draw_text(ctx: any, text: string, width: number, height: number) {
+  function draw_text(
+    ctx: CanvasRenderingContext2D,
+    text: string,
+    width: number,
+    height: number
+  ) {
     ctx.textAlign = 'center';
     ctx.font = '40pt pira';
     ctx.fillStyle = 'white';
@@ -59,28 +63,22 @@ function GameModule(props: { gameMode: string }) {
   }
 
   function saveMouseState(event: MouseEvent) {
-    const canvasEle: any = canvas.current;
+    const canvasEle = canvas.current as HTMLCanvasElement;
     const ratio: number = canvasEle.height / canvasEle.clientHeight;
-    //캔버스 크기/줄어든 캔버스 실제 크기의 비율
+
     mouseState = event.nativeEvent.offsetY * ratio;
   }
 
-  const canvas: any = useRef();
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const background = useRef<HTMLCanvasElement>(null);
   const [gameData, setGameData] = useRecoilState(gameState);
   const [countData, setCountData] = useRecoilState(countState);
 
-  const background: any = useRef();
   useEffect(() => {
-    const canvasEle: any = background.current;
-    const ctx = canvasEle.getContext('2d');
+    const canvasEle = background.current!;
+    const ctx = canvasEle.getContext('2d')!;
 
-    draw_background(
-      ctx,
-      canvasEle,
-      canvasEle.width,
-      canvasEle.height,
-      props.gameMode
-    );
+    draw_background(ctx, canvasEle.width, canvasEle.height, props.gameMode);
   }, []);
 
   useEffect(() => {
@@ -104,8 +102,8 @@ function GameModule(props: { gameMode: string }) {
   }, [setCountData, setGameData]);
 
   useEffect(() => {
-    const canvasEle: any = canvas.current;
-    const ctx = canvasEle.getContext('2d');
+    const canvasEle = canvas.current!;
+    const ctx = canvasEle.getContext('2d')!;
     const displayWidth = canvasEle.width;
     const displayHeight = canvasEle.height;
 
@@ -144,8 +142,8 @@ function GameModule(props: { gameMode: string }) {
   });
 
   useEffect(() => {
-    const canvasEle: any = canvas.current;
-    const ctx = canvasEle.getContext('2d', { alpha: 'false' });
+    const canvasEle = canvas.current!;
+    const ctx = canvasEle.getContext('2d')!;
     const displayWidth = canvasEle.width;
     const displayHeight = canvasEle.height;
 

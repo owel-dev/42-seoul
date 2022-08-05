@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL: any = `${process.env.REACT_APP_SERVERIP}`;
+const baseURL: string = `${process.env.REACT_APP_SERVERIP}`;
 
 const instance = axios.create({ baseURL });
 

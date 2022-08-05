@@ -13,7 +13,7 @@ function SecondAuth() {
   const setErrorMessage = useSetRecoilState(errorState);
 
   const sendEmail = async () => {
-    if (emailInput.indexOf('@') === -1) {
+    if (emailInput.indexOf('@') === -1 || emailInput.indexOf('.') === -1) {
       alert('이메일 양식을 확인해주세요');
     } else if (emailInput === '') {
       alert('이메일을 입력해주세요');

@@ -31,39 +31,27 @@ function NickChangeModal() {
 
   function PostNickName() {
     const regexNickname = /^[a-zA-Z0-9]+$/;
+    const fetchData = async () => {
+      try {
+        await instance.patch(`/users/` + myData.nickName, {
+          nickName: inputValue,
+        });
+        setMyData((prev) => ({ ...prev, nickName: inputValue }));
+        setProfileData((prev) => ({ ...prev, nickName: inputValue }));
+        setIsChange(true);
+      } catch (e: any) {
+        if (e.message === `Network Error`) {
+          setErrorMessage('E500');
+        } else if (e.response.data.statusCode === 'NC01')
+          alert('이미 존재하는 닉네임입니다!');
+        else setErrorMessage('NM01');
+      }
+    };
     if (inputValue === '') {
       alert('닉네임을 입력해주세요');
     } else if (regexNickname.test(inputValue) === false) {
       alert('닉네임에는 영문자, 숫자만 사용할 수 있습니다');
     } else {
-      const fetchData = async () => {
-        try {
-          await instance.patch(`/users/` + myData.nickName, {
-            nickName: inputValue,
-          });
-          setIsChange(true);
-          setMyData({
-            nickName: inputValue,
-            avatar: myData.avatar,
-            admin: myData.admin,
-            isSecondAuth: myData.isSecondAuth,
-          });
-          setProfileData({
-            intraId: profileData.intraId,
-            avatar: profileData.avatar,
-            nickName: inputValue,
-            win: profileData.win,
-            lose: profileData.lose,
-            winRate: profileData.winRate,
-          });
-        } catch (e: any) {
-          if (e.message === `Network Error`) {
-            setErrorMessage('E500');
-          } else if (e.response.data.statusCode === 'NC01')
-            alert('이미 존재하는 닉네임입니다!');
-          else setErrorMessage('NM01');
-        }
-      };
       fetchData();
     }
   }

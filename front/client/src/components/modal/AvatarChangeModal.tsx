@@ -42,46 +42,31 @@ function AvatarChangeModal() {
     }
   };
 
-  const postAvatar = () => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.patch(
-          `${process.env.REACT_APP_SERVERIP}/users/` + myData.nickName,
+  const postAvatar = async () => {
+    try {
+      const res = await axios.patch(
+        `${process.env.REACT_APP_SERVERIP}/users/` + myData.nickName,
 
-          postImg,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${localStorage.getItem('trans-token')}`, // 로그인 후 처리
-            },
-          }
-        );
-        setIsChange(true);
-        setMyData({
-          nickName: myData.nickName,
-          avatar: res.data,
-          admin: myData.admin,
-          isSecondAuth: myData.isSecondAuth,
-        });
-        setProfileData({
-          intraId: profileData.intraId,
-          avatar: res.data,
-          nickName: profileData.nickName,
-          win: profileData.win,
-          lose: profileData.lose,
-          winRate: profileData.winRate,
-        });
-      } catch (e: any) {
-        if (e.message === `Network Error`) {
-          setErrorMessage('E500');
-        } else if (e.response.data.statusCode === 'AC01')
-          alert('jpg, jpeg, png, gif 파일만 등록 가능합니다.');
-        else if (e.response.data.statusCode === 'AC02')
-          alert('10MB 이하의 파일만 등록 가능합니다.');
-        else setErrorMessage('AM01');
-      }
-    };
-    fetchData();
+        postImg,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${localStorage.getItem('trans-token')}`, // 로그인 후 처리
+          },
+        }
+      );
+      setMyData((prev) => ({ ...prev, avatar: res.data }));
+      setProfileData((prev) => ({ ...prev, avatar: res.data }));
+      setIsChange(true);
+    } catch (e: any) {
+      if (e.message === `Network Error`) {
+        setErrorMessage('E500');
+      } else if (e.response.data.statusCode === 'AC01')
+        alert('jpg, jpeg, png, gif 파일만 등록 가능합니다.');
+      else if (e.response.data.statusCode === 'AC02')
+        alert('10MB 이하의 파일만 등록 가능합니다.');
+      else setErrorMessage('AM01');
+    }
   };
 
   return (

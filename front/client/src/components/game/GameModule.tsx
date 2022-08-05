@@ -1,6 +1,6 @@
-import { socket } from 'components/layout/Layout';
 import { MouseEvent, useEffect, useRef } from 'react';
 import { useRecoilState } from 'recoil';
+import { socket } from 'components/layout/Layout';
 import { countState, gameState } from 'utils/recoil/gameState';
 import 'styles/game/Game.css';
 
@@ -8,6 +8,11 @@ let mouseState = 0;
 let pingTime = 0;
 
 function GameModule(props: { gameMode: string }) {
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const background = useRef<HTMLCanvasElement>(null);
+  const [gameData, setGameData] = useRecoilState(gameState);
+  const [countData, setCountData] = useRecoilState(countState);
+
   function draw_background(
     ctx: CanvasRenderingContext2D,
     width: number,
@@ -68,11 +73,6 @@ function GameModule(props: { gameMode: string }) {
 
     mouseState = event.nativeEvent.offsetY * ratio;
   }
-
-  const canvas = useRef<HTMLCanvasElement>(null);
-  const background = useRef<HTMLCanvasElement>(null);
-  const [gameData, setGameData] = useRecoilState(gameState);
-  const [countData, setCountData] = useRecoilState(countState);
 
   useEffect(() => {
     const canvasEle = background.current!;

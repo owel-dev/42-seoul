@@ -1,7 +1,7 @@
-import { socket } from 'components/layout/Layout';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import { socket } from 'components/layout/Layout';
 import { modalState } from 'utils/recoil/modal';
 import { channelState } from 'utils/recoil/gameState';
 

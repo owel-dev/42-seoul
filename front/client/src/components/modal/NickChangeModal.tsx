@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useSetRecoilState, useRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
+import instance from 'utils/axios';
 import { modalState } from 'utils/recoil/modal';
 import { myDataState } from 'utils/recoil/myData';
 import { errorState } from 'utils/recoil/error';
-import instance from 'utils/axios';
-import { useNavigate } from 'react-router-dom';
 import { profileState } from 'utils/recoil/profileData';
 import 'styles/modal/Modal.css';
 
 function NickChangeModal() {
-  const setModalInfo = useSetRecoilState(modalState);
   const [myData, setMyData] = useRecoilState(myDataState);
-  const [profileData, setProfileData] = useRecoilState(profileState);
+  const setModalInfo = useSetRecoilState(modalState);
+  const setProfileData = useSetRecoilState(profileState);
+  const setErrorMessage = useSetRecoilState(errorState);
   const [inputValue, setInputValue] = useState('');
   const [isChange, setIsChange] = useState<boolean>();
-  const setErrorMessage = useSetRecoilState(errorState);
   const navigate = useNavigate();
 
   const CloseModal = () => {

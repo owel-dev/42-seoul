@@ -1,17 +1,17 @@
 import io from 'socket.io-client';
 import { useEffect } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { myDataState } from 'utils/recoil/myData';
-import { myData } from 'types/myDataTypes';
-import { loginState } from 'utils/recoil/login';
-import { errorState } from 'utils/recoil/error';
 import Nav from 'components/layout/Nav';
 import Side from 'components/layout/Side';
-import instance from 'utils/axios';
 import SecondAuth from 'pages/SecondAuth';
+import instance from 'utils/axios';
+import { myDataState } from 'utils/recoil/myData';
+import { loginState } from 'utils/recoil/login';
+import { errorState } from 'utils/recoil/error';
 import { modalState } from 'utils/recoil/modal';
-import { inviteType } from 'types/GameTypes';
 import { inviteState } from 'utils/recoil/gameState';
+import { myData } from 'types/myDataTypes';
+import { inviteType } from 'types/GameTypes';
 import 'styles/layout/Content.css';
 
 export let socket = io();
@@ -22,8 +22,8 @@ type LayoutProps = {
 
 function Layout({ children }: LayoutProps) {
   const [myData, setMyData] = useRecoilState<myData>(myDataState);
-  const setIsLoggedIn = useSetRecoilState(loginState);
   const [errorMessage, setErrorMessage] = useRecoilState(errorState);
+  const setIsLoggedIn = useSetRecoilState(loginState);
   const setModalInfo = useSetRecoilState(modalState);
   const setInviteData = useSetRecoilState<inviteType>(inviteState);
 

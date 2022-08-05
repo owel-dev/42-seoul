@@ -1,26 +1,26 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { modalState } from 'utils/recoil/modal';
+import { socket } from 'components/layout/Layout';
 import { userData } from 'types/userTypes';
+import instance from 'utils/axios';
+import { modalState } from 'utils/recoil/modal';
 import { myDataState } from 'utils/recoil/myData';
 import { chatListState, messageState } from 'utils/recoil/chat';
-import { socket } from 'components/layout/Layout';
 import { channelState } from 'utils/recoil/gameState';
 import { friendState } from 'utils/recoil/friend';
 import { errorState } from 'utils/recoil/error';
-import instance from 'utils/axios';
 import 'styles/modal/Modal.css';
 
 function ProfileModal() {
   const myData = useRecoilValue(myDataState);
-  const [userData, setUserData] = useState<userData>();
-  const [modalInfo, setModalInfo] = useRecoilState(modalState);
-  const [channelInfo, setChannelInfo] = useRecoilState(channelState);
-  const [friend, setFriend] = useRecoilState(friendState);
   const setMessage = useSetRecoilState(messageState);
   const setErrorMessage = useSetRecoilState(errorState);
   const setChatList = useSetRecoilState(chatListState);
+  const [modalInfo, setModalInfo] = useRecoilState(modalState);
+  const [channelInfo, setChannelInfo] = useRecoilState(channelState);
+  const [friend, setFriend] = useRecoilState(friendState);
+  const [userData, setUserData] = useState<userData>();
 
   useEffect(() => {
     getUserData();

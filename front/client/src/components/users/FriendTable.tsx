@@ -1,16 +1,16 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { friendList } from 'types/profileTypes';
 import { socket } from 'components/layout/Layout';
+import { friendList } from 'types/profileTypes';
 import { friendState } from 'utils/recoil/friend';
 import { profileState } from 'utils/recoil/profileData';
 import 'styles/users/FriendList.css';
 
 function FriendTable() {
   const profileData = useRecoilValue(profileState);
-  const [list, setList] = useState<friendList | null>(null);
   const setFriend = useSetRecoilState(friendState);
+  const [list, setList] = useState<friendList | null>(null);
 
   useEffect(() => {
     setFriend(true);

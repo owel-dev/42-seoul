@@ -1,19 +1,19 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { socket } from 'components/layout/Layout';
+import UserList from 'components/layout/UserList';
+import ChatList from 'components/layout/ChatList';
 import { myDataState } from 'utils/recoil/myData';
 import { messageState, chatListState } from 'utils/recoil/chat';
-import UserList from './UserList';
-import ChatList from './ChatList';
 import 'styles/layout/Side.css';
 
 function Side() {
-  const myData = useRecoilValue(myDataState);
   const chatScroll = useRef<HTMLInputElement>(null);
   const chatInput = useRef<HTMLInputElement>(null);
+  const myData = useRecoilValue(myDataState);
   const [message, setMessage] = useRecoilState(messageState);
-  const [scrollState, setScrollState] = useState(true); // 자동 스크롤 여부
   const [chatList, setChatList] = useRecoilState(chatListState); // 채팅 텍스트 list
+  const [scrollState, setScrollState] = useState(true); // 자동 스크롤 여부
 
   useEffect(() => {
     if (message.length) chatInput.current?.focus();

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import GameModule from 'components/game/GameModule';
 import { socket } from 'components/layout/Layout';
 import { modalState } from 'utils/recoil/modal';
 import { channelState } from 'utils/recoil/gameState';
 import { myDataState } from 'utils/recoil/myData';
 import { chatListState } from 'utils/recoil/chat';
-import GameModule from 'components/game/GameModule';
 import 'styles/game/Game.css';
 
 type gameInfoType = {
@@ -17,10 +17,10 @@ type gameInfoType = {
 
 function Game() {
   const setModalInfo = useSetRecoilState(modalState);
+  const setChatList = useSetRecoilState(chatListState);
   const myData = useRecoilValue(myDataState);
   const [channelInfo, setChannelInfo] = useRecoilState(channelState);
   const [admin, setAdmin] = useState<string>('');
-  const setChatList = useSetRecoilState(chatListState);
   const [gameInfo, setgameInfo] = useState<gameInfoType>({
     gameMode: '',
     firstPlayer: '',

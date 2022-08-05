@@ -9,12 +9,12 @@ import 'styles/modal/Modal.css';
 
 function AvatarChangeModal() {
   const [myData, setMyData] = useRecoilState(myDataState);
-  const [postImg, setPostImg] = useState<FormData>();
-  const [isChange, setIsChange] = useState<boolean>();
-  const [previewImg, setPreviewImg] = useState(myData.avatar);
   const setProfileData = useSetRecoilState(profileState);
   const setModalInfo = useSetRecoilState(modalState);
   const setErrorMessage = useSetRecoilState(errorState);
+  const [postImg, setPostImg] = useState<FormData>();
+  const [isChange, setIsChange] = useState<boolean>();
+  const [previewImg, setPreviewImg] = useState(myData.avatar);
 
   const closeModal = () => {
     setModalInfo({ modalName: null });

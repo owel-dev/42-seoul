@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
+import RankRow from 'components/rank/RankRow';
+import RankTitleRow from 'components/rank/RankTitleRow';
 import { rankRowType, userRank } from 'types/RankTypes';
+import instance from 'utils/axios';
 import { loginState } from 'utils/recoil/login';
 import { errorState } from 'utils/recoil/error';
-import RankRow from 'components/rank/RankRow';
-import instance from 'utils/axios';
-import RankTitleRow from './RankTitleRow';
 
 function RankTable() {
-  const [rank, setRank] = useState<userRank | null>(null);
   const setIsLoggedIn = useSetRecoilState(loginState);
   const setErrorMessage = useSetRecoilState(errorState);
+  const [rank, setRank] = useState<userRank | null>(null);
 
   useEffect(() => {
     getData();

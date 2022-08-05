@@ -1,8 +1,8 @@
 import { useSetRecoilState } from 'recoil';
+import { socket } from 'components/layout/Layout';
 import { modalState } from 'utils/recoil/modal';
 import { loginState } from 'utils/recoil/login';
 import 'styles/modal/LogoutModal.css';
-import { socket } from 'components/layout/Layout';
 
 function LogoutModal() {
   const setModalInfo = useSetRecoilState(modalState);

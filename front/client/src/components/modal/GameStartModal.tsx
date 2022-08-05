@@ -46,7 +46,7 @@ function GameStartModal() {
       setMatchWait(false);
       setChannelInfo(data);
     });
-  }, [setChannelInfo]);
+  }, []);
 
   return (
     <>

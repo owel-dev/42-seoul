@@ -47,7 +47,7 @@ function GameInviteModal() {
       setMatchWait(false);
       setChannelInfo(data);
     });
-  }, [setChannelInfo]);
+  }, []);
 
   return (
     <>

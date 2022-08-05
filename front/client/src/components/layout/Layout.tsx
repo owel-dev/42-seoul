@@ -27,30 +27,6 @@ function Layout({ children }: LayoutProps) {
   const setModalInfo = useSetRecoilState(modalState);
   const setInviteData = useSetRecoilState<inviteType>(inviteState);
 
-  useEffect(() => {
-    if (socket.connected === false) {
-      socket = io(
-        `${process.env.REACT_APP_SERVERIP}?token=${window.localStorage.getItem(
-          'trans-token'
-        )}`
-      );
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!window.localStorage.getItem('trans-token')) {
-      window.location.reload();
-    }
-  }, [socket]);
-
-  useEffect(() => {
-    getMyData();
-    socket.on('together-request', (data) => {
-      setInviteData(data);
-      setModalInfo({ modalName: 'GAME-ACCEPT' });
-    });
-  }, []);
-
   const getMyData = async () => {
     try {
       const res = await instance.get(`/users/navi`);
@@ -66,6 +42,27 @@ function Layout({ children }: LayoutProps) {
       } else setErrorMessage('NV01');
     }
   };
+
+  useEffect(() => {
+    if (socket.connected === false) {
+      socket = io(
+        `${process.env.REACT_APP_SERVERIP}?token=${window.localStorage.getItem(
+          'trans-token'
+        )}`
+      );
+    }
+    getMyData();
+    socket.on('together-request', (data) => {
+      setInviteData(data);
+      setModalInfo({ modalName: 'GAME-ACCEPT' });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!window.localStorage.getItem('trans-token')) {
+      window.location.reload();
+    }
+  }, [socket]);
 
   return myData?.isSecondAuth ? (
     <div>

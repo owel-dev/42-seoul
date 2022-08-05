@@ -13,14 +13,11 @@ function FriendTable() {
   const [list, setList] = useState<friendList | null>(null);
 
   useEffect(() => {
-    setFriend(true);
-    socket.emit('friend-start', profileData.nickName);
-  }, []);
-
-  useEffect(() => {
     socket.on('friend', (data) => {
       if (list !== data) setList(data);
     });
+    setFriend(true);
+    socket.emit('friend-start', profileData.nickName);
   }, []);
 
   return (

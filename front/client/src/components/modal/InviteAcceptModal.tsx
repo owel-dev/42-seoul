@@ -24,7 +24,7 @@ function InviteAcceptModal() {
     socket.on('game-wait', (data) => {
       setChannelInfo(data);
     });
-  }, [setChannelInfo]);
+  }, []);
 
   return (
     <>

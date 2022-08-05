@@ -79,9 +79,7 @@ function GameModule(props: { gameMode: string }) {
     const ctx = canvasEle.getContext('2d')!;
 
     draw_background(ctx, canvasEle.width, canvasEle.height, props.gameMode);
-  }, []);
 
-  useEffect(() => {
     socket.on('count-down', (data) => {
       setCountData(data);
     });
@@ -99,7 +97,7 @@ function GameModule(props: { gameMode: string }) {
         pingTime = Date.now() - time;
       });
     }, 500);
-  }, [setCountData, setGameData]);
+  }, []);
 
   useEffect(() => {
     const canvasEle = canvas.current!;

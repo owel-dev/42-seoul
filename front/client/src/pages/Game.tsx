@@ -31,9 +31,6 @@ function Game() {
     socket.on('admin-changed', (data) => {
       setAdmin(data);
     });
-  });
-
-  useEffect(() => {
     setModalInfo({ modalName: null });
     setChatList([]);
     socket.emit(
@@ -43,7 +40,7 @@ function Game() {
         setgameInfo(data);
       }
     );
-  }, [setModalInfo, channelInfo.channelId, setChatList]);
+  }, []);
 
   const exitChannel = () => {
     if (channelInfo.channelId !== '') {

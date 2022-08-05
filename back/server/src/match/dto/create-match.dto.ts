@@ -1,22 +1,29 @@
-import { Type } from "class-transformer";
-import { IsInt, Min, Max, IsIn } from "class-validator"
+import { Type } from 'class-transformer';
+import { IsInt, Min, Max, IsIn } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateMatchDto {
-	player1: string;
-	player2: string;
+  @ApiProperty({ description: '플레이어 1의 닉네임' })
+  player1: string;
 
-	@Type(() => Number)
-	@IsInt()
-	@Min(0)
-	@Max(10)
-	score1: number;
+  @ApiProperty({ description: '플레이어 2의 닉네임' })
+  player2: string;
 
-	@Type(() => Number)
-	@IsInt()
-	@Min(0)
-	@Max(10)
-	score2: number;
+  @ApiProperty({ description: '플레이어 1의 점수' })
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  @Max(10)
+  score1: number;
 
-	@IsIn(["default", "power", "obstacle"])
-	mode: string;
+  @ApiProperty({ description: '플레이어 2의 점수' })
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  @Max(10)
+  score2: number;
+
+  @ApiProperty({ description: '게임 모드' })
+  @IsIn(['default', 'power', 'obstacle'])
+  mode: string;
 }

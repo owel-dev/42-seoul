@@ -11,7 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { WsException } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { AuthService } from 'src/auth/auth.service';
-import { ResFriend } from 'src/friend/dto/res-friend.dto';
+import { ResFriendDto } from 'src/friend/dto/res-friend.dto';
 import { Friend } from 'src/friend/entities/friend.entity';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
@@ -29,7 +29,7 @@ export class ChatService {
     private userRepository: Repository<User>,
     @InjectRepository(Friend)
     private friendRepository: Repository<Friend>,
-  ) {}
+  ) { }
 
   static channels = new Map([['0', new Channel()]]);
   static users: ChatUser[] = [];
@@ -250,21 +250,12 @@ export class ChatService {
         },
         where: { friend_1: { nickname: data } },
       });
-      const resFriendList = await Promise.all(
-        friendList.map(async (friend) => {
-          const friendList = await this.friendRepository.find({
-            relations: {
-              friend_1: true,
-              friend_2: true,
-            },
-            where: { friend_1: { nickname: data } },
-          });
-          return new ResFriend(
-            friend.friend_2.nickname,
-            friend.friend_2.status,
-          );
-        }),
-      );
+      const resFriendList = friendList.map(async (friend) => {
+        const resFriendDto = new ResFriendDto();
+        resFriendDto.nickName = friend.friend_2.nickname;
+        resFriendDto.status = friend.friend_2.status;
+        return resFriendDto;
+      });
       client.emit('friend', { friendList: resFriendList });
     }, 1000);
     client.once('friend-end', () => {

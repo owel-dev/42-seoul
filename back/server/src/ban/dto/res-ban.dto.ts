@@ -1,24 +1,7 @@
-import { Ban } from "../entities/ban.entity";
+import { ApiProperty } from '@nestjs/swagger';
+import { Ban } from '../entities/ban.entity';
 
-class	ResBan {
-	nickName: string;
-
-	constructor (
-		_nickName: string,
-		) {
-		this.nickName = _nickName;
-	}
-}
-
-export class ResBanListDto {
-	banList: ResBan[];
-
-	banToResBanArr(banRepository: Ban[])
-	{
-		this.banList = banRepository.map(
-			(ban, index, array) => {
-				return new ResBan(ban.ban_2.nickname);	 
-			}
-		);
-	}
+export class ResBanDto {
+  @ApiProperty({ description: '유저의 닉네임' })
+  nickName: string;
 }

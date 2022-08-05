@@ -1,15 +1,16 @@
 import { Stat } from '../entities/stat.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ResStatDto {
-	nickName: string;
-	win: number;
-	lose: number;
-	winRate: string;
+  @ApiProperty({ description: '유저 닉네임' })
+  nickName: string;
 
-	constructor (stat: Stat) {
-		this.nickName = stat.user.nickname;
-		this.win = stat.win;
-		this.lose = stat.lose;
-		this.winRate = (stat.winrate * 100).toFixed() + "%";
-	}
+  @ApiProperty({ description: '유저 승수' })
+  win: number;
+
+  @ApiProperty({ description: '유저 패수' })
+  lose: number;
+
+  @ApiProperty({ description: '유저 승률' })
+  winRate: string;
 }

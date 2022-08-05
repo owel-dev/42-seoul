@@ -28,7 +28,7 @@ export class AuthService {
     private mailerService: MailerService,
     private config: ConfigService,
     private authJwtService: AuthJwtService,
-  ) {}
+  ) { }
 
   async getAccessToken(code: string): Promise<string> {
     // console.log('code=', code);
@@ -179,7 +179,10 @@ export class AuthService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const resDto = new ResUserNavi(userFind);
+    const resDto = new ResUserNavi();
+    resDto.nickName = userFind.nickname;
+    resDto.avatar = userFind.avatar;
+    resDto.isSecondAuth = userFind.is_second_auth;
     return resDto;
   }
 

@@ -1,4 +1,3 @@
-import { Query, UseGuards } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -10,8 +9,6 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Token } from 'src/auth/auth.decorator';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { ChatService } from './chat.service';
 
 @WebSocketGateway({

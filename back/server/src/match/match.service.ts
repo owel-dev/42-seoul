@@ -73,9 +73,15 @@ export class MatchService {
         match_id: 'DESC',
       },
     });
-    const resMatchDto = new ResMatchDto();
-    resMatchDto.matchArr = matchRepo;
-    return resMatchDto;
+    const matchList = matchRepo.map((match, index, array) => {
+      const resMatchDto = new ResMatchDto();
+      resMatchDto.player1 = match.player_1.nickname;
+      resMatchDto.player2 = match.player_2.nickname;
+      resMatchDto.score1 = match.score_1;
+      resMatchDto.score2 = match.score_2;
+      resMatchDto.mode = match.mode;
+    });
+    return { matchList: matchList };
   }
 
   //   update(id: number, updateMatchDto: UpdateMatchDto) {

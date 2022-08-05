@@ -1,4 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, Header, Headers, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  UploadedFile,
+  Header,
+  Headers,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -6,63 +20,77 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/multer';
 import { AuthGuard } from '@nestjs/passport';
 import { Token } from 'src/auth/auth.decorator';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
 @Controller('users')
+@ApiTags('users')
 export class UsersController {
-	constructor(
-		private readonly usersService: UsersService,
-	) { }
+  constructor(private readonly usersService: UsersService) {}
 
-	@Post()
-	@UseInterceptors(FileInterceptor('avatar', multerOptions('avatar')))
-	create(
-		@Body() createUserDto: CreateUserDto,
-		@UploadedFile() file: Express.Multer.File
-	) {
-		// console.log(createUserDto);
-		return this.usersService.create(createUserDto, file);
-	}
+  //   @Post()
+  //   @ApiOperation({ summary: ' ', description: ' ' })
+  //   @UseInterceptors(FileInterceptor('avatar', multerOptions('avatar')))
+  //   create(
+  //     @Body() createUserDto: CreateUserDto,
+  //     @UploadedFile() file: Express.Multer.File,
+  //   ) {
+  //     // console.log(createUserDto);
+  //     return this.usersService.create(createUserDto, file);
+  //   }
 
-	@Get('/:nickname/mypage')
-	@UseGuards(AuthGuard('jwt-access-token'))
-	findOneMyPage(@Param('nickname') nickName: string) {
-		return (this.usersService.findOneMyPage(nickName));
-	}
+  @Get('/:nickname/mypage')
+  @ApiOperation({
+    summary: '프로필페이지 유저정보 api',
+    description: '프로필페이지에서의 유저정보를 가져옵니다.',
+  })
+  @UseGuards(AuthGuard('jwt-access-token'))
+  findOneMyPage(@Param('nickname') nickName: string) {
+    return this.usersService.findOneMyPage(nickName);
+  }
 
-	@Get('/:nickname/modal')
-	@UseGuards(AuthGuard('jwt-access-token'))
-	findOneModal(@Param('nickname') nickName: string, @Token() token: string) {
-		// console.log("findOneModal");
-		// console.log(nickName, token);
-		return (this.usersService.findOneModal(token, nickName))
-	}
+  @Get('/:nickname/modal')
+  @ApiOperation({
+    summary: '유저모달창 유저정보 api',
+    description: '유저모달창에서 필요한 유저정보를 가져옵니다',
+  })
+  @UseGuards(AuthGuard('jwt-access-token'))
+  findOneModal(@Param('nickname') nickName: string, @Token() token: string) {
+    // console.log("findOneModal");
+    // console.log(nickName, token);
+    return this.usersService.findOneModal(token, nickName);
+  }
 
-	@UseGuards(AuthGuard('jwt-access-token'))
-	@Get('/navi')
-	findOneNavi(@Token() token) {
-		// console.log("token: ", token);
-		return (this.usersService.findOneNavi(token));
-	}
+  @Get('/navi')
+  @ApiOperation({
+    summary: '네비게이션 유저정보 api',
+    description: '네비게이션에서 필요한 유저정보를 가져옵니다.',
+  })
+  @UseGuards(AuthGuard('jwt-access-token'))
+  findOneNavi(@Token() token) {
+    // console.log("token: ", token);
+    return this.usersService.findOneNavi(token);
+  }
 
-	@UseGuards(AuthGuard('jwt-access-token'))
-	@Patch('/:nickname')
-	@UseInterceptors(FileInterceptor('avatar', multerOptions('avatar')))
-	update(
-		@Param('nickname') nickName: string,
-		@Body() updateUserDto: UpdateUserDto,
-		@Headers() header: string,
-		@UploadedFile() file: Express.Multer.File
-	) {
-		// console.log(header);
-		// console.log(updateUserDto);
-		// console.log(updateUserDto.avatar);
-		// console.log(file);
-		return this.usersService.update(nickName, updateUserDto, file);
-	}
+  @Patch('/:nickname')
+  @ApiOperation({
+    summary: '유저 정보 변경 api',
+    description: '유저 정보(닉네임, 아바타)를 변경합니다',
+  })
+  @UseGuards(AuthGuard('jwt-access-token'))
+  @UseInterceptors(FileInterceptor('avatar', multerOptions('avatar')))
+  update(
+    @Param('nickname') nickName: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @Headers() header: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.usersService.update(nickName, updateUserDto, file);
+  }
 
-	@UseGuards(AuthGuard('jwt-access-token'))
-	@Delete(':nickname')
-	delete(@Param() nickName: string) {
-		return this.usersService.delete(nickName);
-	}
+  //   @Delete(':nickname')
+  //   @ApiOperation({ summary: ' ', description: ' ' })
+  //   @UseGuards(AuthGuard('jwt-access-token'))
+  //   delete(@Param() nickName: string) {
+  //     return this.usersService.delete(nickName);
+  //   }
 }

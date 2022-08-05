@@ -1,42 +1,19 @@
-import { Stat } from "src/stats/entities/stat.entity";
-
-class	UserRank {
-	rank: number;
-	nickName: string;
-	win: number;
-	lose: number;
-	winRate: string;
-
-	constructor (
-		_rank: number,
-		_nickName: string,
-		_win: number,
-		_lose: number,
-		_winRate: number) {
-		this.rank = _rank;
-		this.nickName = _nickName;
-		this.win = _win;
-		this.lose = _lose;
-		this.winRate = (_winRate * 100).toFixed() + "%";
-	}
-}
+import { Stat } from 'src/stats/entities/stat.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ResRankDto {
-	ranking: UserRank[];
+  @ApiProperty({ description: '현재 순위' })
+  rank: number;
 
-	set rankingArr(statRepository: Stat[]) {
-		this.ranking = this.statToRankArr(statRepository);
-	}
+  @ApiProperty({ description: '유저 닉네임' })
+  nickName: string;
 
-	private statToRankArr(statRepository: Stat[]) : UserRank[]
-	{
-		return statRepository.map(
-			(stat, index, array) => {
-				const rank = array.filter((iter) =>
-				(iter.win > stat.win) ||
-				((iter.win === stat.win) && iter.winrate > stat.winrate)).length + 1;
-				return new UserRank(rank, stat.user.nickname, stat.win, stat.lose, stat.winrate);
-			}
-		);
-	}
+  @ApiProperty({ description: '유저 승수' })
+  win: number;
+
+  @ApiProperty({ description: '유저 패수' })
+  lose: number;
+
+  @ApiProperty({ description: '유저 승률' })
+  winRate: string;
 }

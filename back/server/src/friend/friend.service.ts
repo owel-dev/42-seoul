@@ -1,20 +1,10 @@
-import {
-  BadRequestException,
-  forwardRef,
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateFriendDto } from './dto/create-friend.dto';
-import { DeleteFriendDto } from './dto/delete-friend.dto';
-import { ResFriendListDto } from './dto/res-friend.dto';
-import { UpdateFriendDto } from './dto/update-friend.dto';
+import { ResFriendDto } from './dto/res-friend.dto';
 import { Friend } from './entities/friend.entity';
 
 @Injectable()
@@ -91,8 +81,11 @@ export class FriendService {
       },
       where: { friend_1: { nickname: nickName } },
     });
-    const resFrinedListDto = new ResFriendListDto();
-    resFrinedListDto.friendToResFriendArr(friendRepo);
+    const resFrinedListDto = friendRepo.map((friend, index, array) => {
+      const resFriend = new ResFriendDto();
+      resFriend.nickName = friend.friend_2.nickname;
+      resFriend.status = friend.friend_2.status;
+    });
     return resFrinedListDto;
   }
 

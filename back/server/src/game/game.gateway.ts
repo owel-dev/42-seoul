@@ -10,14 +10,16 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { GameService } from './game.service';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
 @WebSocketGateway({
   cors: {
     origin: '*',
   },
 })
+@ApiTags('게임 관련 소켓 API')
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private readonly gameService: GameService) {}
+  constructor(private readonly gameService: GameService) { }
 
   @WebSocketServer()
   server: Server;

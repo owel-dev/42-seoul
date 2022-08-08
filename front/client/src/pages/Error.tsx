@@ -14,7 +14,8 @@ export default function Error() {
 
   const goHome = () => {
     if (errorMessage === 'E500') {
-      localStorage.removeItem('trans-token');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       setIsLoggedIn(false);
     }
     setErrorMessage('');
@@ -26,7 +27,6 @@ export default function Error() {
     <div className={styles.errorContainer}>
       <div className={styles.innerContainer}>
         <div className={styles.title}>{'ERROR'}</div>
-
         <div className={styles.content}>
           {errorMessage === 'E404'
             ? '잘못된 요청입니다!'

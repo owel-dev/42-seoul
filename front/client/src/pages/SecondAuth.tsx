@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { myDataState } from 'utils/recoil/myData';
 import { errorState } from 'utils/recoil/error';
-import instance from 'utils/axios';
+import { loginState } from 'utils/recoil/login';
 import { errorType } from 'types/errorTypes';
 import styles from 'styles/login/login.module.css';
+import refreshToken from 'utils/token';
+import instance from 'utils/axios';
 import 'styles/login/SecondAuth.css';
 
 function SecondAuth() {
@@ -12,6 +14,13 @@ function SecondAuth() {
   const [myData, setMyData] = useRecoilState(myDataState);
   const [emailInput, setEmailInput] = useState<string>('');
   const [codeInput, setCodeInput] = useState<string>('');
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
+
+  const logout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    setIsLoggedIn(false);
+  };
 
   const sendEmail = async () => {
     if (emailInput.indexOf('@') === -1 || emailInput.indexOf('.') === -1) {
@@ -27,6 +36,14 @@ function SecondAuth() {
         const e = err as errorType;
         if (e.message === `Network Error`) {
           setErrorMessage('E500');
+        } else if (e.response.data.statusCode === 401) {
+          refreshToken()
+            .then(() => {
+              if (isLoggedIn === true) sendEmail();
+            })
+            .catch(() => {
+              logout();
+            });
         } else setErrorMessage('SA01');
       }
     }
@@ -47,7 +64,15 @@ function SecondAuth() {
         setErrorMessage('E500');
       } else if (e.response.data.statusCode === 'SC01')
         alert('잘못된 코드입니다.');
-      else setErrorMessage('SA02');
+      else if (e.response.data.statusCode === 401) {
+        refreshToken()
+          .then(() => {
+            if (isLoggedIn === true) submitCode();
+          })
+          .catch(() => {
+            logout();
+          });
+      } else setErrorMessage('SA02');
     }
   };
 

@@ -1,6 +1,14 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from 'styles/login/login.module.css';
 
 function Login() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate('');
+  }, []);
+
   return (
     <div className={styles.loginContainer}>
       <div className={styles.innerContainer}>

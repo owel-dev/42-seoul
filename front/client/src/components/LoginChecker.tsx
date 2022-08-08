@@ -10,17 +10,23 @@ interface LoginCheckerProps {
 
 export default function LoginChecker({ children }: LoginCheckerProps) {
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
-  const token = window.location.href.split('?token=')[1];
+  const accessToken = window.location.href
+    .split('?accessToken=')[1]
+    ?.split('&refreshToken=')[0];
+  const refreshToken = window.location.href.split('&refreshToken=')[1];
   const navigate = useNavigate();
   
   useEffect(() => {
-    if (token) localStorage.setItem('trans-token', token);
-    if (localStorage.getItem('trans-token')) setIsLoggedIn(true);
+    if (accessToken) {
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+    }
+    if (localStorage.getItem('accessToken')) setIsLoggedIn(true);
   }, []);
 
   useEffect(() => {
     const currentURL = window.location.search;
-    if (currentURL.includes('token')) {
+    if (currentURL.includes('?accessToken')) {
       navigate('');
     }
   }, [window.location.href]);

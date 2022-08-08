@@ -1,17 +1,24 @@
 import { useState, useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
-import RankRow from 'components/rank/RankRow';
-import RankTitleRow from 'components/rank/RankTitleRow';
-import { rankRowType, userRank } from 'types/RankTypes';
-import { errorType } from 'types/errorTypes';
-import instance from 'utils/axios';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { loginState } from 'utils/recoil/login';
 import { errorState } from 'utils/recoil/error';
+import { rankRowType, userRank } from 'types/RankTypes';
+import { errorType } from 'types/errorTypes';
+import RankRow from 'components/rank/RankRow';
+import RankTitleRow from 'components/rank/RankTitleRow';
+import instance from 'utils/axios';
+import refreshToken from 'utils/token';
 
 function RankTable() {
-  const setIsLoggedIn = useSetRecoilState(loginState);
-  const setErrorMessage = useSetRecoilState(errorState);
   const [rank, setRank] = useState<userRank | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
+  const setErrorMessage = useSetRecoilState(errorState);
+
+  const logout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    setIsLoggedIn(false);
+  };
 
   useEffect(() => {
     getData();
@@ -26,10 +33,15 @@ function RankTable() {
       if (e.message === `Network Error`) {
         setErrorMessage('E500');
       } else if (e.response.status === 403) {
-        alert('다시 로그인 해주세요!!');
-        localStorage.removeItem('trans-token');
-        setIsLoggedIn(false);
-        window.location.replace('/');
+        logout();
+      } else if (e.response.data.statusCode === 401) {
+        refreshToken()
+          .then(() => {
+            if (isLoggedIn === true) getData();
+          })
+          .catch(() => {
+            logout();
+          });
       } else {
         setErrorMessage('RT01');
       }

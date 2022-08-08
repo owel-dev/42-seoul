@@ -14,7 +14,8 @@ function LogoutModal() {
 
   const onLogout = () => {
     socket.disconnect();
-    localStorage.removeItem('trans-token');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     setIsLoggedIn(false);
     setModalInfo({ modalName: null });
   };

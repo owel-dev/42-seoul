@@ -1,27 +1,35 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { Repository } from "typeorm";
 import { ExtractJwt, Strategy } from "passport-jwt"
-import { User } from "src/users/entities/user.entity";
-import { InjectRepository } from "@nestjs/typeorm";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class JwtAccessStrategy extends PassportStrategy(Strategy, 'jwt-access-token') {
     constructor(
-        @InjectRepository(User)
-        private userRepository: Repository<User>
+        private config: ConfigService
+
     ) {
         super({
-            secretOrKey: 'accessJwt',
+            secretOrKey: config.get("JWT_ACCESS_SECRET"),
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            ignoreExpiration: false
+            ignoreExpiration: true
         })
     }
     async validate(payload: any) {
-        const { intra_id } = payload;
-        const user = await this.userRepository.findOneBy({ intra_id: intra_id });
-        // console.log("JwtaccessStrategy 확인");
-        // console.log(payload);
+        const now = new Date().getTime() / 1000;
+        const exp = payload.exp;
+
+        console.log("JwtAccessStrategy ", exp - now);
+
+        if (exp - now < 0)
+        {
+            throw new HttpException(
+                { statusCode: 401, 
+                error: '만료된 엑세스 토큰입니다.' 
+            },
+                HttpStatus.UNAUTHORIZED,
+            )
+        }
         return "JwtaccessStrategy 확인";
     }
 }

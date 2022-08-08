@@ -27,7 +27,7 @@ export class GameService {
 
   async handleConnection(socket: Socket) {
     console.log(`New client connected: ${socket.id}`);
-
+    // const token = "";
     // console.log("token", token);
     const token = socket.handshake.query.accessToken as string;
     const nickName = await this.authService.getUserNickByToken(token);

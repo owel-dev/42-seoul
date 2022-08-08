@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Res, Query, Req } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthJwtService } from './auth-jwt.service';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
 
@@ -13,45 +13,34 @@ export class AuthJwtController {
 
   @Get("access/:intra_id")
   @ApiOperation({ summary: ' ', description: ' ' })
-  createaccessJwt(@Param("intra_id") intra_id: string) {
+  createaccessJwt(@Param("intra_id") intra_id:string) {
+    console.log("엑세스 토큰 발행");
     return this.authJwtService.createAccessJwt(intra_id);
   }
 
-  @Get("access/:intra_id")
+  @Get("refresh/:intra_id")
   @ApiOperation({ summary: ' ', description: ' ' })
-  createRefreshJwt(@Param("intra_id") intra_id: string) {
+  createRefreshJwt(@Param("intra_id") intra_id:string) {
+    console.log("리프래쉬 토큰 발행");
     return this.authJwtService.createRefreshJwt(intra_id);
   }
 
-  @Get("refresh")
+  @Get("requestAccessToken")
   @ApiOperation({ summary: ' ', description: ' ' })
   @UseGuards(AuthGuard('jwt-refresh-token'))
-  refresh() {
-    return ("refresh 성공");
-  }
-
-  @Get("access")
-  @ApiOperation({ summary: ' ', description: ' ' })
-  @UseGuards(AuthGuard('jwt-access-token'))
-  access() {
-    return "access 성공";
+  async reCreateAccessJwt(@Req() req:Request) {
+    const refreshToken = req.headers.authorization.split('Bearer ')[1]
+    const tokens = await this.authJwtService.reCreateAccessJwt(refreshToken);
+    return tokens;
   }
 
   @Get("test")
   @ApiOperation({ summary: ' ', description: ' ' })
-  cookieTest(@Res() res: Response) {
-    console.log("확인")
-
-    res.cookie('v1', "v1", {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000
-    });
-    res.cookie('v2', "v2", {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000
-    });
-
-
-    return (res.redirect("http://localhost:3000"));
+  @UseGuards(AuthGuard('jwt-access-token'))
+  async test(@Req() req:Request)
+  {  
+    console.log(req.headers.authorization.split('Bearer ')[1]);
+    console.log("test확인");
+    return "test 확인";
   }
 }

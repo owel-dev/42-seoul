@@ -30,10 +30,7 @@ export class AuthController {
   @Get('login')
   @ApiOperation({ summary: '사이트 로그인 API', description: '사이트에 로그인을 시도합니다. /oauth/42로부터 Redirect.' })
   async saveAccessToken(@Res() res: Response, @Query('code') code: string) {
-    console.log("로그인");
     (await this.authService.saveAccessToken(res, code));
-
-    console.log("객체 확인");
   }
 
   @Patch('logout')

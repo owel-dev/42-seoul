@@ -34,10 +34,12 @@ export class ChatService {
   static channels = new Map([['0', new Channel()]]);
   static users: ChatUser[] = [];
 
+
   async handleConnection(socket: Socket, server: Server) {
     // console.log(`Chat: New client connected: ${socket.id}`);
     const token = socket.handshake.query.accessToken as string;
     const clientNick = await this.authService.getUserNickByToken(token);
+
     if (!clientNick) return;
     const client = await this.userRepository.findOneBy({
       nickname: clientNick,

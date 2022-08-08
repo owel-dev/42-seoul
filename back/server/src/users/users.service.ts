@@ -66,9 +66,8 @@ export class UsersService {
   }
 
   async findOneNavi(token: string) {
-    console.log('findOneNavi');
+    // console.log('findOneNavi');
     const userNick = await this.authService.getUserNickByToken(token);
-    console.log('userNick', userNick);
     const userRepo = await this.userRepository.findOne({
       where: {
         nickname: userNick,
@@ -76,8 +75,6 @@ export class UsersService {
     });
     if (!userRepo) throw new NotFoundException(`${userNick}: Cannot find user`);
     const resUserNavi = new ResUserNavi(userRepo);
-    console.log("+++userNick", userNick);
-    console.log("+++findOneNavi", resUserNavi);
     return resUserNavi;
   }
 
@@ -138,15 +135,14 @@ export class UsersService {
       }
     }
     if (file !== undefined) {
-      //   console.log('avatar updated');
       this.userRepository.update(
         { nickname: nickName },
         {
           avatar: `http://${ipv4}:3000/public/avatar/${file.filename}`,
         },
       );
+      return `http://${ipv4}:3000/public/avatar/${file.filename}`;
     }
-    return `http://${ipv4}:3000/public/avatar/${file.filename}`;
   }
 
   async delete(nickName: string) {

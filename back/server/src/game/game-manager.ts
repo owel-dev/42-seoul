@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Server, Socket } from 'socket.io';
 import { GetChannelDto } from 'src/channel/dto/get-channelList.dto';
+import { ChatService } from 'src/chat/chat.service';
 import { Stat } from 'src/stats/entities/stat.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -12,6 +13,7 @@ export class GameManager {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private chatService: ChatService,
   ) {}
 
   games = [];
@@ -20,6 +22,17 @@ export class GameManager {
   async addNewGame(data: any, server: Server) {
     const game = new Game(data, server);
     this.games.push(game);
+    this.chatService.createChannel(
+      game.firstPlayer.socket,
+      game.channelId,
+      server,
+    );
+
+    this.chatService.joinChannel(
+      game.secondPlayer.socket,
+      { channelId: game.channelId },
+      server,
+    );
 
     await this.userRepository.update(
       { nickname: data.firstNick },
@@ -77,13 +90,13 @@ export class GameManager {
   }
 
   changePassword(channelId: string, password: string) {
-    for (let game of this.games) {
+    for (const game of this.games) {
       if (game.channelId === channelId) {
         game.password = password;
         break;
       }
     }
-    for (let gameChannel of this.gameChannelList) {
+    for (const gameChannel of this.gameChannelList) {
       if (gameChannel.channelId === channelId) {
         gameChannel.password = password;
         break;
@@ -92,7 +105,7 @@ export class GameManager {
   }
 
   changeSocket(channelId: string, nickName: string, socket: Socket) {
-    for (let game of this.games) {
+    for (const game of this.games) {
       if (game.channelId === channelId) {
         if (game.firstPlayer.nickName === nickName) {
           game.firstPlayer.socket = socket;

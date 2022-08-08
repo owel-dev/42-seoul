@@ -19,8 +19,6 @@ import { Repository } from 'typeorm';
 import { ResChatUser } from './chat';
 import { Channel, ChatUser } from './chat';
 
-const uuid = require('uuid');
-
 @Injectable()
 export class ChatService {
   constructor(
@@ -38,7 +36,7 @@ export class ChatService {
 
   async handleConnection(socket: Socket, server: Server) {
     // console.log(`Chat: New client connected: ${socket.id}`);
-    const token = socket.handshake.query.token as string;
+    const token = socket.handshake.query.accessToken as string;
     const clientNick = await this.authService.getUserNickByToken(token);
     if (!clientNick) return;
     const client = await this.userRepository.findOneBy({
@@ -47,18 +45,12 @@ export class ChatService {
     const user = ChatService.users.find(
       (user) => user.intraId === client.intra_id,
     );
-    if (user) {
-      user.socket = socket;
-      user.isConenected = true;
-      socket.join(client.intra_id);
-      socket.join(user.curChannel);
-      socket.join(user.curChannel + '-chat');
-      await this.sendUserList(socket, server);
-    } else {
-      ChatService.users.push(new ChatUser(client.intra_id, socket));
-      socket.join(client.intra_id);
-      await this.joinChannel(socket, { channelId: '0' }, server);
-    }
+    ChatService.users.push(new ChatUser(client.intra_id, socket));
+    socket.join(client.intra_id);
+    client.status = 'online';
+    client.channel_id = '0';
+    this.userRepository.save(client);
+    await this.joinChannel(socket, { channelId: '0' }, server);
   }
 
   async handleDisconnect(socket: Socket, server: Server) {
@@ -67,15 +59,15 @@ export class ChatService {
     if (!user) {
       return;
     }
-    user.isConenected = false;
-    setTimeout(() => {
-      if (!user.isConenected) {
-        this.leaveChannel(socket, server);
-        ChatService.users = ChatService.users.filter(
-          (user) => user.socket.id !== socket.id,
-        );
-      }
-    }, 3000);
+    const findUser = await this.userRepository.findOneBy({
+      intra_id: user.intraId,
+    });
+    this.leaveChannel(socket, server);
+    ChatService.users = ChatService.users.filter(
+      (user) => user.socket.id !== socket.id,
+    );
+    findUser.status = 'offline';
+    this.userRepository.save(findUser);
   }
 
   async sendDirectMessage(client: Socket, data: any, server: Server) {
@@ -165,6 +157,10 @@ export class ChatService {
       );
     client.leave(user.curChannel);
     client.leave(user.curChannel + '-chat');
+    if (prevChannel.players.length === 0 && user.curChannel !== '0') {
+      ChatService.channels.delete(user.curChannel);
+      return;
+    }
     server
       .to(user.curChannel)
       .emit('user-list', await this.getChannelUserList(user.curChannel));
@@ -213,10 +209,6 @@ export class ChatService {
         .find((user) => user.intraId === findUser.intra_id)
         .socket.leave(curChannel + '-chat');
     }
-    // console.log(
-    //   `Channel ${curChannel} mute list:`,
-    //   ChatService.channels.get(curChannel).muteList,
-    // );
     setTimeout(() => {
       ChatService.channels
         .get(curChannel)
@@ -225,10 +217,6 @@ export class ChatService {
         .find((user) => user.intraId === findUser.intra_id)
         .socket.join(curChannel);
     }, 0.1 * 60 * 1000);
-    // console.log(
-    //   `Channel ${curChannel} mute list:`,
-    //   ChatService.channels.get(curChannel).muteList,
-    // );
   }
 
   async setAdmin(client: Socket, data: any, server: Server) {
@@ -271,24 +259,16 @@ export class ChatService {
             },
             where: { friend_1: { nickname: data } },
           });
-          const status = await this.getStatus(friend.friend_2.intra_id);
-          return new ResFriend(friend.friend_2.nickname, status);
+          return new ResFriend(
+            friend.friend_2.nickname,
+            friend.friend_2.status,
+          );
         }),
       );
       client.emit('friend', { friendList: resFriendList });
     }, 1000);
-    client.on('friend-end', () => {
+    client.once('friend-end', () => {
       clearTimeout(timeId);
     });
-  }
-
-  async getStatus(intraId: string): Promise<string> {
-    const user = ChatService.users.find((user) => user.intraId === intraId);
-    if (!user) return 'offline';
-    else if (
-      ChatService.channels.get('0').players.some((user) => user === intraId)
-    )
-      return 'online';
-    else return 'playing';
   }
 }

@@ -29,7 +29,7 @@ export class GameService {
     console.log(`New client connected: ${socket.id}`);
 
     // console.log("token", token);
-    const token = socket.handshake.query.token as string;
+    const token = socket.handshake.query.accessToken as string;
     const nickName = await this.authService.getUserNickByToken(token);
     if (nickName === undefined) return;
     // console.log('nick: ', nickName);
@@ -74,7 +74,7 @@ export class GameService {
   }
 
   async matchRequest(socket: Socket, data: any, server: Server): Promise<void> {
-    let remakeMode = data.mode + ' ' + data.password.replace(' ', '');
+    const remakeMode = data.mode + ' ' + data.password.replace(' ', '');
 
     this.matchManager.addUser(socket, remakeMode, data.nickName, data.password);
     if (this.matchManager.isTwoUser(remakeMode)) {
@@ -100,7 +100,7 @@ export class GameService {
       { status: 'spectate' },
     );
     socket.join(data.channelId);
-    this.chatService.joinChannel(socket, data.gameId, server);
+    this.chatService.joinChannel(socket, data, server);
   }
 
   gamelistRequest(): any {
@@ -124,7 +124,7 @@ export class GameService {
   }
 
   async clientLeave(socket: Socket, server: Server) {
-    console.log('clientleave');
+    // console.log('clientleave');
     const user = await this.userRepository.findOneBy({ socket_id: socket.id });
     const prevChannel = user.channel_id;
     if (user.status === 'spectate') {
@@ -136,10 +136,9 @@ export class GameService {
     const findChannelUser = await this.userRepository.find({
       where: { channel_id: prevChannel },
     });
-    console.log(findChannelUser);
     if (findChannelUser.length === 0) {
       this.gameManager.closeGame(prevChannel);
     }
-    this.chatService.joinChannel(socket, { channelId: '0' }, server);
+    await this.chatService.joinChannel(socket, { channelId: '0' }, server);
   }
 }

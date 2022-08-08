@@ -31,32 +31,41 @@ export class StatsService {
       },
       take: numUser,
     });
-    const resRankDto = new ResRankDto();
-    resRankDto.rankingArr = rankRepo;
-    return resRankDto;
+    const rankList = rankRepo.map((stat, index, array) => {
+      const resRankDto = new ResRankDto();
+      const rank =
+        array.filter(
+          (iter) =>
+            iter.win > stat.win ||
+            (iter.win === stat.win && iter.winrate > stat.winrate),
+        ).length + 1;
+      resRankDto.rank = rank;
+      resRankDto.nickName = stat.user.nickname;
+      resRankDto.win = stat.win;
+      resRankDto.lose = stat.lose;
+      resRankDto.winRate = (stat.winrate * 100).toFixed() + '%';
+      return resRankDto;
+    });
+    return { ranking: rankList };
   }
 
-  async update(nickName: string, updateStatDto: UpdateStatDto) {
-    const user = await this.userRepository.findOne({
-      where: { nickname: nickName },
-    });
-    if (user === undefined)
-      throw new BadRequestException(`${nickName}: Cannot find user`);
+  //   async update(nickName: string, updateStatDto: UpdateStatDto) {
+  //     const user = await this.userRepository.findOne({
+  //       where: { nickname: nickName },
+  //     });
+  //     if (user === undefined)
+  //       throw new BadRequestException(`${nickName}: Cannot find user`);
 
-    const statUpdate = await this.statRepository.findOne({
-      relations: ['user'],
-      where: {
-        user: user,
-      },
-    });
-    statUpdate.win = updateStatDto.win;
-    statUpdate.lose = updateStatDto.lose;
-    statUpdate.winrate =
-      +updateStatDto.win / (+updateStatDto.win + +updateStatDto.lose);
-    return await this.statRepository.save(statUpdate);
-  }
-
-  //   remove(id: number) {
-  //     return `This action removes a #${id} stat`;
+  //     const statUpdate = await this.statRepository.findOne({
+  //       relations: ['user'],
+  //       where: {
+  //         user: user,
+  //       },
+  //     });
+  //     statUpdate.win = updateStatDto.win;
+  //     statUpdate.lose = updateStatDto.lose;
+  //     statUpdate.winrate =
+  //       +updateStatDto.win / (+updateStatDto.win + +updateStatDto.lose);
+  //     return await this.statRepository.save(statUpdate);
   //   }
 }

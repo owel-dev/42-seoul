@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateBanDto } from './dto/create-ban.dto';
-import { ResBanListDto } from './dto/res-ban.dto';
+import { ResBanDto } from './dto/res-ban.dto';
 import { UpdateBanDto } from './dto/update-ban.dto';
 import { Ban } from './entities/ban.entity';
 
@@ -78,9 +78,12 @@ export class BanService {
       },
       where: { ban_1: { nickname: nickName } },
     });
-    const resFrinedListDto = new ResBanListDto();
-    resFrinedListDto.banToResBanArr(banRepo);
-    return resFrinedListDto;
+    const resBanListDto = banRepo.map((ban, index, array) => {
+      const resBanDto = new ResBanDto();
+      resBanDto.nickName = ban.ban_2.nickname;
+      return resBanDto;
+    });
+    return { banList: resBanListDto };
   }
 
   async deleteBan(player1: string, player2: string) {

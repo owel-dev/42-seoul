@@ -1,18 +1,30 @@
-export class PostChannelDto 
-{
-    player1 : string;
-    
-    player2 : string;
-    
-    admin : string;
+import { ApiProperty } from '@nestjs/swagger';
 
-    curNumUser : number;
-    
-    maxNumUser : number;
-    
-    password : string;
-    
-    mode : number;
-    
-    type : number;
+export class PostChannelDto {
+    @ApiProperty({ description: ' ' })
+    player1: string;
+
+    @ApiProperty({ description: ' ' })
+    player2: string;
+
+    @ApiProperty({ description: ' ' })
+    admin: string;
+
+    @ApiProperty({ description: ' ' })
+    curNumUser: number;
+
+    @ApiProperty({ description: ' ' })
+    maxNumUser: number
+
+    @ApiProperty({ description: ' ' })
+    password: string
+
+
+    @ApiProperty({ description: ' ' })
+    mode: number
+
+
+    @ApiProperty({ description: ' ' })
+    type: number
+
 }

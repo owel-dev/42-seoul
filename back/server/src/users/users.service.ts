@@ -30,7 +30,7 @@ export class UsersService {
     @InjectRepository(Ban)
     private banRepository: Repository<Ban>,
     private readonly authService: AuthService,
-  ) {}
+  ) { }
 
   async findOneMyPage(nickName: string) {
     // console.log('user findOneMyPage');
@@ -41,7 +41,15 @@ export class UsersService {
       },
     });
     if (!userRepo) throw new NotFoundException(`${nickName}: Cannot find user`);
-    return new ResUserMyPage(userRepo);
+    const resUserMyPage = new ResUserMyPage();
+    resUserMyPage.intraId = userRepo.intra_id;
+    resUserMyPage.avatar = userRepo.avatar;
+    resUserMyPage.nickName = userRepo.nickname;
+    resUserMyPage.win = userRepo.stats.win;
+    resUserMyPage.lose = userRepo.stats.lose;
+    resUserMyPage.winRate = (userRepo.stats.winrate * 100).toFixed() + '%';
+
+    return resUserMyPage;
   }
 
   async findOneModal(token: string, nickName: string) {
@@ -58,10 +66,16 @@ export class UsersService {
         { statusCode: 'PU01', error: `${nickName}: Cannot find user` },
         HttpStatus.BAD_REQUEST,
       );
-    const resUserModal = new ResUserModal(userRepo);
-    resUserModal.setFriend = await this.isFriend(reqNick, userRepo.friend_2);
-    resUserModal.setBan = await this.isBan(reqNick, userRepo.ban_2);
-    resUserModal.setAdmin = await this.isAdmin(reqNick);
+    const resUserModal = new ResUserModal();
+    resUserModal.nickName = userRepo.nickname;
+    resUserModal.win = userRepo.stats.win;
+    resUserModal.lose = userRepo.stats.lose;
+    resUserModal.winRate = (userRepo.stats.winrate * 100).toFixed() + '%';
+    resUserModal.status = userRepo.status;
+    resUserModal.channelId = userRepo.channel_id;
+    resUserModal.friend = await this.isFriend(reqNick, userRepo.friend_2);
+    resUserModal.ban = await this.isBan(reqNick, userRepo.ban_2);
+    resUserModal.admin = await this.isAdmin(reqNick);
     return resUserModal;
   }
 
@@ -74,7 +88,10 @@ export class UsersService {
       },
     });
     if (!userRepo) throw new NotFoundException(`${userNick}: Cannot find user`);
-    const resUserNavi = new ResUserNavi(userRepo);
+    const resUserNavi = new ResUserNavi();
+    resUserNavi.nickName = userRepo.nickname;
+    resUserNavi.avatar = userRepo.avatar;
+    resUserNavi.isSecondAuth = userRepo.is_second_auth;
     return resUserNavi;
   }
 
@@ -145,10 +162,10 @@ export class UsersService {
     }
   }
 
-  async delete(nickName: string) {
-    console.log('delete user');
-    await this.userRepository.delete({ nickname: nickName });
-  }
+  //   async delete(nickName: string) {
+  //     console.log('delete user');
+  //     await this.userRepository.delete({ nickname: nickName });
+  //   }
 
   private async saveUser(
     createUserDto: CreateUserDto,

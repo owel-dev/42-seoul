@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { modalState } from 'utils/recoil/modal';
 import { socket } from 'components/layout/Layout';
+import { modalState } from 'utils/recoil/modal';
 
 type userListType = {
   nickName: string;

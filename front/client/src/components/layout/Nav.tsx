@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { socket } from './Layout';
+import { socket } from 'components/layout/Layout';
 import { modalState } from 'utils/recoil/modal';
 import { channelState } from 'utils/recoil/gameState';
 import { friendState } from 'utils/recoil/friend';
@@ -8,9 +8,9 @@ import { chatListState } from 'utils/recoil/chat';
 import 'styles/layout/Nav.css';
 
 function Nav(props: { nickName: string; avatar: string }) {
-  const setModalInfo = useSetRecoilState(modalState);
   const [channelInfo, setChannelInfo] = useRecoilState(channelState);
   const [friend, setFriend] = useRecoilState(friendState);
+  const setModalInfo = useSetRecoilState(modalState);
   const setChatList = useSetRecoilState(chatListState);
 
   const movePage = () => {

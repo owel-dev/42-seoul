@@ -1,7 +1,7 @@
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { chat } from 'types/chatTypes';
 import { modalState } from 'utils/recoil/modal';
 import { myDataState } from 'utils/recoil/myData';
+import { chat } from 'types/chatTypes';
 
 function ChatList({ chatList }: { chatList: chat[] }) {
   const myData = useRecoilValue(myDataState);

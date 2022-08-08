@@ -12,8 +12,6 @@ export default function Error() {
   const setIsLoggedIn = useSetRecoilState(loginState);
   const navigate = useNavigate();
 
-  useEffect(() => {}, []);
-
   const goHome = () => {
     if (errorMessage === 'E500') {
       localStorage.removeItem('trans-token');

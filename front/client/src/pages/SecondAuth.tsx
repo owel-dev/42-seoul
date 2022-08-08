@@ -3,14 +3,15 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { myDataState } from 'utils/recoil/myData';
 import { errorState } from 'utils/recoil/error';
 import instance from 'utils/axios';
+import { errorType } from 'types/errorTypes';
 import styles from 'styles/login/login.module.css';
 import 'styles/login/SecondAuth.css';
 
 function SecondAuth() {
+  const setErrorMessage = useSetRecoilState(errorState);
   const [myData, setMyData] = useRecoilState(myDataState);
   const [emailInput, setEmailInput] = useState<string>('');
   const [codeInput, setCodeInput] = useState<string>('');
-  const setErrorMessage = useSetRecoilState(errorState);
 
   const sendEmail = async () => {
     if (emailInput.indexOf('@') === -1 || emailInput.indexOf('.') === -1) {
@@ -22,7 +23,8 @@ function SecondAuth() {
         await instance.post(`/oauth/sendEmail?id=${myData.nickName}`, {
           email: emailInput,
         });
-      } catch (e: any) {
+      } catch (err) {
+        const e = err as errorType;
         if (e.message === `Network Error`) {
           setErrorMessage('E500');
         } else setErrorMessage('SA01');
@@ -39,7 +41,8 @@ function SecondAuth() {
         }
       );
       setMyData(res?.data);
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as errorType;
       if (e.message === `Network Error`) {
         setErrorMessage('E500');
       } else if (e.response.data.statusCode === 'SC01')

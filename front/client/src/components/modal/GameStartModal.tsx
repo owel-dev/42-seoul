@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Navigate } from 'react-router-dom';
+import RadioOption from 'components/modal/RadioOption';
+import { socket } from 'components/layout/Layout';
 import { modalState } from 'utils/recoil/modal';
 import { channelState } from 'utils/recoil/gameState';
 import { myDataState } from 'utils/recoil/myData';
-import { socket } from 'components/layout/Layout';
 import { myData } from 'types/myDataTypes';
-import RadioOption from 'components/modal/RadioOption';
 import 'styles/modal/Modal.css';
 
 function GameStartModal() {
-  const [matchWait, setMatchWait] = useState<boolean>(false);
+  const myData = useRecoilValue<myData>(myDataState);
+  const setModalInfo = useSetRecoilState(modalState);
   const [channelInfo, setChannelInfo] = useRecoilState(channelState);
+  const [matchWait, setMatchWait] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState('');
   const [radioValue, setRadioValue] = useState('none');
-  const setModalInfo = useSetRecoilState(modalState);
-  const myData = useRecoilValue<myData>(myDataState);
 
   const [disable, SetDisable] = useState<boolean>(false);
 
@@ -46,7 +46,7 @@ function GameStartModal() {
       setMatchWait(false);
       setChannelInfo(data);
     });
-  }, [setChannelInfo]);
+  }, []);
 
   return (
     <>

@@ -1,16 +1,16 @@
 import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { channelState, inviteState } from 'utils/recoil/gameState';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { socket } from 'components/layout/Layout';
 import { inviteType } from 'types/GameTypes';
 import { modalState } from 'utils/recoil/modal';
-import { socket } from 'components/layout/Layout';
+import { channelState, inviteState } from 'utils/recoil/gameState';
 import 'styles/modal/Modal.css';
 
 function InviteAcceptModal() {
-  const [inviteData, setInviteData] = useRecoilState<inviteType>(inviteState);
-  const [channelInfo, setChannelInfo] = useRecoilState(channelState);
+  const inviteData = useRecoilValue<inviteType>(inviteState);
   const setModalState = useSetRecoilState(modalState);
+  const [channelInfo, setChannelInfo] = useRecoilState(channelState);
 
   const inviteAccept = () => {
     socket.emit('together-response', { status: true, data: inviteData });
@@ -24,7 +24,7 @@ function InviteAcceptModal() {
     socket.on('game-wait', (data) => {
       setChannelInfo(data);
     });
-  }, [setChannelInfo]);
+  }, []);
 
   return (
     <>

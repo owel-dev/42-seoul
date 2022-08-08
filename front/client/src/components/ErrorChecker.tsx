@@ -1,5 +1,5 @@
-import { errorState } from 'utils/recoil/error';
 import { useRecoilValue } from 'recoil';
+import { errorState } from 'utils/recoil/error';
 import Error from 'pages/Error';
 
 interface ErrorCheckerProps {

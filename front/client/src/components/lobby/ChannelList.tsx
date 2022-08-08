@@ -1,14 +1,14 @@
-import { socket } from 'components/layout/Layout';
 import { useState, useEffect } from 'react';
-import { channelListTypes, channelTypes } from 'types/LobbyTypes';
 import ChannelListRow from 'components/lobby/ChannelListRow';
+import { socket } from 'components/layout/Layout';
+import { channelListTypes, channelTypes } from 'types/LobbyTypes';
 import 'styles/Lobby/Lobby.css';
 
 function ChannelList() {
   const [channelList, setChannelList] = useState<channelListTypes | null>(null);
 
   useEffect(() => {
-    socket.emit('gamelist-request', (response: any) => {
+    socket.emit('gamelist-request', (response: channelListTypes) => {
       setChannelList(response);
     });
   }, []);

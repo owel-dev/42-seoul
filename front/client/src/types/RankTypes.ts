@@ -1,11 +1,11 @@
+export type rankRowType = {
+  rank: string;
+  nickName: string;
+  win: number;
+  lose: number;
+  winRate: string;
+};
+
 export type userRank = {
-  ranking: [
-    {
-      rank: string;
-      nickName: string;
-      win: number;
-      lose: number;
-      winRate: string;
-    }
-  ];
+  ranking: [rankRowType];
 };

@@ -1,5 +1,6 @@
 import { useRecoilState } from 'recoil';
 import { modalState } from 'utils/recoil/modal';
+import { socket } from 'components/layout/Layout';
 import GameStartModal from './GameStartModal';
 import NickChangeModal from './NickChangeModal';
 import AvatarChangeModal from './AvatarChangeModal';
@@ -7,10 +8,9 @@ import ProfileModal from './ProfileModal';
 import LogoutModal from './LogoutModal';
 import ChannelSettingModal from './ChannelSettingModal';
 import PasswordSubmitModal from './PasswordSubmitModal';
-import { socket } from 'components/layout/Layout';
-import 'styles/modal/Modal.css';
 import GameInviteModal from './GameInviteModal';
 import InviteAcceptModal from './InviteAcceptModal';
+import 'styles/modal/Modal.css';
 
 export default function ModalProvider() {
   const [modalInfo, setModalInfo] = useRecoilState(modalState);

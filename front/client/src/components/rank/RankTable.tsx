@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { userRank } from 'types/RankTypes';
+import RankRow from 'components/rank/RankRow';
+import RankTitleRow from 'components/rank/RankTitleRow';
+import { rankRowType, userRank } from 'types/RankTypes';
+import { errorType } from 'types/errorTypes';
+import instance from 'utils/axios';
 import { loginState } from 'utils/recoil/login';
 import { errorState } from 'utils/recoil/error';
-import RankRow from 'components/rank/RankRow';
-import instance from 'utils/axios';
-import RankTitleRow from './RankTitleRow';
 
 function RankTable() {
-  const [rank, setRank] = useState<userRank | null>(null);
   const setIsLoggedIn = useSetRecoilState(loginState);
   const setErrorMessage = useSetRecoilState(errorState);
+  const [rank, setRank] = useState<userRank | null>(null);
 
   useEffect(() => {
     getData();
@@ -20,7 +21,8 @@ function RankTable() {
     try {
       const getAPI = await instance.get(`/stat`);
       setRank(getAPI.data);
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as errorType;
       if (e.message === `Network Error`) {
         setErrorMessage('E500');
       } else if (e.response.status === 403) {
@@ -37,19 +39,9 @@ function RankTable() {
   return (
     <div className='rank-table'>
       <RankTitleRow />
-      {rank?.ranking.map((val: any, index: any) => {
+      {rank?.ranking.map((val: rankRowType, index: number) => {
         const row_type = index % 2 ? 'rank-row' : 'rank-row-gray';
-        return (
-          <RankRow
-            key={index}
-            rank={val.rank}
-            nickName={val.nickName}
-            win={val.win}
-            lose={val.lose}
-            winRate={val.winRate}
-            type={row_type}
-          />
-        );
+        return <RankRow key={index} rankrow={val} type={row_type} />;
       })}
     </div>
   );

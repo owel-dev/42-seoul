@@ -1,6 +1,6 @@
 import { useSetRecoilState } from 'recoil';
-import { modalState } from 'utils/recoil/modal';
 import ChannelList from 'components/lobby/ChannelList';
+import { modalState } from 'utils/recoil/modal';
 import 'styles/Lobby/Lobby.css';
 
 function Lobby() {

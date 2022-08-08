@@ -1,24 +1,34 @@
 import { useEffect, useState } from 'react';
 import { useSetRecoilState, useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import instance from 'utils/axios';
 import { modalState } from 'utils/recoil/modal';
 import { myDataState } from 'utils/recoil/myData';
 import { errorState } from 'utils/recoil/error';
 import { profileState } from 'utils/recoil/profileData';
 import { errorType } from 'types/errorTypes';
+import { loginState } from 'utils/recoil/login';
+import instance from 'utils/axios';
+import refreshToken from 'utils/token';
 import 'styles/modal/Modal.css';
 
 function NickChangeModal() {
   const [myData, setMyData] = useRecoilState(myDataState);
+  const [inputValue, setInputValue] = useState('');
+  const [isChange, setIsChange] = useState<boolean>();
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
   const setModalInfo = useSetRecoilState(modalState);
   const setProfileData = useSetRecoilState(profileState);
   const setErrorMessage = useSetRecoilState(errorState);
-  const [inputValue, setInputValue] = useState('');
-  const [isChange, setIsChange] = useState<boolean>();
   const navigate = useNavigate();
 
   const CloseModal = () => {
+    setModalInfo({ modalName: null });
+  };
+
+  const logout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    setIsLoggedIn(false);
     setModalInfo({ modalName: null });
   };
 
@@ -46,7 +56,15 @@ function NickChangeModal() {
           setErrorMessage('E500');
         } else if (e.response.data.statusCode === 'NC01')
           alert('이미 존재하는 닉네임입니다!');
-        else setErrorMessage('NM01');
+        else if (e.response.data.statusCode === 401) {
+          refreshToken()
+            .then(() => {
+              if (isLoggedIn === true) fetchData();
+            })
+            .catch(() => {
+              logout();
+            });
+        } else setErrorMessage('NM01');
       }
     };
     if (inputValue === '') {

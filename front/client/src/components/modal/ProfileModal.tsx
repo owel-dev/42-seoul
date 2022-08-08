@@ -4,24 +4,34 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { socket } from 'components/layout/Layout';
 import { userData } from 'types/userTypes';
 import { errorType } from 'types/errorTypes';
-import instance from 'utils/axios';
 import { modalState } from 'utils/recoil/modal';
 import { myDataState } from 'utils/recoil/myData';
 import { chatListState, messageState } from 'utils/recoil/chat';
 import { channelState } from 'utils/recoil/gameState';
 import { friendState } from 'utils/recoil/friend';
 import { errorState } from 'utils/recoil/error';
+import { loginState } from 'utils/recoil/login';
+import instance from 'utils/axios';
+import refreshToken from 'utils/token';
 import 'styles/modal/Modal.css';
 
 function ProfileModal() {
   const myData = useRecoilValue(myDataState);
-  const setMessage = useSetRecoilState(messageState);
-  const setErrorMessage = useSetRecoilState(errorState);
-  const setChatList = useSetRecoilState(chatListState);
+  const [userData, setUserData] = useState<userData>();
   const [modalInfo, setModalInfo] = useRecoilState(modalState);
   const [channelInfo, setChannelInfo] = useRecoilState(channelState);
   const [friend, setFriend] = useRecoilState(friendState);
-  const [userData, setUserData] = useState<userData>();
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
+  const setMessage = useSetRecoilState(messageState);
+  const setErrorMessage = useSetRecoilState(errorState);
+  const setChatList = useSetRecoilState(chatListState);
+
+  const logout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    setIsLoggedIn(false);
+    setModalInfo({ modalName: null });
+  };
 
   useEffect(() => {
     getUserData();
@@ -38,6 +48,14 @@ function ProfileModal() {
       } else if (e.response.data.statusCode === 'PU01') {
         alert('존재하지 않는 사용자입니다.');
         setModalInfo({ modalName: null });
+      } else if (e.response.data.statusCode === 401) {
+        refreshToken()
+          .then(() => {
+            if (isLoggedIn === true) getUserData();
+          })
+          .catch(() => {
+            logout();
+          });
       } else {
         setModalInfo({ modalName: null });
         setErrorMessage('PM01');

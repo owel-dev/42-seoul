@@ -1,16 +1,25 @@
 import { useState, useEffect } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { matchList } from 'types/profileTypes';
 import { errorType } from 'types/errorTypes';
-import instance from 'utils/axios';
 import { profileState } from 'utils/recoil/profileData';
 import { errorState } from 'utils/recoil/error';
+import { loginState } from 'utils/recoil/login';
+import instance from 'utils/axios';
+import refreshToken from 'utils/token';
 import 'styles/users/MatchList.css';
 
 function MatchTable() {
   const profileData = useRecoilValue(profileState);
   const [matchList, setMatchList] = useState<matchList | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
   const setErrorMessage = useSetRecoilState(errorState);
+
+  const logout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    setIsLoggedIn(false);
+  };
 
   const getData = async () => {
     try {
@@ -20,6 +29,14 @@ function MatchTable() {
       const e = err as errorType;
       if (e.message === `Network Error`) {
         setErrorMessage('E500');
+      } else if (e.response.data.statusCode === 401) {
+        refreshToken()
+          .then(() => {
+            if (isLoggedIn === true) getData();
+          })
+          .catch(() => {
+            logout();
+          });
       } else setErrorMessage('MT01');
     }
   };

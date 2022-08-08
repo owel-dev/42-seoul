@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   forwardRef,
   HttpException,
   HttpStatus,
@@ -30,7 +31,7 @@ export class UsersService {
     @InjectRepository(Ban)
     private banRepository: Repository<Ban>,
     private readonly authService: AuthService,
-  ) { }
+  ) {}
 
   async findOneMyPage(nickName: string) {
     // console.log('user findOneMyPage');
@@ -138,28 +139,32 @@ export class UsersService {
     updateUserDto: UpdateUserDto,
     file: Express.Multer.File,
   ) {
-    if (
-      (await this.userRepository.findOneBy({ nickname: nickName })) == undefined
-    )
+    if (!nickName)
+      throw new ForbiddenException(`${nickName}: nickName cannot be empty`);
+    const userRepo = await this.userRepository.findOneBy({
+      nickname: nickName,
+    });
+    const prevAvatar = userRepo.avatar;
+    if (userRepo === undefined)
       throw new NotFoundException(`${nickName}: Cannot find user`);
+
     const ipv4 = await this.getIpAdrress();
-    if (updateUserDto.nickName !== undefined) {
-      if (await this.isNickAvailable(updateUserDto.nickName)) {
-        this.userRepository.update(
-          { nickname: nickName },
-          { nickname: updateUserDto.nickName },
-        );
-      }
+    if (
+      updateUserDto.nickName !== undefined &&
+      (await this.isNickAvailable(updateUserDto.nickName))
+    ) {
+      userRepo.nickname = updateUserDto.nickName;
     }
     if (file !== undefined) {
-      this.userRepository.update(
-        { nickname: nickName },
-        {
-          avatar: `http://${ipv4}:3000/public/avatar/${file.filename}`,
-        },
-      );
-      return `http://${ipv4}:3000/public/avatar/${file.filename}`;
+      userRepo.avatar = `http://${ipv4}:3000/public/avatar/${file.filename}`;
+      if (!prevAvatar.includes('https://cdn.intra.42.fr')) {
+        const prevFilename = prevAvatar.split('/').pop();
+        const prevPath = `${file.destination}/${prevFilename}`;
+        this.deleteFile(prevPath);
+      }
     }
+    this.userRepository.save(userRepo);
+    return userRepo.avatar;
   }
 
   //   async delete(nickName: string) {
@@ -207,5 +212,13 @@ export class UsersService {
     const nets = networkInterfaces();
     const ipv4 = nets['en0'][1]['address'];
     return ipv4;
+  }
+
+  private async deleteFile(path: string) {
+    const fs = require('fs');
+    fs.unlink(path, (err) => {
+      if (err) console.log(err);
+      return;
+    });
   }
 }

@@ -8,6 +8,7 @@ import instance from 'utils/axios';
 import { profileState } from 'utils/recoil/profileData';
 import { loginState } from 'utils/recoil/login';
 import { errorState } from 'utils/recoil/error';
+import { errorType } from 'types/errorTypes';
 import 'styles/users/MyPage.css';
 
 function UserPage() {
@@ -22,7 +23,8 @@ function UserPage() {
       try {
         const getAPI = await instance.get(`/users/` + currentUser + `/mypage`);
         setProfileData(getAPI.data);
-      } catch (e: any) {
+      } catch (err) {
+        const e = err as errorType;
         if (e.message === `Network Error`) {
           setErrorMessage('E500');
         } else if (e.response.status === 403) {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { matchList } from 'types/profileTypes';
+import { errorType } from 'types/errorTypes';
 import instance from 'utils/axios';
 import { profileState } from 'utils/recoil/profileData';
 import { errorState } from 'utils/recoil/error';
@@ -15,7 +16,8 @@ function MatchTable() {
     try {
       const getAPI = await instance.get(`/match/` + profileData.nickName);
       setMatchList(getAPI.data);
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as errorType;
       if (e.message === `Network Error`) {
         setErrorMessage('E500');
       } else setErrorMessage('MT01');

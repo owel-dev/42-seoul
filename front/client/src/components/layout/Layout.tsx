@@ -12,6 +12,7 @@ import { modalState } from 'utils/recoil/modal';
 import { inviteState } from 'utils/recoil/gameState';
 import { myData } from 'types/myDataTypes';
 import { inviteType } from 'types/GameTypes';
+import { errorType } from 'types/errorTypes';
 import 'styles/layout/Content.css';
 
 export let socket = io();
@@ -31,7 +32,8 @@ function Layout({ children }: LayoutProps) {
     try {
       const res = await instance.get(`/users/navi`);
       setMyData(res?.data);
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as errorType;
       if (e.message === `Network Error`) {
         setErrorMessage('E500');
       } else if (e.response.status === 403) {

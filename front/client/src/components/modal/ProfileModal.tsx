@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { socket } from 'components/layout/Layout';
 import { userData } from 'types/userTypes';
+import { errorType } from 'types/errorTypes';
 import instance from 'utils/axios';
 import { modalState } from 'utils/recoil/modal';
 import { myDataState } from 'utils/recoil/myData';
@@ -30,7 +31,8 @@ function ProfileModal() {
     try {
       const res = await instance.get(`/users/${modalInfo.user}/modal`);
       setUserData(res?.data);
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as errorType;
       if (e.message === `Network Error`) {
         setErrorMessage('E500');
       } else if (e.response.data.statusCode === 'PU01') {
@@ -68,7 +70,8 @@ function ProfileModal() {
       });
       alert('친구 추가가 완료되었습니다.');
       setModalInfo({ modalName: null });
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as errorType;
       if (e.message === `Network Error`) {
         setErrorMessage('E500');
       } else if (e.response.data.statusCode === 'FA01')
@@ -88,7 +91,8 @@ function ProfileModal() {
       await instance.delete(`/friend?nickname=${modalInfo.user}`);
       alert('친구 삭제가 완료되었습니다.');
       setModalInfo({ modalName: null });
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as errorType;
       if (e.message === `Network Error`) {
         setErrorMessage('E500');
       } else if (e.response.data.statusCode === 'FD01')
@@ -111,7 +115,8 @@ function ProfileModal() {
       });
       alert('차단이 완료되었습니다.');
       setModalInfo({ modalName: null });
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as errorType;
       if (e.message === `Network Error`) {
         setErrorMessage('E500');
       } else if (e.response.data.statusCode === 'BA01')
@@ -131,7 +136,8 @@ function ProfileModal() {
       await instance.delete(`/ban?user=${modalInfo.user}`);
       alert('차단이 해제되었습니다.');
       setModalInfo({ modalName: null });
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as errorType;
       if (e.message === `Network Error`) {
         setErrorMessage('E500');
       } else if (e.response.data.statusCode === 'BD01')

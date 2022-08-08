@@ -3,6 +3,7 @@ import { useSetRecoilState } from 'recoil';
 import RankRow from 'components/rank/RankRow';
 import RankTitleRow from 'components/rank/RankTitleRow';
 import { rankRowType, userRank } from 'types/RankTypes';
+import { errorType } from 'types/errorTypes';
 import instance from 'utils/axios';
 import { loginState } from 'utils/recoil/login';
 import { errorState } from 'utils/recoil/error';
@@ -20,7 +21,8 @@ function RankTable() {
     try {
       const getAPI = await instance.get(`/stat`);
       setRank(getAPI.data);
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as errorType;
       if (e.message === `Network Error`) {
         setErrorMessage('E500');
       } else if (e.response.status === 403) {

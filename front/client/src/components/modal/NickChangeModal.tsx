@@ -6,6 +6,7 @@ import { modalState } from 'utils/recoil/modal';
 import { myDataState } from 'utils/recoil/myData';
 import { errorState } from 'utils/recoil/error';
 import { profileState } from 'utils/recoil/profileData';
+import { errorType } from 'types/errorTypes';
 import 'styles/modal/Modal.css';
 
 function NickChangeModal() {
@@ -39,7 +40,8 @@ function NickChangeModal() {
         setMyData((prev) => ({ ...prev, nickName: inputValue }));
         setProfileData((prev) => ({ ...prev, nickName: inputValue }));
         setIsChange(true);
-      } catch (e: any) {
+      } catch (err) {
+        const e = err as errorType;
         if (e.message === `Network Error`) {
           setErrorMessage('E500');
         } else if (e.response.data.statusCode === 'NC01')

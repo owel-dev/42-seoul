@@ -24,6 +24,6 @@ export class CreateMatchDto {
   score2: number;
 
   @ApiProperty({ description: '게임 모드' })
-  @IsIn(['default', 'power', 'obstacle'])
+  @IsIn(["none", "power", "map"])
   mode: string;
 }

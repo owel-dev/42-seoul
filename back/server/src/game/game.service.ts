@@ -30,7 +30,7 @@ export class GameService {
         console.log(`New client connected: ${socket.id}`);
 
         // console.log("token", token);
-        const token = socket.handshake.query.token as string;
+        const token = socket.handshake.query.accessToken as string;
         const nickName = await this.authService.getUserNickByToken(token);
         if (nickName === undefined) return;
         // console.log('nick: ', nickName);
@@ -131,6 +131,7 @@ export class GameService {
         // 만약 플레이어면 stopsignal 호출.
 
         const user = await this.userRepository.findOneBy({ socket_id: socket.id });
+        console.log(`socket.id: ${socket.id}, user: ${user}`);
         if (user.status === 'gaming') {
             this.gameManager.stopGame(user.channel_id, user.nickname);
         }
@@ -189,13 +190,6 @@ export class GameService {
             this.matchRequest(socket, response.data, server);
             return;
         }
-
-        // {
-        //     status: true,
-        //         data: {
-
-        //     },
-        // }
 
         let remakeMode = response.data.gameMode + ' ' + response.data.password.replace(' ', '');
         this.matchManager.clearQueue(remakeMode);

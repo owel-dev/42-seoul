@@ -9,13 +9,10 @@ import { Repository } from 'typeorm';
 
 const uuid = require('uuid');
 
-let MAX_SPEED = 2;
-let MIN_SPEED = 2;
-const MAX_SCORE = 10;
+
+const MAX_SCORE = 2;
 const HERZ = 60;
 const COUNTDOWN = 5;
-
-// let interval;
 
 export class Game {
     channelId: string;
@@ -28,13 +25,10 @@ export class Game {
     interval: any;
     stopSignal: number;
     stopUser: string;
+    maxSpeed: number;
+    minSpeed: number;
 
-    constructor(
-        data: any,
-        server: Server,
-        // @InjectRepository(User)
-        // private userRepository: Repository<User>,
-    ) {
+    constructor(data: any, server: Server) {
         this.channelId = uuid.v4();
         this.firstPlayer = {
             socket: data.firstSocket,
@@ -49,15 +43,17 @@ export class Game {
             paddlePosition: 50,
         };
         this.password = data.password;
+        this.maxSpeed = 2;
+        this.minSpeed = 2;
         this.gameMode = data.gameMode;
         if (this.gameMode == 'power') {
-            MAX_SPEED = 5;
-            MIN_SPEED = 5;
+            this.maxSpeed = 5;
+            this.minSpeed = 5;
         }
         this.ball = {
             x: 20,
             y: 50,
-            speed: MIN_SPEED,
+            speed: this.minSpeed,
             direction: 0,
         };
         this.server = server;
@@ -119,55 +115,44 @@ export class Game {
         this.secondPlayer.socket.emit('game-end', this.channelId);
         this.server.to(this.channelId).emit('game-end', this.channelId);
 
-        if (user === this.firstPlayer.nickName || this.firstPlayer.score === MAX_SCORE) {
+        if (this.firstPlayer.score === MAX_SCORE) {
             return {
-                win: this.firstPlayer.nickName,
-                lose: this.secondPlayer.nickName,
+                winPlayer: this.firstPlayer.nickName,
+                winScore: this.firstPlayer.score,
+                losePlayer: this.secondPlayer.nickName,
+                loseScore: this.secondPlayer.score,
+                gameMode: this.gameMode
             };
         }
-        else if (user === this.secondPlayer.nickName || this.secondPlayer.score === MAX_SCORE) {
+        if (this.secondPlayer.score === MAX_SCORE) {
             return {
-                win: this.secondPlayer.nickName,
-                lose: this.firstPlayer.nickName,
+                winPlayer: this.secondPlayer.nickName,
+                winScore: this.secondPlayer.score,
+                losePlayer: this.firstPlayer.nickName,
+                loseScore: this.firstPlayer.score,
+                gameMode: this.gameMode
+            };
+        }
+        if (user === this.secondPlayer.nickName) {
+            return {
+                winPlayer: this.firstPlayer.nickName,
+                winScore: this.firstPlayer.score,
+                losePlayer: this.secondPlayer.nickName,
+                loseScore: 0,
+                gameMode: this.gameMode
+            };
+        }
+        if (user === this.firstPlayer.nickName) {
+            return {
+                winPlayer: this.secondPlayer.nickName,
+                winScore: this.secondPlayer.score,
+                losePlayer: this.firstPlayer.nickName,
+                loseScore: 0,
+                gameMode: this.gameMode
             };
         }
 
         return new NotFoundException("stopGame");
-    }
-
-    sendGameData() {
-        // this.interval = setInterval(() => {
-        //     this.update();
-        //     if (this.firstPlayer.score == 10 ||
-        //         this.secondPlayer.score == 10) {
-        //         this.stopGame();
-        //     }
-        //     const data = {
-        //         firstPlayerScore: this.firstPlayer.score,
-        //         secondPlayerScore: this.secondPlayer.score,
-        //         firstPlayerPaddle: this.firstPlayer.paddlePosition,
-        //         secondPlayerPaddle: this.secondPlayer.paddlePosition,
-        //         ball: { x: this.ball.x, y: this.ball.y },
-        //     };
-        //     this.secondPlayer.socket.emit(
-        //         'game-data',
-        //         data,
-        //         (callback) => {
-        //             this.secondPlayer.paddlePosition = callback;
-        //         },
-        //     );
-        //     this.firstPlayer.socket.emit(
-        //         'game-data',
-        //         data,
-        //         (callback) => {
-        //             this.firstPlayer.paddlePosition = callback;
-        //         },
-        //     );
-        //     // console.log("@@@server", server);
-        //     // console.log("@@@channelId", this.channelId);
-        //     this.server.to(this.channelId).emit('game-data', data);
-        //     // console.log("interval");
-        // }, (1 / HERZ) * 1000);
     }
 
     async countDown() {
@@ -183,8 +168,6 @@ export class Game {
             secondPlayer: this.secondPlayer.nickName,
         });
 
-
-
         for (let i = COUNTDOWN; i >= 0; --i) {
             console.log(i.toString());
             this.firstPlayer.socket.emit('count-down', i.toString());
@@ -196,7 +179,6 @@ export class Game {
                 this.secondPlayer.socket.emit('count-down', 'Game Start!');
                 this.server.to(this.channelId).emit('count-down', 'Game Start!');
             }
-
             await this.sleep(1000);
         }
     }
@@ -231,8 +213,8 @@ export class Game {
             var normalizedRelativeIntersectionY = relativeIntersectY / 10;
             this.ball.speed = -(
                 (1 - Math.abs(normalizedRelativeIntersectionY)) *
-                (MAX_SPEED - MIN_SPEED) +
-                MIN_SPEED
+                (this.maxSpeed - this.minSpeed) +
+                this.minSpeed
             );
             this.ball.direction = -normalizedRelativeIntersectionY;
             //* 테스트용
@@ -250,8 +232,8 @@ export class Game {
             var normalizedRelativeIntersectionY = relativeIntersectY / 10;
             this.ball.speed =
                 (1 - Math.abs(normalizedRelativeIntersectionY)) *
-                (MAX_SPEED - MIN_SPEED) +
-                MIN_SPEED;
+                (this.maxSpeed - this.minSpeed) +
+                this.minSpeed;
             this.ball.direction = -normalizedRelativeIntersectionY;
             //* 테스트용
             // this.ball_velocity[1] = 0;
@@ -262,14 +244,14 @@ export class Game {
         if (player == 1) {
             this.ball.x = 50;
             this.ball.y = 50;
-            this.ball.speed = -(MIN_SPEED - 1);
+            this.ball.speed = -(this.minSpeed - 1);
             this.ball.direction = 0;
             //* 테스트용
             //this.ball_velocity = [MAX_SPEED, MAX_SPEED];
         } else {
             this.ball.x = 50;
             this.ball.y = 50;
-            this.ball.speed = MIN_SPEED - 1;
+            this.ball.speed = this.minSpeed - 1;
             this.ball.direction = 0;
         }
     }

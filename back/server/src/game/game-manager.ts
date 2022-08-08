@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Server, Socket } from 'socket.io';
 import { GetChannelDto } from 'src/channel/dto/get-channelList.dto';
 import { ChatService } from 'src/chat/chat.service';
+import { CreateMatchDto } from 'src/match/dto/create-match.dto';
+import { Match } from 'src/match/entities/match.entity';
 import { Stat } from 'src/stats/entities/stat.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -16,6 +18,8 @@ export class GameManager {
         @InjectRepository(Stat)
         private statRepository: Repository<Stat>,
         private chatService: ChatService,
+        @InjectRepository(Match)
+        private matchRepository: Repository<Match>,
     ) { }
 
     games = [];
@@ -48,12 +52,35 @@ export class GameManager {
         );
 
         game.startGame().then(async (data) => {
-            // const stat = this.statRepository.findOne({relations: ['user'], where: {
-            // }});
-            // stat.win++
-            // stat.intra_id =
+            const winPlayer = await this.statRepository.findOne({
+                relations: ['user'],
+                where: {
+                    user: { nickname: data.winPlayer }
+                }
+            });
+            winPlayer.win++;
+            winPlayer.winrate = (winPlayer.win + winPlayer.lose) / winPlayer.win;
+            await this.statRepository.save(winPlayer);
 
-            await await this.statRepository.save();
+            const losePlayer = await this.statRepository.findOne({
+                relations: ['user'],
+                where: {
+                    user: { nickname: data.losePlayer }
+                }
+            });
+            losePlayer.lose++;
+            losePlayer.winrate = (losePlayer.win + losePlayer.lose) / losePlayer.win;
+            await this.statRepository.save(losePlayer);
+
+            const matchData = new Match();
+            console.log("gameMode: ", data);
+            matchData.mode = data.gameMode;
+            matchData.player_1 = data.winPlayer;
+            matchData.player_2 = data.losePlayer;
+            matchData.score_1 = data.winScore;
+            matchData.score_2 = data.loseScore;
+            this.matchRepository.save(matchData);
+
             await this.userRepository.update(
                 { nickname: game.firstPlayer.nickName },
                 { status: 'online' },
@@ -63,8 +90,6 @@ export class GameManager {
                 { status: 'online' },
             );
         });
-
-        // console.log("games", this.games);
 
         const getChannelDto = new GetChannelDto();
         getChannelDto.channelId = game.channelId;

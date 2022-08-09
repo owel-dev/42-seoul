@@ -1,26 +1,35 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh-token') {
-    constructor() {
+    constructor(
+        private config: ConfigService
+    ) {
         super({
-            secretOrKey: 'RefreshJwt',
+            secretOrKey: config.get("JWT_REFRESH_SECRET"),
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            ignoreExpiration: false
+            ignoreExpiration: true
         })
     }
 
     async validate(payload: any)
     {
-        // console.log("JwtRefreshStrategy");
-        //리프래쉬 토큰이 만료되면? 
-        //에러코드 발송
-        //클라이언트 측에서 로그인페이지로 리다이렉트 시켜줘야함.
-        
-        // console.log("refreshJwt ");
-        // console.log(payload);
-        return "(refreshJwt 확인)"
+        const now = new Date().getTime() / 1000;
+        const exp = payload.exp;
+        console.log("JwtRefreshStrategy ", exp - now);
+
+        if (exp - now < 0)
+        {
+            throw new HttpException(
+                { statusCode: 400, 
+                error: '만료된 리프래쉬 토큰입니다.' 
+            },
+                HttpStatus.UNAUTHORIZED,
+            )
+        }
+        return "JwtRefreshStrategy 확인"
     }
 }

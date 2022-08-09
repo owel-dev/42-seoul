@@ -89,7 +89,6 @@ export class AuthService {
   }
 
   async saveAccessToken(@Res() response: Response, code: string) {
-    console.log('saveAccessToken');
     const newUser: CreateUserDto = await this.getUserData(code);
     // console.log(newUser);
     if (!newUser) {

@@ -64,12 +64,12 @@ export class ChatService {
     const findUser = await this.userRepository.findOneBy({
       intra_id: user.intraId,
     });
+    findUser.status = 'offline';
+    this.userRepository.save(findUser);
     this.leaveChannel(socket, server);
     ChatService.users = ChatService.users.filter(
       (user) => user.socket.id !== socket.id,
     );
-    findUser.status = 'offline';
-    this.userRepository.save(findUser);
   }
 
   async sendDirectMessage(client: Socket, data: any, server: Server) {
@@ -134,7 +134,10 @@ export class ChatService {
     // console.log(`createChannel`);
     const user = ChatService.users.find((user) => user.socket.id === client.id);
     ChatService.channels.set(channelId, new Channel());
+
     await this.joinChannel(client, { channelId: channelId }, server);
+    await this.addChannelAdmin(channelId, user.intraId, server);
+    ChatService.channels.get(channelId).owner = user.intraId;
   }
 
   async joinChannel(client: Socket, data: any, server: Server) {
@@ -148,11 +151,6 @@ export class ChatService {
     }
     user.curChannel = data.channelId;
     ChatService.channels.get(data.channelId).players.push(findUser.intra_id);
-    if (
-      data.channelId !== '0' &&
-      ChatService.channels.get(data.channelId).admin === ''
-    )
-      await this.changeChannelAdmin(data.channelId, findUser.intra_id, server);
     client.join(data.channelId);
     client.join(data.channelId + '-chat');
     await this.sendUserList(client, server);
@@ -171,12 +169,8 @@ export class ChatService {
     prevChannel.muteList = prevChannel.muteList.filter(
       (elem) => elem !== findUser.intra_id,
     );
-    if (prevChannel.admin === findUser.intra_id)
-      await this.changeChannelAdmin(
-        user.curChannel,
-        prevChannel.players[0],
-        server,
-      );
+    if (prevChannel.adminList.includes(findUser.intra_id))
+      await this.removeChannelAdmin(user.curChannel, user.intraId, server);
     client.leave(user.curChannel);
     client.leave(user.curChannel + '-chat');
     if (prevChannel.players.length === 0 && user.curChannel !== '0') {
@@ -195,10 +189,13 @@ export class ChatService {
         const findUser = await this.userRepository.findOneBy({
           intra_id: user,
         });
-        return {
-          nickName: findUser.nickname,
-          admin: ChatService.channels.get(curChannel).admin === user,
-        };
+        const resChatUser = new ResChatUser();
+        resChatUser.nickName = findUser.nickname;
+        resChatUser.owner = ChatService.channels.get(curChannel).owner === user;
+        resChatUser.admin = ChatService.channels
+          .get(curChannel)
+          .adminList.includes(user);
+        return resChatUser;
       }),
     );
     // console.log(`user-list in ${curChannel}`, userList);
@@ -248,16 +245,30 @@ export class ChatService {
     const userFind = await this.userRepository.findOneBy({
       nickname: data.nickName,
     });
-    await this.changeChannelAdmin(curChannel, userFind.intra_id, server);
+    await this.addChannelAdmin(curChannel, userFind.intra_id, server);
   }
 
-  async changeChannelAdmin(channelId: string, intraId: string, server: Server) {
+  async addChannelAdmin(channelId: string, intraId: string, server: Server) {
     const findUser = await this.userRepository.findOneBy({ intra_id: intraId });
-    ChatService.channels.get(channelId).admin = intraId;
+    ChatService.channels.get(channelId).adminList.push(intraId);
     server
       .to(channelId)
       .emit('user-list', await this.getChannelUserList(channelId));
-    server.to(channelId).emit('admin-changed', findUser.nickname);
+    server
+      .to(channelId)
+      .emit('admin-changed', ChatService.channels.get(channelId).adminList);
+  }
+
+  async removeChannelAdmin(channelId: string, intraId: string, server: Server) {
+    const findUser = await this.userRepository.findOneBy({ intra_id: intraId });
+    let adminList = ChatService.channels.get(channelId).adminList;
+    adminList = adminList.filter((user) => user !== intraId);
+    server
+      .to(channelId)
+      .emit('user-list', await this.getChannelUserList(channelId));
+    server
+      .to(channelId)
+      .emit('admin-changed', ChatService.channels.get(channelId).adminList);
   }
 
   async updateFriendList(client: Socket, data: any, server: Server) {

@@ -1,11 +1,11 @@
 import {
-    BadRequestException,
-    ForbiddenException,
-    forwardRef,
-    HttpException,
-    HttpStatus,
-    Injectable,
-    NotFoundException,
+  BadRequestException,
+  ForbiddenException,
+  forwardRef,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
@@ -23,204 +23,219 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-    constructor(
-        @InjectRepository(User)
-        private userRepository: Repository<User>,
-        @InjectRepository(Friend)
-        private friendRepository: Repository<Friend>,
-        @InjectRepository(Ban)
-        private banRepository: Repository<Ban>,
-        private readonly authService: AuthService,
-    ) { }
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+    @InjectRepository(Friend)
+    private friendRepository: Repository<Friend>,
+    @InjectRepository(Ban)
+    private banRepository: Repository<Ban>,
+    private readonly authService: AuthService,
+  ) {}
 
-    async findOneMyPage(token: string, nickName: string) {
-        // console.log('user findOneMyPage');
-        const reqNick = await this.authService.getUserNickByToken(token);
-        const userRepo = await this.userRepository.findOne({
-            relations: ['stats', 'friend_1', 'friend_2'],
-            where: {
-                nickname: nickName,
-            },
-        });
-        if (!userRepo) throw new NotFoundException(`${nickName}: Cannot find user`);
-        const resUserMyPage = new ResUserMyPage();
-        resUserMyPage.intraId = userRepo.intra_id;
-        resUserMyPage.avatar = userRepo.avatar;
-        resUserMyPage.nickName = userRepo.nickname;
-        resUserMyPage.win = userRepo.stats.win;
-        resUserMyPage.lose = userRepo.stats.lose;
-        resUserMyPage.winRate = (userRepo.stats.winrate * 100).toFixed() + '%';
-        resUserMyPage.isFriend = await this.isFriend(reqNick, userRepo.friend_2);
+  async findOneMyPage(token: string, nickName: string) {
+    // console.log('user findOneMyPage');
+    const reqNick = await this.authService.getUserNickByToken(token);
+    const userRepo = await this.userRepository.findOne({
+      relations: ['stats', 'friend_1', 'friend_2'],
+      where: {
+        nickname: nickName,
+      },
+    });
+    if (!userRepo) throw new NotFoundException(`${nickName}: Cannot find user`);
+    const resUserMyPage = new ResUserMyPage();
+    resUserMyPage.intraId = userRepo.intra_id;
+    resUserMyPage.avatar = userRepo.avatar;
+    resUserMyPage.nickName = userRepo.nickname;
+    resUserMyPage.win = userRepo.stats.win;
+    resUserMyPage.lose = userRepo.stats.lose;
+    resUserMyPage.winRate = (userRepo.stats.winrate * 100).toFixed() + '%';
+    resUserMyPage.isFriend = await this.isFriend(reqNick, userRepo.friend_2);
 
-        return resUserMyPage;
+    return resUserMyPage;
+  }
+
+  async findOneModal(token: string, nickName: string) {
+    // console.log('user findOneModal');
+    const reqNick = await this.authService.getUserNickByToken(token);
+    const userRepo = await this.userRepository.findOne({
+      relations: ['stats', 'friend_1', 'friend_2', 'ban_1', 'ban_2'],
+      where: {
+        nickname: nickName,
+      },
+    });
+    if (!userRepo)
+      throw new HttpException(
+        { statusCode: 'PU01', error: `${nickName}: Cannot find user` },
+        HttpStatus.BAD_REQUEST,
+      );
+    const resUserModal = new ResUserModal();
+    resUserModal.nickName = userRepo.nickname;
+    resUserModal.win = userRepo.stats.win;
+    resUserModal.lose = userRepo.stats.lose;
+    resUserModal.winRate = (userRepo.stats.winrate * 100).toFixed() + '%';
+    resUserModal.status = userRepo.status;
+    resUserModal.channelId = userRepo.channel_id;
+    resUserModal.friend = await this.isFriend(reqNick, userRepo.friend_2);
+    resUserModal.ban = await this.isBan(reqNick, userRepo.ban_2);
+    resUserModal.owner = await this.isOwner(reqNick, userRepo.intra_id);
+    resUserModal.admin = await this.isAdmin(reqNick);
+    return resUserModal;
+  }
+
+  async findOneNavi(token: string) {
+    // console.log('findOneNavi');
+    const userNick = await this.authService.getUserNickByToken(token);
+    const userRepo = await this.userRepository.findOne({
+      where: {
+        nickname: userNick,
+      },
+    });
+    if (!userRepo) throw new NotFoundException(`${userNick}: Cannot find user`);
+    const resUserNavi = new ResUserNavi();
+    resUserNavi.nickName = userRepo.nickname;
+    resUserNavi.avatar = userRepo.avatar;
+    resUserNavi.isSecondAuth = userRepo.is_second_auth;
+    return resUserNavi;
+  }
+
+  async isFriend(requester: string, friendList: Friend[]): Promise<boolean> {
+    for (let i = 0; i < friendList.length; i++) {
+      const friend = await this.friendRepository.findOne({
+        relations: ['friend_1', 'friend_2'],
+        where: { friend_id: friendList[i].friend_id },
+      });
+      if (friend.friend_1.nickname == requester) return true;
     }
+    return false;
+  }
 
-    async findOneModal(token: string, nickName: string) {
-        // console.log('user findOneModal');
-        const reqNick = await this.authService.getUserNickByToken(token);
-        const userRepo = await this.userRepository.findOne({
-            relations: ['stats', 'friend_1', 'friend_2', 'ban_1', 'ban_2'],
-            where: {
-                nickname: nickName,
-            },
-        });
-        if (!userRepo)
-            throw new HttpException(
-                { statusCode: 'PU01', error: `${nickName}: Cannot find user` },
-                HttpStatus.BAD_REQUEST,
-            );
-        const resUserModal = new ResUserModal();
-        resUserModal.nickName = userRepo.nickname;
-        resUserModal.win = userRepo.stats.win;
-        resUserModal.lose = userRepo.stats.lose;
-        resUserModal.winRate = (userRepo.stats.winrate * 100).toFixed() + '%';
-        resUserModal.status = userRepo.status;
-        resUserModal.channelId = userRepo.channel_id;
-        resUserModal.friend = await this.isFriend(reqNick, userRepo.friend_2);
-        resUserModal.ban = await this.isBan(reqNick, userRepo.ban_2);
-        resUserModal.admin = await this.isAdmin(reqNick);
-        return resUserModal;
+  async isBan(requester: string, banList: Ban[]): Promise<boolean> {
+    for (let i = 0; i < banList.length; i++) {
+      const ban = await this.banRepository.findOne({
+        relations: ['ban_1', 'ban_2'],
+        where: { ban_id: banList[i].ban_id },
+      });
+      if (ban.ban_1.nickname == requester) return true;
     }
+    return false;
+  }
 
-    async findOneNavi(token: string) {
-        // console.log('findOneNavi');
-        const userNick = await this.authService.getUserNickByToken(token);
-        const userRepo = await this.userRepository.findOne({
-            where: {
-                nickname: userNick,
-            },
-        });
-        if (!userRepo) throw new NotFoundException(`${userNick}: Cannot find user`);
-        const resUserNavi = new ResUserNavi();
-        resUserNavi.nickName = userRepo.nickname;
-        resUserNavi.avatar = userRepo.avatar;
-        resUserNavi.isSecondAuth = userRepo.is_second_auth;
-        return resUserNavi;
-    }
+  async isAdmin(requester: string): Promise<boolean> {
+    const findUser = await this.userRepository.findOneBy({
+      nickname: requester,
+    });
+    if (!findUser)
+      throw new NotFoundException(`${requester}: Cannot find user`);
+    const curChannel = ChatService.users.find(
+      (user) => user.intraId === findUser.intra_id,
+    ).curChannel;
+    return ChatService.channels
+      .get(curChannel)
+      .adminList.includes(findUser.intra_id);
+  }
 
-    async isFriend(requester: string, friendList: Friend[]): Promise<boolean> {
-        for (let i = 0; i < friendList.length; i++) {
-            const friend = await this.friendRepository.findOne({
-                relations: ['friend_1', 'friend_2'],
-                where: { friend_id: friendList[i].friend_id },
-            });
-            if (friend.friend_1.nickname == requester) return true;
-        }
-        return false;
-    }
+  async isOwner(requester: string, intraId: string): Promise<boolean> {
+    const findUser = await this.userRepository.findOneBy({
+      nickname: requester,
+    });
+    if (!findUser)
+      throw new NotFoundException(`${requester}: Cannot find user`);
+    const curChannel = ChatService.users.find(
+      (user) => user.intraId === findUser.intra_id,
+    ).curChannel;
+    return ChatService.channels.get(curChannel).owner === intraId;
+  }
 
-    async isBan(requester: string, banList: Ban[]): Promise<boolean> {
-        for (let i = 0; i < banList.length; i++) {
-            const ban = await this.banRepository.findOne({
-                relations: ['ban_1', 'ban_2'],
-                where: { ban_id: banList[i].ban_id },
-            });
-            if (ban.ban_1.nickname == requester) return true;
-        }
-        return false;
-    }
+  create(createUserDto: CreateUserDto, file: Express.Multer.File) {
+    return this.saveUser(createUserDto, file);
+  }
 
-    async isAdmin(requester: string): Promise<boolean> {
-        const findUser = await this.userRepository.findOneBy({
-            nickname: requester,
-        });
-        if (!findUser)
-            throw new NotFoundException(`${requester}: Cannot find user`);
-        const curChannel = ChatService.users.find(
-            (user) => user.intraId === findUser.intra_id,
-        ).curChannel;
-        return ChatService.channels.get(curChannel).admin === findUser.intra_id;
-    }
+  async update(
+    nickName: string,
+    updateUserDto: UpdateUserDto,
+    file: Express.Multer.File,
+  ) {
+    if (!nickName)
+      throw new ForbiddenException(`${nickName}: nickName cannot be empty`);
+    const userRepo = await this.userRepository.findOneBy({
+      nickname: nickName,
+    });
+    const prevAvatar = userRepo.avatar;
+    if (userRepo === undefined)
+      throw new NotFoundException(`${nickName}: Cannot find user`);
 
-    create(createUserDto: CreateUserDto, file: Express.Multer.File) {
-        return this.saveUser(createUserDto, file);
-    }
-
-    async update(
-        nickName: string,
-        updateUserDto: UpdateUserDto,
-        file: Express.Multer.File,
+    const ipv4 = await this.getIpAdrress();
+    if (
+      updateUserDto.nickName !== undefined &&
+      (await this.isNickAvailable(updateUserDto.nickName))
     ) {
-        if (!nickName)
-            throw new ForbiddenException(`${nickName}: nickName cannot be empty`);
-        const userRepo = await this.userRepository.findOneBy({
-            nickname: nickName,
-        });
-        const prevAvatar = userRepo.avatar;
-        if (userRepo === undefined)
-            throw new NotFoundException(`${nickName}: Cannot find user`);
-
-        const ipv4 = await this.getIpAdrress();
-        if (
-            updateUserDto.nickName !== undefined &&
-            (await this.isNickAvailable(updateUserDto.nickName))
-        ) {
-            userRepo.nickname = updateUserDto.nickName;
-        }
-        if (file !== undefined) {
-            userRepo.avatar = `http://${ipv4}:3000/public/avatar/${file.filename}`;
-            if (!prevAvatar.includes('https://cdn.intra.42.fr')) {
-                const prevFilename = prevAvatar.split('/').pop();
-                const prevPath = `${file.destination}/${prevFilename}`;
-                this.deleteFile(prevPath);
-            }
-        }
-        this.userRepository.save(userRepo);
-        return userRepo.avatar;
+      userRepo.nickname = updateUserDto.nickName;
     }
-
-    //   async delete(nickName: string) {
-    //     console.log('delete user');
-    //     await this.userRepository.delete({ nickname: nickName });
-    //   }
-
-    private async saveUser(
-        createUserDto: CreateUserDto,
-        file: Express.Multer.File,
-    ) {
-        const user = new User();
-        const filePath = `avatar/${file.filename}`;
-        const ipv4 = await this.getIpAdrress();
-
-        user.intra_id = createUserDto.intraId;
-        user.nickname = createUserDto.nickName;
-        user.intra_email = createUserDto.intraEmail;
-        user.avatar = `http://${ipv4}:3000/public/${filePath}`;
-        user.status = createUserDto.status;
-        user.channel_id = createUserDto.channelId;
-        user.stats = new Stat();
-
-        return await this.userRepository.save(user);
+    if (file !== undefined) {
+      userRepo.avatar = `http://${ipv4}:3000/public/avatar/${file.filename}`;
+      if (!prevAvatar.includes('https://cdn.intra.42.fr')) {
+        const prevFilename = prevAvatar.split('/').pop();
+        const prevPath = `${file.destination}/${prevFilename}`;
+        this.deleteFile(prevPath);
+      }
     }
+    this.userRepository.save(userRepo);
+    return userRepo.avatar;
+  }
 
-    private async isNickAvailable(nickName: string) {
-        const users = await this.userRepository.find({
-            where: {
-                nickname: nickName,
-            },
-        });
-        if (users.length === 0) {
-            return true;
-        } else {
-            throw new HttpException(
-                { statusCode: 'NC01', error: `${nickName}: Nickname already exist` },
-                HttpStatus.BAD_REQUEST,
-            );
-        }
-    }
+  //   async delete(nickName: string) {
+  //     console.log('delete user');
+  //     await this.userRepository.delete({ nickname: nickName });
+  //   }
 
-    private async getIpAdrress() {
-        const { networkInterfaces } = require('os');
-        const nets = networkInterfaces();
-        const ipv4 = nets['en0'][1]['address'];
-        return ipv4;
-    }
+  private async saveUser(
+    createUserDto: CreateUserDto,
+    file: Express.Multer.File,
+  ) {
+    const user = new User();
+    const filePath = `avatar/${file.filename}`;
+    const ipv4 = await this.getIpAdrress();
 
-    private async deleteFile(path: string) {
-        const fs = require('fs');
-        fs.unlink(path, (err) => {
-            if (err) console.log(err);
-            return;
-        });
+    user.intra_id = createUserDto.intraId;
+    user.nickname = createUserDto.nickName;
+    user.intra_email = createUserDto.intraEmail;
+    user.avatar = `http://${ipv4}:3000/public/${filePath}`;
+    user.status = createUserDto.status;
+    user.channel_id = createUserDto.channelId;
+    user.stats = new Stat();
+
+    return await this.userRepository.save(user);
+  }
+
+  private async isNickAvailable(nickName: string) {
+    const users = await this.userRepository.find({
+      where: {
+        nickname: nickName,
+      },
+    });
+    if (users.length === 0) {
+      return true;
+    } else {
+      throw new HttpException(
+        { statusCode: 'NC01', error: `${nickName}: Nickname already exist` },
+        HttpStatus.BAD_REQUEST,
+      );
     }
+  }
+
+  private async getIpAdrress() {
+    const { networkInterfaces } = require('os');
+    const nets = networkInterfaces();
+    const ipv4 = nets['en0'][1]['address'];
+    return ipv4;
+  }
+
+  private async deleteFile(path: string) {
+    const fs = require('fs');
+    fs.unlink(path, (err) => {
+      if (err) console.log(err);
+      return;
+    });
+  }
 }

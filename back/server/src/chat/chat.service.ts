@@ -9,8 +9,10 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { WsException } from '@nestjs/websockets';
+import { execPath } from 'process';
 import { Server, Socket } from 'socket.io';
 import { AuthService } from 'src/auth/auth.service';
+import { Ban } from 'src/ban/entities/ban.entity';
 import { ResFriendDto } from 'src/friend/dto/res-friend.dto';
 import { Friend } from 'src/friend/entities/friend.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -29,17 +31,17 @@ export class ChatService {
     private userRepository: Repository<User>,
     @InjectRepository(Friend)
     private friendRepository: Repository<Friend>,
-  ) { }
+    @InjectRepository(Ban)
+    private banRepository: Repository<Ban>,
+  ) {}
 
   static channels = new Map([['0', new Channel()]]);
   static users: ChatUser[] = [];
-
 
   async handleConnection(socket: Socket, server: Server) {
     // console.log(`Chat: New client connected: ${socket.id}`);
     const token = socket.handshake.query.accessToken as string;
     const clientNick = await this.authService.getUserNickByToken(token);
-
     if (!clientNick) return;
     const client = await this.userRepository.findOneBy({
       nickname: clientNick,
@@ -75,10 +77,20 @@ export class ChatService {
   async sendDirectMessage(client: Socket, data: any, server: Server) {
     // console.log(`sendDirectMessage: ${client.id}`, data);
     const user = ChatService.users.find((user) => user.socket.id === client.id);
-    const findUser = await this.userRepository.findOneBy({
-      intra_id: user.intraId,
+    const findUser = await this.userRepository.findOne({
+      where: {
+        intra_id: user.intraId,
+      },
     });
-    if (!(await this.userService.isBan(data.nickName, []))) {
+    const isBan = await this.banRepository.find({
+      relations: ['ban_1', 'ban_2'],
+      where: {
+        ban_1: { nickname: data.nickName },
+        ban_2: { intra_id: user.intraId },
+      },
+    });
+
+    if (isBan.length === 0) {
       const sendTo = await this.userRepository.findOneBy({
         nickname: data.nickName,
       });
@@ -100,11 +112,21 @@ export class ChatService {
     // console.log(`sendChannelMessage: ${client.id}`, data);
 
     const user = ChatService.users.find((user) => user.socket.id === client.id);
-    server.to(user.curChannel + '-chat').emit('message', {
-      nickName: data.nickName,
-      message: data.message,
-      isDM: false,
+    const banRepo = await this.banRepository.find({
+      relations: ['ban_1', 'ban_2'],
+      where: {
+        ban_2: { intra_id: user.intraId },
+      },
     });
+    const bannerList = banRepo.map((ban) => ban.ban_1.intra_id);
+    server
+      .to(user.curChannel + '-chat')
+      .except(bannerList)
+      .emit('message', {
+        nickName: data.nickName,
+        message: data.message,
+        isDM: false,
+      });
     // console.log(
     //   `sendMessage to channel ${user.curChannel} from ${data.nickName} "${data.message}"`,
     // );

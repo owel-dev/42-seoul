@@ -28,7 +28,7 @@ export class AuthService {
     private mailerService: MailerService,
     private config: ConfigService,
     private authJwtService: AuthJwtService,
-  ) { }
+  ) {}
 
   async getAccessToken(code: string): Promise<string> {
     // console.log('code=', code);
@@ -89,6 +89,7 @@ export class AuthService {
   }
 
   async saveAccessToken(@Res() response: Response, code: string) {
+    // console.log('saveAccessToken');
     const newUser: CreateUserDto = await this.getUserData(code);
     // console.log(newUser);
     if (!newUser) {
@@ -130,7 +131,9 @@ export class AuthService {
     response.redirect(
       `http://${this.config.get('FRONT_HOST')}:${this.config.get(
         'FRONT_PORT',
-      )}?token=${jwtToken.accessToken}`,
+      )}?accessToken=${jwtToken.accessToken}&refreshToken=${
+        jwtToken.refreshToken
+      }`,
       302,
     );
     return response;

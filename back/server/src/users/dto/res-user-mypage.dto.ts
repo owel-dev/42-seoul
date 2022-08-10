@@ -21,4 +21,7 @@ export class ResUserMyPage {
 
   @ApiProperty({ description: '해당 유저 승률' })
   winRate: string;
+
+  @ApiProperty({ description: '해당 유저 친구 여부' })
+  isFriend: boolean;
 }

@@ -33,10 +33,11 @@ export class UsersService {
     private readonly authService: AuthService,
   ) {}
 
-  async findOneMyPage(nickName: string) {
+  async findOneMyPage(token: string, nickName: string) {
     // console.log('user findOneMyPage');
+    const reqNick = await this.authService.getUserNickByToken(token);
     const userRepo = await this.userRepository.findOne({
-      relations: ['stats'],
+      relations: ['stats', 'friend_1', 'friend_2'],
       where: {
         nickname: nickName,
       },
@@ -49,6 +50,7 @@ export class UsersService {
     resUserMyPage.win = userRepo.stats.win;
     resUserMyPage.lose = userRepo.stats.lose;
     resUserMyPage.winRate = (userRepo.stats.winrate * 100).toFixed() + '%';
+    resUserMyPage.isFriend = await this.isFriend(reqNick, userRepo.friend_2);
 
     return resUserMyPage;
   }

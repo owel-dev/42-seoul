@@ -274,7 +274,7 @@ export class ChatService {
         },
         where: { friend_1: { nickname: data } },
       });
-      const resFriendList = friendList.map(async (friend) => {
+      const resFriendList = friendList.map((friend) => {
         const resFriendDto = new ResFriendDto();
         resFriendDto.nickName = friend.friend_2.nickname;
         resFriendDto.status = friend.friend_2.status;

@@ -142,6 +142,7 @@ export class AuthService {
   async getUserNickByToken(token: string): Promise<string> {
     const user = await this.authJwtService.jwtVerify(token);
     // console.log('+++getUserNickByToken', user);
+    if (!user) return undefined;
     const userFind = await this.userRepository.findOneBy({
       intra_id: user.intra_id,
     });

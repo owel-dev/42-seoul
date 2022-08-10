@@ -11,5 +11,6 @@ export const profileState = atom<profileType>({
     win: 0,
     lose: 0,
     winRate: '',
+    isFriend: false,
   }, // default value (aka initial value)
 });

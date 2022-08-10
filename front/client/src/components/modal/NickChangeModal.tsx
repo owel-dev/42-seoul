@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useSetRecoilState, useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
+import instance from 'utils/axios';
+import refreshToken from 'utils/token';
+import { socket } from 'components/layout/Layout';
 import { modalState } from 'utils/recoil/modal';
 import { myDataState } from 'utils/recoil/myData';
 import { errorState } from 'utils/recoil/error';
 import { profileState } from 'utils/recoil/profileData';
 import { errorType } from 'types/errorTypes';
 import { loginState } from 'utils/recoil/login';
-import instance from 'utils/axios';
-import refreshToken from 'utils/token';
 import 'styles/modal/Modal.css';
 
 function NickChangeModal() {
@@ -47,6 +48,7 @@ function NickChangeModal() {
         await instance.patch(`/users/` + myData.nickName, {
           nickName: inputValue,
         });
+        socket.emit('user-list');
         setMyData((prev) => ({ ...prev, nickName: inputValue }));
         setProfileData((prev) => ({ ...prev, nickName: inputValue }));
         setIsChange(true);

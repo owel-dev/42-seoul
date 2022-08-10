@@ -5,6 +5,7 @@ export type profileType = {
   win: number;
   lose: number;
   winRate: string;
+  isFriend: boolean;
 };
 
 export type matchList = {

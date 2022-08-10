@@ -42,6 +42,14 @@ function Nav(props: { nickName: string; avatar: string }) {
           />
         </Link>
         <div id='blank' />
+        <div>
+          <img
+            src='/guide.png'
+            alt='guidImg'
+            id='guide'
+            onClick={() => setModalInfo({ modalName: 'GUIDE' })}
+          />
+        </div>
         <Link to='/ranking'>
           <img
             src='/ranking.png'

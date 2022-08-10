@@ -44,8 +44,8 @@ export class UsersController {
     description: '프로필페이지에서의 유저정보를 가져옵니다.',
   })
   @UseGuards(AuthGuard('jwt-access-token'))
-  findOneMyPage(@Param('nickname') nickName: string) {
-    return this.usersService.findOneMyPage(nickName);
+  findOneMyPage(@Token() token: string, @Param('nickname') nickName: string) {
+    return this.usersService.findOneMyPage(token, nickName);
   }
 
   @Get('/:nickname/modal')

@@ -11,6 +11,7 @@ import PasswordSubmitModal from './PasswordSubmitModal';
 import GameInviteModal from './GameInviteModal';
 import InviteAcceptModal from './InviteAcceptModal';
 import 'styles/modal/Modal.css';
+import GameGuideModal from './GameGuideModal';
 
 export default function ModalProvider() {
   const [modalInfo, setModalInfo] = useRecoilState(modalState);
@@ -43,6 +44,8 @@ export default function ModalProvider() {
         return <GameInviteModal />;
       case 'GAME-ACCEPT':
         return <InviteAcceptModal />;
+      case 'GUIDE':
+        return <GameGuideModal />;
       default:
         return null;
     }

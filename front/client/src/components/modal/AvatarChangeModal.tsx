@@ -50,7 +50,7 @@ function AvatarChangeModal() {
         {
           headers: {
             'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${localStorage.getItem('trans-token')}`, // 로그인 후 처리
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
         }
       );

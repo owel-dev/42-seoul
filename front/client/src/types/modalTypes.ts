@@ -12,6 +12,7 @@ type ModalName =
   | `USER-${UserModal}`
   | `SIDE-${SideModal}`
   | `GAME-${GameModal}`
+  | `GUIDE`
   | `LOGOUT`;
 
 export interface ModalInfo {

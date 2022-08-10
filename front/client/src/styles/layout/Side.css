@@ -100,7 +100,7 @@
 
 .message {
   height: 1.4rem;
-  width: 14.6rem;
+  width: 75%;
   border: 1px #00babc solid;
   font-size: 1rem;
   font-weight: 400;
@@ -108,7 +108,10 @@
 
 .button {
   height: 1.7rem;
-  width: 3rem;
+  width: 22%;
+  border: 1px #00babc solid;
+  background-color: #00babc;
+  color: white;
 }
 
 .userlist-row {

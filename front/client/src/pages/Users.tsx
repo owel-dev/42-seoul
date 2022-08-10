@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import instance from 'utils/axios';
+import refreshToken from 'utils/token';
 import { profileState } from 'utils/recoil/profileData';
 import { loginState } from 'utils/recoil/login';
 import { errorState } from 'utils/recoil/error';
@@ -8,8 +10,6 @@ import { errorType } from 'types/errorTypes';
 import FriendList from 'components/users/FriendList';
 import MatchList from 'components/users/MatchList';
 import UserInfo from 'components/users/UserInfo';
-import instance from 'utils/axios';
-import refreshToken from 'utils/token';
 import 'styles/users/MyPage.css';
 
 function UserPage() {

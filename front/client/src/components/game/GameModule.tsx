@@ -172,6 +172,13 @@ function GameModule(props: { gameMode: string }) {
       <div style={{ position: 'absolute', top: '70%', left: '35%' }}>
         ping : {pingTime}
       </div>
+      <div>
+        게임 방법 : 마우스를 움직여 패들을 조작할 수 있습니다.
+        <br />
+        패들을 이용해 공을 튕겨내 상대방이 받아치지 못하면 점수를 얻습니다.
+        <br />
+        먼저 10점을 달성하는 사람이 승리합니다.
+      </div>
     </div>
   );
 }

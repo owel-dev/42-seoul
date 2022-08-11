@@ -6,10 +6,21 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { UsersService } from './users/users.service';
 
+import * as fs from 'fs';
+import * as path from 'path';
+
 var cookieParser = require('cookie-parser');
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const httpsOptions = {
+    key: fs.readFileSync(path.join(__dirname, '..', 'secrets/private-key.pem')),
+    cert: fs.readFileSync(
+      path.join(__dirname, '..', 'secrets/public-certificate.pem'),
+    ),
+  };
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    httpsOptions,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Hi-transcendence')

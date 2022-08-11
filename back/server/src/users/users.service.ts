@@ -79,7 +79,7 @@ export class UsersService {
     resUserModal.friend = await this.isFriend(reqNick, userRepo.friend_2);
     resUserModal.ban = await this.isBan(reqNick, userRepo.ban_2);
     resUserModal.owner = await this.isOwner(reqNick, userRepo.intra_id);
-    resUserModal.admin = await this.isAdmin(reqNick);
+    resUserModal.admin = await this.isAdmin(reqNick, userRepo.intra_id);
     return resUserModal;
   }
 
@@ -121,7 +121,7 @@ export class UsersService {
     return false;
   }
 
-  async isAdmin(requester: string): Promise<boolean> {
+  async isAdmin(requester: string, intraId: string): Promise<boolean> {
     const findUser = await this.userRepository.findOneBy({
       nickname: requester,
     });
@@ -130,9 +130,7 @@ export class UsersService {
     const curChannel = ChatService.users.find(
       (user) => user.intraId === findUser.intra_id,
     ).curChannel;
-    return ChatService.channels
-      .get(curChannel)
-      .adminList.includes(findUser.intra_id);
+    return ChatService.channels.get(curChannel).adminList.includes(intraId);
   }
 
   async isOwner(requester: string, intraId: string): Promise<boolean> {

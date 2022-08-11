@@ -6,24 +6,28 @@ import { Socket } from "socket.io";
 export class MatchManager {
     matchQueue = {};
 
-    addUser(socket: Socket, gameMode: string, nickName: string, password: string) {
+    addUser(socket: Socket, remakeMode: string, nickName: string, password: string, gameMode: string) {
         // console.log("mode", mode);
-        if (this.matchQueue[gameMode] === undefined) {
-            this.matchQueue[gameMode] = [{
+
+        if (this.matchQueue[remakeMode] === undefined) {
+            this.matchQueue[remakeMode] = [{
                 socketId: socket.id,
                 socket: socket,
                 nickName: nickName,
-                password: password
+                password: password,
+                gameMode: gameMode,
             }];
             // console.log(gameMode);
             // console.log(this.matchQueue);
             return;
         }
-        this.matchQueue[gameMode].push({
+
+        this.matchQueue[remakeMode].push({
             socketId: socket.id,
             socket: socket,
             nickName: nickName,
-            password: password
+            password: password,
+            gameMode: gameMode,
         })
         // console.log(this.matchQueue);
     }
@@ -42,6 +46,7 @@ export class MatchManager {
                 firstNick: this.matchQueue[mode][0].nickName,
                 secondSocket: this.matchQueue[mode][1].socket,
                 secondNick: this.matchQueue[mode][1].nickName,
+                gameMode: this.matchQueue[mode][0].gameMode,
                 password: this.matchQueue[mode][0].password,
             }
         )

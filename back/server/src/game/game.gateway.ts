@@ -73,5 +73,28 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     //게임 방 목록에서 해당 소켓에 대한 유저를 지우고,
     //만약 더 남은 유저가 없으면 방 폭파
     this.gameService.clientLeave(socket, this.server);
+    // console.log()
   }
+
+  @SubscribeMessage('game-player-data')
+  gamePlayerData(socket: Socket, channelId: string): any {
+    const a = this.gameService.gamePlayerData(socket, channelId);
+    console.log("palyer: ", a);
+    return a;
+    // console.log();
+  }
+
+  @SubscribeMessage('together-request')
+  togetherRequest(socket: Socket, data: any): any {
+    console.log('together-request');
+    const a = this.gameService.togetherRequest(socket, data, this.server);
+  }
+
+  @SubscribeMessage('together-response')
+  togetherResponse(socket: Socket, data: any): any {
+    console.log('together-response');
+    const a = this.gameService.togetherResponse(socket, data, this.server);
+  }
+
+
 }

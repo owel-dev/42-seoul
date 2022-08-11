@@ -8,8 +8,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { WsException } from '@nestjs/websockets';
-import { execPath } from 'process';
 import { Server, Socket } from 'socket.io';
 import { AuthService } from 'src/auth/auth.service';
 import { Ban } from 'src/ban/entities/ban.entity';
@@ -278,6 +276,7 @@ export class ChatService {
         const resFriendDto = new ResFriendDto();
         resFriendDto.nickName = friend.friend_2.nickname;
         resFriendDto.status = friend.friend_2.status;
+        resFriendDto.channelId = friend.friend_2.channel_id;
         return resFriendDto;
       });
       client.emit('friend', { friendList: resFriendList });

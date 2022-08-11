@@ -10,5 +10,6 @@ export const myDataState = atom<myData>({
     owner: false,
     admin: false,
     isSecondAuth: false,
+    enable2FA: false,
   }, // default value (aka initial value)
 });

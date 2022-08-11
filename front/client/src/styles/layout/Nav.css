@@ -1,26 +1,21 @@
 .nav {
   background-color: #292d39;
   height: 5rem;
-  display: flex;
-  justify-content: space-evenly;
+  width: 100%;
 }
 
 #logo {
   margin-top: 1vh;
   margin-left: 1vw;
-  flex: 1;
-  height: 75%;
-}
-
-#blank {
-  flex: 5;
+  height: 8vh;
+  float: left;
 }
 
 #guide {
   margin-top: 1vh;
   margin-right: 1vw;
-  flex: 1;
-  height: 75%;
+  float: right;
+  height: 8vh;
   cursor: pointer;
   filter: invert(100%);
 }
@@ -28,18 +23,16 @@
 #ranking {
   margin-top: 1vh;
   margin-right: 1vw;
-  flex: 1;
-  height: 75%;
+  float: right;
+  height: 8vh;
   filter: invert(100%);
 }
 
-#avatar {
-}
 #avatar-image {
   margin-top: 1vh;
   margin-right: 1vw;
-  flex: 1;
-  height: 80%;
+  float: right;
+  height: 8vh;
   border: solid 1px white;
   border-radius: 50%;
 }
@@ -47,9 +40,8 @@
 #logout {
   margin-top: 1vh;
   margin-right: 1vw;
-  flex: 1;
-  height: 75%;
+  float: right;
+  height: 8vh;
   filter: invert(100%);
   cursor: pointer;
-  align-items: flex-end;
 }

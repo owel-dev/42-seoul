@@ -52,3 +52,15 @@ canvas {
 #game-layer {
   z-index: 2;
 }
+
+#ping-message {
+  position: absolute;
+  top: 70%;
+  left: 35%;
+}
+#guide-message {
+  position: absolute;
+  top: 75%;
+  text-align: left;
+  color: black;
+}

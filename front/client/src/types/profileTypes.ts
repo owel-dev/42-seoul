@@ -24,6 +24,7 @@ export type friendList = {
     {
       nickName: string;
       status: string;
+      channelId: string;
     }
   ];
 };

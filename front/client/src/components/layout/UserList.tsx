@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useEffect, useInsertionEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { socket } from 'components/layout/Layout';
 import { modalState } from 'utils/recoil/modal';
 import { myDataState } from 'utils/recoil/myData';
+import { loginState } from 'utils/recoil/login';
 
 type userListType = {
   nickName: string;
@@ -13,7 +14,12 @@ type userListType = {
 function UserList() {
   const [userList, setUserList] = useState<userListType[]>();
   const [myData, setMyData] = useRecoilState(myDataState);
+  const isLoggedIn = useRecoilValue(loginState);
   const setModalInfo = useSetRecoilState(modalState);
+
+  useEffect(() => {
+    if (isLoggedIn) socket.emit('user-list');
+  }, [socket]);
 
   useEffect(() => {
     socket.on('user-list', (data: userListType[]) => {

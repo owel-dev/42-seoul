@@ -7,5 +7,6 @@ export type userData = {
   channelId: number;
   friend: boolean;
   ban: boolean;
+  owner: boolean;
   admin: boolean;
 };

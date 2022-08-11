@@ -178,7 +178,7 @@ function ProfileModal() {
 
   const setAdmin = () => {
     socket.emit('admin', userData?.nickName);
-    alert(`${userData?.nickName}에게 방장을 위임하였습니다.`);
+    alert(`${userData?.nickName}에게 관리자 권한을 부여하였습니다.`);
     setModalInfo({ modalName: null });
   };
 
@@ -240,20 +240,26 @@ function ProfileModal() {
                     onClick={userData.ban ? banCancel : banUser}
                     value={userData.ban ? '차단해제' : '차단하기'}
                   />
-                  {myData.admin && (
+                  {(myData.owner || myData.admin) && (
                     <>
-                      <input
-                        type='button'
-                        onClick={mute}
-                        value='음소거'
-                        className='modalButtonInner'
-                      />
-                      <input
-                        type='button'
-                        onClick={setAdmin}
-                        value='방장위임'
-                        className='modalButtonInner'
-                      />
+                      {!userData.owner && (
+                        <input
+                          type='button'
+                          onClick={mute}
+                          value='음소거'
+                          className='modalButtonInner'
+                        />
+                      )}
+                      {myData.owner && (
+                        <input
+                          type='button'
+                          onClick={setAdmin}
+                          value={
+                            userData.admin ? '방장권한해제' : '방장권한부여'
+                          }
+                          className='modalButtonInner'
+                        />
+                      )}
                     </>
                   )}
                 </section>

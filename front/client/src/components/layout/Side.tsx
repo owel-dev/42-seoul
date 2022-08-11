@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { socket } from 'components/layout/Layout';
+import { messageState, chatListState } from 'utils/recoil/chat';
+import { myDataState } from 'utils/recoil/myData';
 import UserList from 'components/layout/UserList';
 import ChatList from 'components/layout/ChatList';
-import { myDataState } from 'utils/recoil/myData';
-import { messageState, chatListState } from 'utils/recoil/chat';
 import 'styles/layout/Side.css';
 
 function Side() {

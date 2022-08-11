@@ -47,7 +47,7 @@ function FriendTable() {
             </span>
           </Link>
 
-          {element.status === 'gaming' ? (
+          {element.status === 'gaming' && (
             <Link to={'/channel/' + element.channelId}>
               <button
                 className='friendButton'
@@ -56,15 +56,11 @@ function FriendTable() {
                 관전하기
               </button>
             </Link>
-          ) : (
-            <></>
           )}
-          {element.status === 'online' ? (
+          {element.status === 'online' && (
             <button className='friendButton' onClick={sendInvite}>
               같이하기
             </button>
-          ) : (
-            <></>
           )}
           <span className='friendStatus'> {element.status}</span>
         </div>

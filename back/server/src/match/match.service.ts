@@ -80,6 +80,7 @@ export class MatchService {
       resMatchDto.score1 = match.score_1;
       resMatchDto.score2 = match.score_2;
       resMatchDto.mode = match.mode;
+      return resMatchDto;
     });
     return { matchList: matchList };
   }

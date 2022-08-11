@@ -4,4 +4,5 @@ export type myData = {
   owner: boolean;
   admin: boolean;
   isSecondAuth: boolean;
+  enable2FA: boolean;
 };

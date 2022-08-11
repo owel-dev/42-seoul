@@ -87,9 +87,9 @@ function GameModule(props: { gameMode: string }) {
       setGameData(data);
       if (typeof callback === 'function') callback((mouseState / 500) * 100);
     });
-    socket.on('game-end', () => {
+    socket.on('game-end', (data: string) => {
       clearInterval(ping_interval);
-      setCountData('game over');
+      setCountData(`${data} win!`);
     });
     const ping_interval = setInterval(() => {
       const time = Date.now();
@@ -169,10 +169,8 @@ function GameModule(props: { gameMode: string }) {
         onMouseMove={saveMouseState}
         id='game-layer'
       />
-      <div style={{ position: 'absolute', top: '70%', left: '35%' }}>
-        ping : {pingTime}
-      </div>
-      <div>
+      <div id='ping-message'>ping : {pingTime}</div>
+      <div id='guide-message'>
         게임 방법 : 마우스를 움직여 패들을 조작할 수 있습니다.
         <br />
         패들을 이용해 공을 튕겨내 상대방이 받아치지 못하면 점수를 얻습니다.

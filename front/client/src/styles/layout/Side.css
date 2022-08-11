@@ -1,6 +1,6 @@
 .side {
   background-color: rgb(255, 255, 255);
-  border: 1px #00babc solid;
+  border: 2px #00babc solid;
   box-sizing: border-box;
   float: right;
   display: flex;
@@ -11,7 +11,6 @@
 
 .userContainer {
   height: 45%;
-  border: 1px #00babc solid;
 }
 
 .userTitle {
@@ -25,10 +24,10 @@
 }
 
 .users {
-  height: 87%;
-  border: 1px #00babc solid;
+  height: 84%;
   overflow-y: scroll;
   position: sticky;
+  padding-left: 5%;
 }
 
 .userList {
@@ -64,6 +63,7 @@
   flex-direction: column;
   height: 84%;
   overflow-y: scroll;
+  padding-left: 5%;
 }
 
 .messageContainer {
@@ -74,27 +74,23 @@
 .myNick {
   height: auto;
   margin: 0.2rem 0;
-  font-size: 1.2rem;
   color: cadetblue;
 }
 
 .userNick {
   height: auto;
   margin: 0.2rem 0;
-  font-size: 1.2rem;
   cursor: pointer;
 }
 
 .messageList {
   height: auto;
   margin: 0.2rem 0;
-  font-size: 1.2rem;
 }
 
 .directMessage {
   height: auto;
   margin: 0.2rem 0;
-  font-size: 1.2rem;
   color: purple;
 }
 

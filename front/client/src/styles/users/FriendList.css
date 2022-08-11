@@ -1,7 +1,8 @@
 .friendList {
   width: 50%;
   flex: 1;
-  padding: 2%;
+  padding-left: 2%;
+  padding-right: 2%;
 }
 .friendTitle {
   font-size: larger;
@@ -21,7 +22,7 @@
   align-items: center;
 }
 .friendNickname {
-  flex: 1;
+  flex: 5;
   text-align: left;
   margin-left: 1rem;
 }
@@ -29,4 +30,12 @@
   flex: 1;
   text-align: right;
   margin-right: 1rem;
+}
+
+.friendButton {
+  width: 5rem;
+  font-size: 1rem;
+  background-color: #00babc;
+  color: white;
+  border: none;
 }

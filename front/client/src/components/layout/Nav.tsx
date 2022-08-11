@@ -41,24 +41,15 @@ function Nav(props: { nickName: string; avatar: string }) {
             onClick={movePage}
           />
         </Link>
-        <div id='blank' />
         <div>
           <img
-            src='/guide.png'
-            alt='guidImg'
-            id='guide'
-            onClick={() => setModalInfo({ modalName: 'GUIDE' })}
+            src='/logout.png'
+            alt='logoutImg'
+            id='logout'
+            onClick={() => setModalInfo({ modalName: 'LOGOUT' })}
           />
         </div>
-        <Link to='/ranking'>
-          <img
-            src='/ranking.png'
-            alt='rankImg'
-            id='ranking'
-            onClick={movePage}
-          />
-        </Link>
-        <Link to={`/users/${props.nickName}/mypage`} id='avatar'>
+        <Link to={`/users/${props.nickName}/mypage`}>
           <img
             src={props.avatar}
             height='60vh'
@@ -68,12 +59,20 @@ function Nav(props: { nickName: string; avatar: string }) {
             onClick={movePage}
           />
         </Link>
+        <Link to='/ranking'>
+          <img
+            src='/ranking.png'
+            alt='rankImg'
+            id='ranking'
+            onClick={movePage}
+          />
+        </Link>
         <div>
           <img
-            src='/logout.png'
-            alt='logoutImg'
-            id='logout'
-            onClick={() => setModalInfo({ modalName: 'LOGOUT' })}
+            src='/guide.png'
+            alt='guidImg'
+            id='guide'
+            onClick={() => setModalInfo({ modalName: 'GUIDE' })}
           />
         </div>
       </header>

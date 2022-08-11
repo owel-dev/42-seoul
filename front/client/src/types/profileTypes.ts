@@ -15,6 +15,7 @@ export type matchList = {
       player2: string;
       score1: number;
       score2: number;
+      mode: string;
     }
   ];
 };
@@ -24,6 +25,7 @@ export type friendList = {
     {
       nickName: string;
       status: string;
+      channelId: string;
     }
   ];
 };

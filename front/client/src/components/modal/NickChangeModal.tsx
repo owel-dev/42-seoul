@@ -42,7 +42,7 @@ function NickChangeModal() {
   }, [isChange && myData]);
 
   function PostNickName() {
-    const regexNickname = /^[a-zA-Z0-9]+$/;
+    const regexNickname = /^[a-zA-Z0-9]{1,8}$/;
     const fetchData = async () => {
       try {
         await instance.patch(`/users/` + myData.nickName, {

@@ -1,7 +1,8 @@
 .matchList {
   width: 50%;
   flex: 1;
-  padding: 2%;
+  padding-left: 2%;
+  padding-right: 2%;
 }
 .matchTitle {
   font-size: larger;

@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { modalState } from 'utils/recoil/modal';
 import { profileState } from 'utils/recoil/profileData';
 import { myDataState } from 'utils/recoil/myData';
@@ -8,7 +8,7 @@ import { errorState } from 'utils/recoil/error';
 import 'styles/users/UserInfo.css';
 
 function UserInfo() {
-  const myData = useRecoilValue(myDataState);
+  const [myData, setMyData] = useRecoilState(myDataState);
   const [profileData, setProfileData] = useRecoilState(profileState);
   const setModalInfo = useSetRecoilState(modalState);
   const setErrorMessage = useSetRecoilState(errorState);
@@ -19,6 +19,33 @@ function UserInfo() {
 
   const openAvatarModal = () => {
     setModalInfo({ modalName: 'USER-AVATAR' });
+  };
+
+  const onEnable2FA = async () => {
+    try {
+      await instance.patch(`/users/` + myData.nickName, {
+        enable2FA: true,
+      });
+      setMyData((prev) => ({ ...prev, enable2FA: true }));
+    } catch (err) {
+      const e = err as errorType;
+      if (e.message === `Network Error`) {
+        setErrorMessage('E500');
+      }
+    }
+  };
+  const offEnable2FA = async () => {
+    try {
+      await instance.patch(`/users/` + myData.nickName, {
+        enable2FA: false,
+      });
+      setMyData((prev) => ({ ...prev, enable2FA: false }));
+    } catch (err) {
+      const e = err as errorType;
+      if (e.message === `Network Error`) {
+        setErrorMessage('E500');
+      }
+    }
   };
 
   const addFriend = async () => {
@@ -101,6 +128,17 @@ function UserInfo() {
           <span>lose </span>
           <span>winRate : </span>
           <span>{profileData.winRate} </span>
+          <div>
+            {myData.enable2FA === true ? (
+              <button onClick={offEnable2FA} className='changeButton'>
+                2차인증항상끄기
+              </button>
+            ) : (
+              <button onClick={onEnable2FA} className='changeButton'>
+                2차인증항상하기
+              </button>
+            )}
+          </div>
           {profileData?.nickName !== myData.nickName ? (
             <div>
               {profileData?.isFriend === false ? (

@@ -7,10 +7,10 @@ export class Friend {
 	friend_id: number;
 
 	// 요청 보낸사람
-	@ManyToOne(() => User)
+	@ManyToOne(() => User, { onDelete: "CASCADE" })
 	friend_1: User;
 
 	// 요청 받은사람
-	@ManyToOne(() => User)
+	@ManyToOne(() => User, { onDelete: "CASCADE" })
 	friend_2: User;
 }

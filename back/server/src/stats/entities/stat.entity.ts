@@ -6,16 +6,16 @@ export class Stat {
 	@PrimaryColumn()
 	intra_id: string;
 
-	@OneToOne(() => User, (user) => user.stats)
-	@JoinColumn({name : "intra_id"})
+	@OneToOne(() => User, (user) => user.stats, { onDelete: "CASCADE" })
+	@JoinColumn({ name: "intra_id" })
 	user: User;
 
-	@Column('int', {default: 0})
+	@Column('int', { default: 0 })
 	win: number;
 
-	@Column('int', {default: 0})
+	@Column('int', { default: 0 })
 	lose: number;
 
-	@Column('real', {default : 0})
+	@Column('real', { default: 0 })
 	winrate: number;
 }

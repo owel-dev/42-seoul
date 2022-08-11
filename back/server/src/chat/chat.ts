@@ -16,10 +16,12 @@ export class ChatUser {
 export class Channel {
   players: string[] = [];
   muteList: string[] = [];
-  admin = '';
+  owner = '';
+  adminList: string[] = [];
 }
 
 export class ResChatUser {
   nickName: string;
+  owner: boolean;
   admin: boolean;
 }

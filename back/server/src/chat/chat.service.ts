@@ -64,12 +64,12 @@ export class ChatService {
     const findUser = await this.userRepository.findOneBy({
       intra_id: user.intraId,
     });
+    findUser.status = 'offline';
+    this.userRepository.save(findUser);
     this.leaveChannel(socket, server);
     ChatService.users = ChatService.users.filter(
       (user) => user.socket.id !== socket.id,
     );
-    findUser.status = 'offline';
-    this.userRepository.save(findUser);
   }
 
   async sendDirectMessage(client: Socket, data: any, server: Server) {
@@ -117,24 +117,31 @@ export class ChatService {
       },
     });
     const bannerList = banRepo.map((ban) => ban.ban_1.intra_id);
-    server
-      .to(user.curChannel + '-chat')
-      .except(bannerList)
-      .emit('message', {
-        nickName: data.nickName,
-        message: data.message,
-        isDM: false,
-      });
-    // console.log(
-    //   `sendMessage to channel ${user.curChannel} from ${data.nickName} "${data.message}"`,
-    // );
+    if (
+      !ChatService.channels.get(user.curChannel).muteList.includes(user.intraId)
+    ) {
+      server
+        .to(user.curChannel + '-chat')
+        .except(bannerList)
+        .emit('message', {
+          nickName: data.nickName,
+          message: data.message,
+          isDM: false,
+        });
+      //   console.log(
+      //     `sendMessage to channel ${user.curChannel} from ${data.nickName} "${data.message}"`,
+      //   );
+    }
   }
 
   async createChannel(client: Socket, channelId: string, server: Server) {
     // console.log(`createChannel`);
     const user = ChatService.users.find((user) => user.socket.id === client.id);
     ChatService.channels.set(channelId, new Channel());
+
     await this.joinChannel(client, { channelId: channelId }, server);
+    await this.addChannelAdmin(channelId, user.intraId, server);
+    ChatService.channels.get(channelId).owner = user.intraId;
   }
 
   async joinChannel(client: Socket, data: any, server: Server) {
@@ -148,11 +155,6 @@ export class ChatService {
     }
     user.curChannel = data.channelId;
     ChatService.channels.get(data.channelId).players.push(findUser.intra_id);
-    if (
-      data.channelId !== '0' &&
-      ChatService.channels.get(data.channelId).admin === ''
-    )
-      await this.changeChannelAdmin(data.channelId, findUser.intra_id, server);
     client.join(data.channelId);
     client.join(data.channelId + '-chat');
     await this.sendUserList(client, server);
@@ -171,12 +173,8 @@ export class ChatService {
     prevChannel.muteList = prevChannel.muteList.filter(
       (elem) => elem !== findUser.intra_id,
     );
-    if (prevChannel.admin === findUser.intra_id)
-      await this.changeChannelAdmin(
-        user.curChannel,
-        prevChannel.players[0],
-        server,
-      );
+    if (prevChannel.adminList.includes(findUser.intra_id))
+      await this.removeChannelAdmin(user.curChannel, user.intraId, server);
     client.leave(user.curChannel);
     client.leave(user.curChannel + '-chat');
     if (prevChannel.players.length === 0 && user.curChannel !== '0') {
@@ -195,10 +193,13 @@ export class ChatService {
         const findUser = await this.userRepository.findOneBy({
           intra_id: user,
         });
-        return {
-          nickName: findUser.nickname,
-          admin: ChatService.channels.get(curChannel).admin === user,
-        };
+        const resChatUser = new ResChatUser();
+        resChatUser.nickName = findUser.nickname;
+        resChatUser.owner = ChatService.channels.get(curChannel).owner === user;
+        resChatUser.admin = ChatService.channels
+          .get(curChannel)
+          .adminList.includes(user);
+        return resChatUser;
       }),
     );
     // console.log(`user-list in ${curChannel}`, userList);
@@ -220,25 +221,20 @@ export class ChatService {
     const userClient = ChatService.users.find(
       (user) => user.socket.id === client.id,
     );
-    const curChannel = userClient.curChannel;
+    const curChannelId = userClient.curChannel;
+    const curChannel = ChatService.channels.get(curChannelId);
     const findUser = await this.userRepository.findOneBy({
-      nickname: data.nickName,
+      nickname: data,
     });
-    const userList = await this.getChannelUserList(curChannel);
-    if (userList.some((user) => user.nickName === data.nickName)) {
-      ChatService.channels.get(curChannel).muteList.push(data.nickName);
-      ChatService.users
-        .find((user) => user.intraId === findUser.intra_id)
-        .socket.leave(curChannel + '-chat');
+    const userList = await this.getChannelUserList(curChannelId);
+    if (userList.some((user) => user.nickName === data)) {
+      curChannel.muteList.push(findUser.intra_id);
     }
     setTimeout(() => {
-      ChatService.channels
-        .get(curChannel)
-        .muteList.filter((user) => user !== data.nickName);
-      ChatService.users
-        .find((user) => user.intraId === findUser.intra_id)
-        .socket.join(curChannel);
-    }, 0.1 * 60 * 1000);
+      curChannel.muteList = curChannel.muteList.filter(
+        (user) => user !== findUser.intra_id,
+      );
+    }, 30 * 1000);
   }
 
   async setAdmin(client: Socket, data: any, server: Server) {
@@ -246,18 +242,26 @@ export class ChatService {
       (user) => user.socket.id === client.id,
     ).curChannel;
     const userFind = await this.userRepository.findOneBy({
-      nickname: data.nickName,
+      nickname: data,
     });
-    await this.changeChannelAdmin(curChannel, userFind.intra_id, server);
+    await this.addChannelAdmin(curChannel, userFind.intra_id, server);
   }
 
-  async changeChannelAdmin(channelId: string, intraId: string, server: Server) {
+  async addChannelAdmin(channelId: string, intraId: string, server: Server) {
     const findUser = await this.userRepository.findOneBy({ intra_id: intraId });
-    ChatService.channels.get(channelId).admin = intraId;
+    ChatService.channels.get(channelId).adminList.push(intraId);
     server
       .to(channelId)
       .emit('user-list', await this.getChannelUserList(channelId));
-    server.to(channelId).emit('admin-changed', findUser.nickname);
+  }
+
+  async removeChannelAdmin(channelId: string, intraId: string, server: Server) {
+    const findUser = await this.userRepository.findOneBy({ intra_id: intraId });
+    let adminList = ChatService.channels.get(channelId).adminList;
+    adminList = adminList.filter((user) => user !== intraId);
+    server
+      .to(channelId)
+      .emit('user-list', await this.getChannelUserList(channelId));
   }
 
   async updateFriendList(client: Socket, data: any, server: Server) {

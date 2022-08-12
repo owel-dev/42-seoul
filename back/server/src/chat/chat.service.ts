@@ -289,4 +289,18 @@ export class ChatService {
       clearTimeout(timeId);
     });
   }
+
+  async logout(client: Socket) {
+    console.log('logout');
+    const user = ChatService.users.find((user) => user.socket.id === client.id);
+    const findUser = await this.userRepository.findOneBy({
+      intra_id: user.intraId,
+    });
+    console.log('findUser', findUser);
+    if (findUser.enable2fa) {
+      console.log('enable2fa');
+      findUser.is_second_auth = false;
+      await this.userRepository.save(findUser);
+    }
+  }
 }

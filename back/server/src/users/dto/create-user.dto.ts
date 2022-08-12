@@ -26,4 +26,7 @@ export class CreateUserDto {
 
   @ApiProperty({ description: '유저 access token' })
   access_token: string;
+
+  @ApiProperty({ description: '유저 이차 인증 활성화 여부' })
+  enable2FA?: boolean;
 }

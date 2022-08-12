@@ -30,6 +30,9 @@ export class User {
   @Column({ default: false })
   is_second_auth: boolean;
 
+  @Column({ default: false })
+  enable2fa?: boolean;
+
   @OneToOne(() => Stat, (stat) => stat.user, {
     cascade: ['remove', 'insert', 'update'],
   })

@@ -76,4 +76,9 @@ export class ChatGateway
   ) {
     return this.chatService.updateFriendList(client, data, this.server);
   }
+
+  @SubscribeMessage('logout')
+  logout(@ConnectedSocket() client: Socket) {
+    return this.chatService.logout(client);
+  }
 }

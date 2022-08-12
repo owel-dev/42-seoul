@@ -96,6 +96,9 @@ export class UsersService {
     resUserNavi.nickName = userRepo.nickname;
     resUserNavi.avatar = userRepo.avatar;
     resUserNavi.isSecondAuth = userRepo.is_second_auth;
+    resUserNavi.owner = await this.isOwner(userNick, userRepo.intra_id);
+    resUserNavi.admin = await this.isAdmin(userNick, userRepo.intra_id);
+    resUserNavi.enable2FA = userRepo.enable2fa;
     return resUserNavi;
   }
 
@@ -127,10 +130,9 @@ export class UsersService {
     });
     if (!findUser)
       throw new NotFoundException(`${requester}: Cannot find user`);
-    const curChannel = ChatService.users.find(
-      (user) => user.intraId === findUser.intra_id,
-    ).curChannel;
-    return ChatService.channels.get(curChannel).adminList.includes(intraId);
+    return ChatService.channels
+      .get(findUser.channel_id)
+      .adminList.includes(intraId);
   }
 
   async isOwner(requester: string, intraId: string): Promise<boolean> {
@@ -139,10 +141,8 @@ export class UsersService {
     });
     if (!findUser)
       throw new NotFoundException(`${requester}: Cannot find user`);
-    const curChannel = ChatService.users.find(
-      (user) => user.intraId === findUser.intra_id,
-    ).curChannel;
-    return ChatService.channels.get(curChannel).owner === intraId;
+
+    return ChatService.channels.get(findUser.channel_id).owner === intraId;
   }
 
   create(createUserDto: CreateUserDto, file: Express.Multer.File) {
@@ -177,6 +177,12 @@ export class UsersService {
         const prevPath = `${file.destination}/${prevFilename}`;
         this.deleteFile(prevPath);
       }
+    }
+    if (updateUserDto.enable2FA !== undefined) {
+      if (!updateUserDto.enable2FA) {
+        userRepo.is_second_auth = true;
+      }
+      userRepo.enable2fa = updateUserDto.enable2FA;
     }
     this.userRepository.save(userRepo);
     return userRepo.avatar;

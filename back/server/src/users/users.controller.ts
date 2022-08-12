@@ -44,8 +44,11 @@ export class UsersController {
     description: '프로필페이지에서의 유저정보를 가져옵니다.',
   })
   @UseGuards(AuthGuard('jwt-access-token'))
-  findOneMyPage(@Token() token: string, @Param('nickname') nickName: string) {
-    return this.usersService.findOneMyPage(token, nickName);
+  async findOneMyPage(
+    @Token() token: string,
+    @Param('nickname') nickName: string,
+  ) {
+    return await this.usersService.findOneMyPage(token, nickName);
   }
 
   @Get('/:nickname/modal')
@@ -54,10 +57,13 @@ export class UsersController {
     description: '유저모달창에서 필요한 유저정보를 가져옵니다',
   })
   @UseGuards(AuthGuard('jwt-access-token'))
-  findOneModal(@Param('nickname') nickName: string, @Token() token: string) {
+  async findOneModal(
+    @Param('nickname') nickName: string,
+    @Token() token: string,
+  ) {
     // console.log("findOneModal");
     // console.log(nickName, token);
-    return this.usersService.findOneModal(token, nickName);
+    return await this.usersService.findOneModal(token, nickName);
   }
 
   @Get('/navi')
@@ -66,9 +72,9 @@ export class UsersController {
     description: '네비게이션에서 필요한 유저정보를 가져옵니다.',
   })
   @UseGuards(AuthGuard('jwt-access-token'))
-  findOneNavi(@Token() token) {
+  async findOneNavi(@Token() token) {
     // console.log("token: ", token);
-    return this.usersService.findOneNavi(token);
+    return await this.usersService.findOneNavi(token);
   }
 
   @Patch('/:nickname')
@@ -78,13 +84,12 @@ export class UsersController {
   })
   @UseGuards(AuthGuard('jwt-access-token'))
   @UseInterceptors(FileInterceptor('avatar', multerOptions('avatar')))
-  update(
+  async update(
     @Param('nickname') nickName: string,
     @Body() updateUserDto: UpdateUserDto,
-    @Headers() header: string,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    return this.usersService.update(nickName, updateUserDto, file);
+    return await this.usersService.update(nickName, updateUserDto, file);
   }
 
   //   @Delete(':nickname')

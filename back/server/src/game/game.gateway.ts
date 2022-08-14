@@ -1,16 +1,11 @@
-import { Param } from '@nestjs/common';
 import {
-  ConnectedSocket,
-  MessageBody,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { GameService } from './game.service';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
 @WebSocketGateway({
   cors: {
@@ -18,19 +13,19 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
   },
 })
 @ApiTags('게임 관련 소켓 API')
-export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class GameGateway {
   constructor(private readonly gameService: GameService) { }
 
   @WebSocketServer()
   server: Server;
 
-  handleConnection(socket: Socket) {
-    this.gameService.handleConnection(socket);
-  }
+  // handleConnection(socket: Socket) {
+  //   this.gameService.handleConnection(socket);
+  // }
 
-  handleDisconnect(socket: Socket) {
-    this.gameService.handleDisconnect(socket);
-  }
+  // handleDisconnect(socket: Socket) {
+  //   this.gameService.handleDisconnect(socket);
+  // }
 
   @SubscribeMessage('match-request')
   matchRequest(socket: Socket, data: any): void {
@@ -40,7 +35,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('match-cancel')
   matchCancel(socket: Socket): void {
-    this.gameService.matchCancel();
+    this.gameService.matchCancel(socket);
   }
 
   @SubscribeMessage('spectate-request')

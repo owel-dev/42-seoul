@@ -1,9 +1,6 @@
 import {
   ConnectedSocket,
   MessageBody,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
-  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -16,23 +13,11 @@ import { ChatService } from './chat.service';
     origin: '*',
   },
 })
-export class ChatGateway
-  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
-{
-  constructor(private readonly chatService: ChatService) {}
+export class ChatGateway {
+  constructor(private readonly chatService: ChatService) { }
 
   @WebSocketServer()
   server: Server;
-
-  afterInit() {}
-
-  handleConnection(socket: Socket) {
-    this.chatService.handleConnection(socket, this.server);
-  }
-
-  handleDisconnect(socket: Socket) {
-    this.chatService.handleDisconnect(socket, this.server);
-  }
 
   @SubscribeMessage('create-channel')
   createChannel(@ConnectedSocket() client: Socket, @MessageBody() data: any) {

@@ -19,6 +19,7 @@ import { Match } from './match/entities/match.entity';
 import { User } from './users/entities/user.entity';
 import { AuthJwtModule } from './auth-jwt/auth-jwt.module';
 import { ChatModule } from './chat/chat.module';
+import { ConnectModule } from './connect/connect.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ChatModule } from './chat/chat.module';
     GameModule,
     AuthModule,
     AuthJwtModule,
+    ConnectModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

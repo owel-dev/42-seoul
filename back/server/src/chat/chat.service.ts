@@ -1,11 +1,7 @@
 import {
-  ConsoleLogger,
   forwardRef,
-  HttpException,
-  HttpStatus,
   Inject,
   Injectable,
-  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Server, Socket } from 'socket.io';
@@ -31,46 +27,46 @@ export class ChatService {
     private friendRepository: Repository<Friend>,
     @InjectRepository(Ban)
     private banRepository: Repository<Ban>,
-  ) {}
+  ) { }
 
   static channels = new Map([['0', new Channel()]]);
   static users: ChatUser[] = [];
 
-  async handleConnection(socket: Socket, server: Server) {
-    // console.log(`Chat: New client connected: ${socket.id}`);
-    const token = socket.handshake.query.accessToken as string;
-    const clientNick = await this.authService.getUserNickByToken(token);
-    if (!clientNick) return;
-    const client = await this.userRepository.findOneBy({
-      nickname: clientNick,
-    });
-    const user = ChatService.users.find(
-      (user) => user.intraId === client.intra_id,
-    );
-    ChatService.users.push(new ChatUser(client.intra_id, socket));
-    socket.join(client.intra_id);
-    client.status = 'online';
-    client.channel_id = '0';
-    this.userRepository.save(client);
-    await this.joinChannel(socket, { channelId: '0' }, server);
-  }
+  // async handleConnection(socket: Socket, server: Server) {
+  // console.log(`Chat: New client connected: ${socket.id}`);
+  // const token = socket.handshake.query.accessToken as string;
+  // const clientNick = await this.authService.getUserNickByToken(token);
+  // if (!clientNick) return;
+  // const client = await this.userRepository.findOneBy({
+  //   nickname: clientNick,
+  // });
+  // const user = ChatService.users.find(
+  //   (user) => user.intraId === client.intra_id,
+  // );
+  // ChatService.users.push(new ChatUser(client.intra_id, socket));
+  // socket.join(client.intra_id);
+  // client.status = 'online';
+  // client.channel_id = '0';
+  // this.userRepository.save(client);
+  // await this.joinChannel(socket, { channelId: '0' }, server);
+  // }
 
-  async handleDisconnect(socket: Socket, server: Server) {
-    // console.log(`Chat: client disconnected: ${socket.id}`);
-    const user = ChatService.users.find((user) => user.socket.id === socket.id);
-    if (!user) {
-      return;
-    }
-    const findUser = await this.userRepository.findOneBy({
-      intra_id: user.intraId,
-    });
-    findUser.status = 'offline';
-    this.userRepository.save(findUser);
-    this.leaveChannel(socket, server);
-    ChatService.users = ChatService.users.filter(
-      (user) => user.socket.id !== socket.id,
-    );
-  }
+  // async handleDisconnect(socket: Socket, server: Server) {
+  //   // console.log(`Chat: client disconnected: ${socket.id}`);
+  //   const user = ChatService.users.find((user) => user.socket.id === socket.id);
+  //   if (!user) {
+  //     return;
+  //   }
+  //   const findUser = await this.userRepository.findOneBy({
+  //     intra_id: user.intraId,
+  //   });
+  //   findUser.status = 'offline';
+  //   this.userRepository.save(findUser);
+  //   this.leaveChannel(socket, server);
+  //   ChatService.users = ChatService.users.filter(
+  //     (user) => user.socket.id !== socket.id,
+  //   );
+  // }
 
   async sendDirectMessage(client: Socket, data: any, server: Server) {
     // console.log(`sendDirectMessage: ${client.id}`, data);
@@ -145,8 +141,9 @@ export class ChatService {
   }
 
   async joinChannel(client: Socket, data: any, server: Server) {
-    // console.log(`joinChannel: ${client.id}, ${data}`);
     const user = ChatService.users.find((user) => user.socket.id === client.id);
+    console.log(`@@client.id: ${client.id}, ${data}`);
+    // console.log(user);
     const findUser = await this.userRepository.findOneBy({
       intra_id: user.intraId,
     });
@@ -154,6 +151,7 @@ export class ChatService {
       await this.leaveChannel(client, server);
     }
     user.curChannel = data.channelId;
+    console.log(`@@channelId: ${data.channelId}`);
     ChatService.channels.get(data.channelId).players.push(findUser.intra_id);
     client.join(data.channelId);
     client.join(data.channelId + '-chat');
@@ -188,6 +186,7 @@ export class ChatService {
 
   async getChannelUserList(curChannel: string): Promise<ResChatUser[]> {
     // console.log('getChannelUserList');
+    // console.log(`curChannel: ${curChannel}, channels: ${ChatService.channels}`);
     const userList = await Promise.all(
       ChatService.channels.get(curChannel).players.map(async (user) => {
         const findUser = await this.userRepository.findOneBy({
@@ -207,13 +206,15 @@ export class ChatService {
   }
 
   async sendUserList(client: Socket, server: Server) {
+
+    const curUser = ChatService.users.find(
+      (user) => user.socket.id === client.id
+    )
     // console.log(`sendUserList: ${client.id}`);
-    const curChannel = ChatService.users.find(
-      (user) => user.socket.id === client.id,
-    ).curChannel;
+    // console.log(`chatService []:`, ChatService.users);
     server
-      .to(curChannel)
-      .emit('user-list', await this.getChannelUserList(curChannel));
+      .to(curUser.curChannel)
+      .emit('user-list', await this.getChannelUserList(curUser.curChannel));
   }
 
   async muteUser(client: Socket, data: any, server: Server) {

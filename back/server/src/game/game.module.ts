@@ -21,5 +21,9 @@ import { MatchManager } from './match-manager';
     MatchManager,
     GameManager,
   ],
+  exports: [
+    GameManager,
+    GameService,
+  ]
 })
 export class GameModule { }

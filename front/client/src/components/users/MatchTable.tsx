@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { socket } from 'components/layout/Layout';
 import { matchList } from 'types/profileTypes';
 import { errorType } from 'types/errorTypes';
 import { profileState } from 'utils/recoil/profileData';
@@ -8,7 +10,6 @@ import { loginState } from 'utils/recoil/login';
 import instance from 'utils/axios';
 import refreshToken from 'utils/token';
 import 'styles/users/MatchList.css';
-import { Link } from 'react-router-dom';
 
 function MatchTable() {
   const profileData = useRecoilValue(profileState);
@@ -17,6 +18,9 @@ function MatchTable() {
   const setErrorMessage = useSetRecoilState(errorState);
 
   const logout = () => {
+    socket.emit('logout', () => {
+      socket.disconnect();
+    });
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     setIsLoggedIn(false);

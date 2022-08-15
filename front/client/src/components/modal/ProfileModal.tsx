@@ -27,6 +27,9 @@ function ProfileModal() {
   const setChatList = useSetRecoilState(chatListState);
 
   const logout = () => {
+    socket.emit('logout', () => {
+      socket.disconnect();
+    });
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     setIsLoggedIn(false);

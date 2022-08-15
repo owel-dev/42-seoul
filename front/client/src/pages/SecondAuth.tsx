@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import { socket } from 'components/layout/Layout';
 import { myDataState } from 'utils/recoil/myData';
 import { errorState } from 'utils/recoil/error';
 import { loginState } from 'utils/recoil/login';
@@ -17,6 +18,9 @@ function SecondAuth() {
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
 
   const logout = () => {
+    socket.emit('logout', () => {
+      socket.disconnect();
+    });
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     setIsLoggedIn(false);

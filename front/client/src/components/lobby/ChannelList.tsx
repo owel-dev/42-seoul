@@ -9,11 +9,11 @@ function ChannelList() {
 
   useEffect(() => {
     socket.on('gamelist-update', () => {
-      socket.emit('gamelist-request', (response: channelListTypes) => {
+      socket.emit('gamelist-request', '', (response: channelListTypes) => {
         setChannelList(response);
       });
     });
-    socket.emit('gamelist-request', (response: channelListTypes) => {
+    socket.emit('gamelist-request', '', (response: channelListTypes) => {
       setChannelList(response);
     });
   }, []);

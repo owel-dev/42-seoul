@@ -4,6 +4,7 @@ import { loginState } from 'utils/recoil/login';
 import { errorState } from 'utils/recoil/error';
 import { rankRowType, userRank } from 'types/RankTypes';
 import { errorType } from 'types/errorTypes';
+import { socket } from 'components/layout/Layout';
 import RankRow from 'components/rank/RankRow';
 import RankTitleRow from 'components/rank/RankTitleRow';
 import instance from 'utils/axios';
@@ -15,6 +16,9 @@ function RankTable() {
   const setErrorMessage = useSetRecoilState(errorState);
 
   const logout = () => {
+    socket.emit('logout', () => {
+      socket.disconnect();
+    });
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     setIsLoggedIn(false);

@@ -11,12 +11,13 @@
 }
 .matchTable {
   border: 1px #00babc solid;
+
   color: black;
   overflow-y: scroll;
   height: 40vh;
 }
 .matchRow {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   height: 15%;
   display: flex;
   align-items: center;

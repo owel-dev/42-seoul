@@ -5,7 +5,7 @@
   float: right;
   height: 92vh;
   width: 17vw;
-  min-width: 250px;
+  min-width: 150px;
 }
 
 .userContainer {
@@ -98,11 +98,11 @@
 
 .sendMessage {
   width: 16.9vw;
-  min-width: 250px;
+  min-width: 150px;
 }
 .message {
   height: 2rem;
-  width: 75%;
+  width: 70%;
   border: 1px #00babc solid;
   box-sizing: border-box;
   font-size: 1.25rem;
@@ -110,12 +110,12 @@
 
 .button {
   height: 2rem;
-  width: 25%;
+  width: 30%;
   border: 1px #00babc solid;
   box-sizing: border-box;
   background-color: #00babc;
   color: white;
-  font-size: 1.25rem;
+  font-size: 1rem;
 }
 
 .userlist-row {

@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { modalState } from 'utils/recoil/modal';
@@ -15,6 +14,9 @@ export default function Error() {
 
   const goHome = () => {
     if (errorMessage === 'E500') {
+      socket.emit('logout', () => {
+        socket.disconnect();
+      });
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       setIsLoggedIn(false);
@@ -23,12 +25,6 @@ export default function Error() {
     setModalInfo({ modalName: null });
     navigate('');
   };
-
-  useEffect(() => {
-    socket.emit('logout', () => {
-      socket.disconnect();
-    });
-  }, []);
 
   return (
     <div className={styles.errorContainer}>

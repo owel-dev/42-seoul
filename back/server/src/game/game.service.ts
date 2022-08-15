@@ -65,16 +65,17 @@ export class GameService {
 
         this.matchManager.addUser(socket, remakeMode, data.nickName, data.password, data.gameMode);
         if (this.matchManager.isTwoUser(remakeMode)) {
+            console.log("isTwoUser");
             this.gameManager.addNewGame(
                 this.matchManager.getMatchData(remakeMode),
                 server,
             );
-            this.matchManager.clearQueue(remakeMode);
+            this.matchManager.clearQueueMode(remakeMode);
         }
     }
 
-    matchCancel(): void {
-        // this.matchManager.clearQueue(data.mode);
+    matchCancel(socket: Socket): void {
+        this.matchManager.clearQueueSocket(socket.id);
     }
 
     async spectateRequest(
@@ -87,7 +88,7 @@ export class GameService {
             { status: 'spectate' },
         );
         socket.join(data.channelId);
-        this.chatService.joinChannel(socket, data.gameId, server);
+        this.chatService.joinChannel(socket, data, server);
     }
 
     gamelistRequest(): any {
@@ -121,20 +122,27 @@ export class GameService {
             this.gameManager.stopGame(user.channel_id, user.nickname);
         }
         const prevChannel = user.channel_id;
-        if (user.status === 'spectate') {
-            socket.leave(user.channel_id);
+        // if (user.status === 'spectate') {
+        //     socket.leave(user.channel_id);
+        // }
+
+        if (user.status !== 'offline') {
+            await this.chatService.joinChannel(socket, { channelId: '0' }, server);
+            user.status = 'online';
+            user.channel_id = '0';
+            await this.userRepository.save(user);
         }
-        user.status = 'online';
-        user.channel_id = '0';
-        await this.userRepository.save(user);
+
         const findChannelUser = await this.userRepository.find({
             where: { channel_id: prevChannel },
         });
-        // console.log(findChannelUser);
+
         if (findChannelUser.length === 0) {
+            console.log('closegame');
             this.gameManager.closeGame(prevChannel);
+            // server.emit('gamelist-update');
         }
-        this.chatService.joinChannel(socket, { channelId: '0' }, server);
+
     }
 
     gamePlayerData(socket: Socket, channelId: string) {
@@ -177,7 +185,7 @@ export class GameService {
         }
 
         let remakeMode = response.data.gameMode + ' ' + response.data.password.replace(' ', '');
-        this.matchManager.clearQueue(remakeMode);
+        this.matchManager.clearQueueMode(remakeMode);
     }
 
 }

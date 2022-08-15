@@ -1,16 +1,9 @@
-import { tsConstructorType } from '@babel/types';
-import { NotFoundException, OnModuleInit } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { timeStamp } from 'console';
-import { resolve } from 'path';
-import { Server, Socket } from 'socket.io';
-import { User } from 'src/users/entities/user.entity';
-import { Repository } from 'typeorm';
+import { Server } from 'socket.io';
 
 const uuid = require('uuid');
 
 
-const MAX_SCORE = 2;
+const MAX_SCORE = 20;
 const HERZ = 60;
 const COUNTDOWN = 5;
 
@@ -66,6 +59,7 @@ export class Game {
     }
 
     async startGame(): Promise<any> {
+        this.server.emit('gamelist-update');
         await this.countDown();
         return new Promise((resolve) => {
             this.interval = setInterval(() => {
@@ -110,13 +104,11 @@ export class Game {
     }
 
     async stopGame(user: string = '') {
+        let gameData;
         await clearInterval(this.interval);
-        this.firstPlayer.socket.emit('game-end', this.channelId);
-        this.secondPlayer.socket.emit('game-end', this.channelId);
-        this.server.to(this.channelId).emit('game-end', this.channelId);
 
-        if (this.firstPlayer.score === MAX_SCORE) {
-            return {
+        if (this.firstPlayer.score === MAX_SCORE || user === this.secondPlayer.nickName) {
+            gameData = {
                 winPlayer: this.firstPlayer.nickName,
                 winScore: this.firstPlayer.score,
                 losePlayer: this.secondPlayer.nickName,
@@ -124,8 +116,8 @@ export class Game {
                 gameMode: this.gameMode
             };
         }
-        if (this.secondPlayer.score === MAX_SCORE) {
-            return {
+        if (this.secondPlayer.score === MAX_SCORE || user === this.firstPlayer.nickName) {
+            gameData = {
                 winPlayer: this.secondPlayer.nickName,
                 winScore: this.secondPlayer.score,
                 losePlayer: this.firstPlayer.nickName,
@@ -133,26 +125,10 @@ export class Game {
                 gameMode: this.gameMode
             };
         }
-        if (user === this.secondPlayer.nickName) {
-            return {
-                winPlayer: this.firstPlayer.nickName,
-                winScore: this.firstPlayer.score,
-                losePlayer: this.secondPlayer.nickName,
-                loseScore: 0,
-                gameMode: this.gameMode
-            };
-        }
-        if (user === this.firstPlayer.nickName) {
-            return {
-                winPlayer: this.secondPlayer.nickName,
-                winScore: this.secondPlayer.score,
-                losePlayer: this.firstPlayer.nickName,
-                loseScore: 0,
-                gameMode: this.gameMode
-            };
-        }
-
-        return new NotFoundException("stopGame");
+        this.firstPlayer.socket.emit('game-end', gameData.winPlayer);
+        this.secondPlayer.socket.emit('game-end', gameData.winPlayer);
+        this.server.to(this.channelId).emit('game-end', gameData.winPlayer);
+        return gameData;
     }
 
     async countDown() {

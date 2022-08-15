@@ -29,12 +29,13 @@ export class GameGateway {
 
   @SubscribeMessage('match-request')
   matchRequest(socket: Socket, data: any): void {
-    // console.log("match-request");
+    console.log("match-request");
     this.gameService.matchRequest(socket, data, this.server);
   }
 
   @SubscribeMessage('match-cancel')
   matchCancel(socket: Socket): void {
+    console.log("match-cancel");
     this.gameService.matchCancel(socket);
   }
 
@@ -82,13 +83,13 @@ export class GameGateway {
   @SubscribeMessage('together-request')
   togetherRequest(socket: Socket, data: any): any {
     console.log('together-request');
-    const a = this.gameService.togetherRequest(socket, data, this.server);
+    this.gameService.togetherRequest(socket, data, this.server);
   }
 
   @SubscribeMessage('together-response')
   togetherResponse(socket: Socket, data: any): any {
     console.log('together-response');
-    const a = this.gameService.togetherResponse(socket, data, this.server);
+    this.gameService.togetherResponse(socket, data, this.server);
   }
 
 

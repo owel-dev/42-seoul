@@ -117,7 +117,7 @@ export class ChatService {
       !ChatService.channels.get(user.curChannel).muteList.includes(user.intraId)
     ) {
       server
-        .to(user.curChannel + '-chat')
+        .to(user.curChannel)
         .except(bannerList)
         .emit('message', {
           nickName: data.nickName,
@@ -154,7 +154,6 @@ export class ChatService {
     console.log(`@@channelId: ${data.channelId}`);
     ChatService.channels.get(data.channelId).players.push(findUser.intra_id);
     client.join(data.channelId);
-    client.join(data.channelId + '-chat');
     await this.sendUserList(client, server);
   }
 
@@ -174,19 +173,19 @@ export class ChatService {
     if (prevChannel.adminList.includes(findUser.intra_id))
       await this.removeChannelAdmin(user.curChannel, user.intraId, server);
     client.leave(user.curChannel);
-    client.leave(user.curChannel + '-chat');
     if (prevChannel.players.length === 0 && user.curChannel !== '0') {
       ChatService.channels.delete(user.curChannel);
       return;
     }
     server
       .to(user.curChannel)
+      // .emit('user-list', await );
       .emit('user-list', await this.getChannelUserList(user.curChannel));
   }
 
   async getChannelUserList(curChannel: string): Promise<ResChatUser[]> {
     // console.log('getChannelUserList');
-    // console.log(`curChannel: ${curChannel}, channels: ${ChatService.channels}`);
+    // console.log("curChannel=: ", curChannel)
     const userList = await Promise.all(
       ChatService.channels.get(curChannel).players.map(async (user) => {
         const findUser = await this.userRepository.findOneBy({
@@ -201,7 +200,7 @@ export class ChatService {
         return resChatUser;
       }),
     );
-    // console.log(`user-list in ${curChannel}`, userList);
+    // console.log(`user - list in ${ curChannel }`, userList);
     return userList;
   }
 
@@ -210,8 +209,9 @@ export class ChatService {
     const curUser = ChatService.users.find(
       (user) => user.socket.id === client.id
     )
-    // console.log(`sendUserList: ${client.id}`);
-    // console.log(`chatService []:`, ChatService.users);
+    // console.log('curUser=', curUser)
+    // console.log("curChannel=: ", curUser.curChannel);
+    // console.log(`sendUserList: ${ client.id }`);
     server
       .to(curUser.curChannel)
       .emit('user-list', await this.getChannelUserList(curUser.curChannel));

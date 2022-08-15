@@ -18,10 +18,6 @@ function ChatList({ chatList }: { chatList: chat[] }) {
             className={
               element.nickName === myData.nickName ? 'myNick' : 'userNick'
             }
-            onClick={() =>
-              element.nickName !== myData.nickName &&
-              setModalInfo({ modalName: 'SIDE-USER', user: element.nickName })
-            }
           >
             {`${element.nickName} `}
           </span>

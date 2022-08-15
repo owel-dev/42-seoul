@@ -16,10 +16,13 @@
   height: 40vh;
 }
 .friendRow {
-  font-size: large;
+  font-size: 1.5rem;
   height: 15%;
   display: flex;
   align-items: center;
+}
+.friendNickname:visited {
+  color: #00babc;
 }
 .friendNickname {
   flex: 5;
@@ -29,12 +32,13 @@
 .friendStatus {
   flex: 1;
   text-align: right;
+  font-weight: bold;
   margin-right: 1rem;
 }
 
 .friendButton {
-  width: 5rem;
-  font-size: 1rem;
+  width: 7rem;
+  font-size: 1.25rem;
   background-color: #00babc;
   color: white;
   border: none;

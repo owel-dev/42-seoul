@@ -3,10 +3,9 @@
   border: 2px #00babc solid;
   box-sizing: border-box;
   float: right;
-  display: flex;
-  flex-direction: column;
-  height: 90vh;
-  width: 30vh;
+  height: 92vh;
+  width: 17vw;
+  min-width: 250px;
 }
 
 .userContainer {
@@ -15,16 +14,17 @@
 
 .userTitle {
   background-color: #00babc;
-  height: auto;
-  padding: 3%;
+  height: 3.5vh;
+  min-height: 40px;
   color: white;
   font-size: 1.7rem;
-  font-weight: 700;
-  text-align: center;
+  font-weight: bolder;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .users {
-  height: 84%;
   overflow-y: scroll;
   position: sticky;
   padding-left: 5%;
@@ -34,7 +34,7 @@
   height: auto;
   width: fit-content;
   margin: 0.2rem 0;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   cursor: pointer;
 }
 
@@ -50,18 +50,20 @@
 
 .chatTiTle {
   background-color: #00babc;
-  height: auto;
-  padding: 3%;
+  height: 3.5vh;
+  min-height: 40px;
   color: white;
   font-size: 1.7rem;
-  font-weight: 700;
-  text-align: center;
+  font-weight: bolder;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .chat {
   display: flex;
   flex-direction: column;
-  height: 84%;
+  height: 45.5vh;
   overflow-y: scroll;
   padding-left: 5%;
 }
@@ -80,12 +82,12 @@
 .userNick {
   height: auto;
   margin: 0.2rem 0;
-  cursor: pointer;
 }
 
 .messageList {
   height: auto;
   margin: 0.2rem 0;
+  font-size: 1.25rem;
 }
 
 .directMessage {
@@ -94,20 +96,26 @@
   color: purple;
 }
 
+.sendMessage {
+  width: 16.9vw;
+  min-width: 250px;
+}
 .message {
-  height: 1.4rem;
+  height: 2rem;
   width: 75%;
   border: 1px #00babc solid;
-  font-size: 1rem;
-  font-weight: 400;
+  box-sizing: border-box;
+  font-size: 1.25rem;
 }
 
 .button {
-  height: 1.7rem;
-  width: 22%;
+  height: 2rem;
+  width: 25%;
   border: 1px #00babc solid;
+  box-sizing: border-box;
   background-color: #00babc;
   color: white;
+  font-size: 1.25rem;
 }
 
 .userlist-row {

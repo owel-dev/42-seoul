@@ -5,6 +5,7 @@ import { modalState } from 'utils/recoil/modal';
 import { errorState } from 'utils/recoil/error';
 import { loginState } from 'utils/recoil/login';
 import styles from 'styles/error/error.module.css';
+import { socket } from 'components/layout/Layout';
 
 export default function Error() {
   const [errorMessage, setErrorMessage] = useRecoilState(errorState);
@@ -22,6 +23,12 @@ export default function Error() {
     setModalInfo({ modalName: null });
     navigate('');
   };
+
+  useEffect(() => {
+    socket.emit('logout', () => {
+      socket.disconnect();
+    });
+  }, []);
 
   return (
     <div className={styles.errorContainer}>

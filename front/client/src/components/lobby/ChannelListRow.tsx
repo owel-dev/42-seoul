@@ -44,7 +44,6 @@ function ChannelListRow({ props }: { props: channelTypes }) {
       <span className='rowElseElement'>player1 : {player1} </span>
       <span className='rowElseElement'>player2 : {player2} </span>
       <span className='blank'></span>
-      <span className='rowElseElement'>인원 : {curNumUser} </span>
       <span className='rowElseElement'>
         비밀방 :{password ? <span>🔒</span> : <></>}
       </span>

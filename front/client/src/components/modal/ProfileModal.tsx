@@ -216,12 +216,14 @@ function ProfileModal() {
             <>
               {userData.nickName !== myData.nickName && (
                 <section>
-                  <input
-                    type='button'
-                    onClick={sendInvite}
-                    value='같이하기'
-                    className='modalButtonInner'
-                  />
+                  {userData.status === 'online' && (
+                    <input
+                      type='button'
+                      onClick={sendInvite}
+                      value='같이하기'
+                      className='modalButtonInner'
+                    />
+                  )}
                   <input
                     type='button'
                     onClick={sendDM}

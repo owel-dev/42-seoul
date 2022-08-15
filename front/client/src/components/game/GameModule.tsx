@@ -137,7 +137,7 @@ function GameModule(props: { gameMode: string }) {
       Math.floor(displayWidth * 0.75),
       50
     );
-  });
+  }, [gameData]);
 
   useEffect(() => {
     const canvasEle = canvas.current!;

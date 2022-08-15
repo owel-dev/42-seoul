@@ -18,8 +18,10 @@ function UserList() {
   const setModalInfo = useSetRecoilState(modalState);
 
   useEffect(() => {
-    if (isLoggedIn) socket.emit('user-list');
-  }, [socket]);
+    socket.on('connected', () => {
+      if (isLoggedIn) socket.emit('user-list');
+    });
+  }, []);
 
   useEffect(() => {
     socket.on('user-list', (data: userListType[]) => {

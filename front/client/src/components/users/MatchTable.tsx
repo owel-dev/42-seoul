@@ -8,6 +8,7 @@ import { loginState } from 'utils/recoil/login';
 import instance from 'utils/axios';
 import refreshToken from 'utils/token';
 import 'styles/users/MatchList.css';
+import { Link } from 'react-router-dom';
 
 function MatchTable() {
   const profileData = useRecoilValue(profileState);
@@ -51,15 +52,19 @@ function MatchTable() {
         <>
           {matchList?.matchList.map((element, index) => (
             <div className='matchRow' key={index}>
-              <a href={`/users/${element.player1}`} className='matchLeft'>
-                <span>{element.player1}</span>
-              </a>
-              <span> {element.score1}</span>
-              <span> vs </span>
-              <a href={`/users/${element.player2}`}>
-                <span>{element.player2}</span>
-              </a>
-              <span> {element.score2}</span>
+              <span className='matchLeft'>
+                <Link to={`/users/${element.player1}/mypage`}>
+                  <span>{element.player1}</span>
+                </Link>
+                <span> {element.score1}</span>
+              </span>
+              <span className='matchMiddle'> vs </span>
+              <span className='matchRight'>
+                <Link to={`/users/${element.player2}/mypage`}>
+                  <span>{element.player2}</span>
+                </Link>
+                <span> {element.score2}</span>
+              </span>
             </div>
           ))}
         </>

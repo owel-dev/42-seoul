@@ -16,14 +16,12 @@ function GameStartModal() {
   const [matchWait, setMatchWait] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState('');
   const [radioValue, setRadioValue] = useState('none');
-
   const [disable, SetDisable] = useState<boolean>(false);
 
   function closeModal() {
     if (matchWait === true) {
       socket.emit('match-cancel');
     }
-
     setModalInfo({ modalName: null });
   }
 

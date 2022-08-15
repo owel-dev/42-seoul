@@ -129,14 +129,18 @@ function UserInfo() {
           <span>winRate : </span>
           <span>{profileData.winRate} </span>
           <div>
-            {myData.enable2FA === true ? (
-              <button onClick={offEnable2FA} className='changeButton'>
-                2차인증항상끄기
-              </button>
-            ) : (
-              <button onClick={onEnable2FA} className='changeButton'>
-                2차인증항상하기
-              </button>
+            {profileData?.nickName === myData.nickName && (
+              <>
+                {myData.enable2FA === true ? (
+                  <button onClick={offEnable2FA} className='changeButton'>
+                    2차인증항상끄기
+                  </button>
+                ) : (
+                  <button onClick={onEnable2FA} className='changeButton'>
+                    2차인증항상하기
+                  </button>
+                )}
+              </>
             )}
           </div>
           {profileData?.nickName !== myData.nickName ? (

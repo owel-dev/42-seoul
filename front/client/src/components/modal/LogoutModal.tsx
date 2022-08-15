@@ -13,8 +13,9 @@ function LogoutModal() {
   };
 
   const onLogout = () => {
-    socket.emit('logout');
-    socket.disconnect();
+    socket.emit('logout', () => {
+      socket.disconnect();
+    });
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     setIsLoggedIn(false);

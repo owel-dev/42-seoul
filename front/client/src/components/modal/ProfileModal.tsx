@@ -27,6 +27,9 @@ function ProfileModal() {
   const setChatList = useSetRecoilState(chatListState);
 
   const logout = () => {
+    socket.emit('logout', () => {
+      socket.disconnect();
+    });
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     setIsLoggedIn(false);
@@ -216,12 +219,14 @@ function ProfileModal() {
             <>
               {userData.nickName !== myData.nickName && (
                 <section>
-                  <input
-                    type='button'
-                    onClick={sendInvite}
-                    value='같이하기'
-                    className='modalButtonInner'
-                  />
+                  {userData.status === 'online' && (
+                    <input
+                      type='button'
+                      onClick={sendInvite}
+                      value='같이하기'
+                      className='modalButtonInner'
+                    />
+                  )}
                   <input
                     type='button'
                     onClick={sendDM}

@@ -19,8 +19,10 @@ export default function ModalProvider() {
   const modalCloseHandler = (e: React.MouseEvent) => {
     if (e.target instanceof HTMLDivElement && e.target.id === 'modalOutside') {
       setModalInfo({ modalName: null });
+      if (modalInfo.modalName === 'MAIN-START') {
+        socket.emit('match-cancel');
+      }
     }
-    if (modalInfo.modalName === 'MAIN-START') socket.emit('match-cancel');
   };
 
   const findModal = () => {

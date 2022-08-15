@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import instance from 'utils/axios';
-import refreshToken from 'utils/token';
 import { profileState } from 'utils/recoil/profileData';
 import { loginState } from 'utils/recoil/login';
 import { errorState } from 'utils/recoil/error';
 import { errorType } from 'types/errorTypes';
+import { socket } from 'components/layout/Layout';
+import instance from 'utils/axios';
+import refreshToken from 'utils/token';
 import FriendList from 'components/users/FriendList';
 import MatchList from 'components/users/MatchList';
 import UserInfo from 'components/users/UserInfo';
@@ -20,6 +21,9 @@ function UserPage() {
   const currentUser = location.pathname.split('/')[2];
 
   const logout = () => {
+    socket.emit('logout', () => {
+      socket.disconnect();
+    });
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     setIsLoggedIn(false);

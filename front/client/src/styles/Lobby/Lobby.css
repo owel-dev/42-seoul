@@ -29,6 +29,9 @@
   font-weight: bold;
   text-align: center;
   line-height: 300%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .rowElseElement {
   flex: 2;

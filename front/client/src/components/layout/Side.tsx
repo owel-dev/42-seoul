@@ -90,18 +90,20 @@ function Side() {
               setMessage('');
             }}
           >
-            <input
-              className='message'
-              value={message}
-              ref={chatInput}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-            <input
-              type='button'
-              value='보내기'
-              className='button'
-              onClick={sendMessage}
-            />
+            <div className='sendMessage'>
+              <input
+                className='message'
+                value={message}
+                ref={chatInput}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+              <input
+                type='button'
+                value='보내기'
+                className='button'
+                onClick={sendMessage}
+              />
+            </div>
           </form>
         </div>
       </section>

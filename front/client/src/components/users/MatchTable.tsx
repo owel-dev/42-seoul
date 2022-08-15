@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { socket } from 'components/layout/Layout';
 import { matchList } from 'types/profileTypes';
 import { errorType } from 'types/errorTypes';
 import { profileState } from 'utils/recoil/profileData';
@@ -16,6 +18,9 @@ function MatchTable() {
   const setErrorMessage = useSetRecoilState(errorState);
 
   const logout = () => {
+    socket.emit('logout', () => {
+      socket.disconnect();
+    });
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     setIsLoggedIn(false);
@@ -51,15 +56,19 @@ function MatchTable() {
         <>
           {matchList?.matchList.map((element, index) => (
             <div className='matchRow' key={index}>
-              <a href={`/users/${element.player1}`} className='matchLeft'>
-                <span>{element.player1}</span>
-              </a>
-              <span> {element.score1}</span>
-              <span> vs </span>
-              <a href={`/users/${element.player2}`}>
-                <span>{element.player2}</span>
-              </a>
-              <span> {element.score2}</span>
+              <span className='matchLeft'>
+                <Link to={`/users/${element.player1}/mypage`}>
+                  <span>{element.player1}</span>
+                </Link>
+                <span> {element.score1}</span>
+              </span>
+              <span className='matchMiddle'> vs </span>
+              <span className='matchRight'>
+                <Link to={`/users/${element.player2}/mypage`}>
+                  <span>{element.player2}</span>
+                </Link>
+                <span> {element.score2}</span>
+              </span>
             </div>
           ))}
         </>

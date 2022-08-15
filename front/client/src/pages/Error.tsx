@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { modalState } from 'utils/recoil/modal';
 import { errorState } from 'utils/recoil/error';
 import { loginState } from 'utils/recoil/login';
 import styles from 'styles/error/error.module.css';
+import { socket } from 'components/layout/Layout';
 
 export default function Error() {
   const [errorMessage, setErrorMessage] = useRecoilState(errorState);
@@ -14,6 +14,9 @@ export default function Error() {
 
   const goHome = () => {
     if (errorMessage === 'E500') {
+      socket.emit('logout', () => {
+        socket.disconnect();
+      });
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       setIsLoggedIn(false);

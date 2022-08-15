@@ -8,7 +8,12 @@ function ChannelList() {
   const [channelList, setChannelList] = useState<channelListTypes | null>(null);
 
   useEffect(() => {
-    socket.emit('gamelist-request', (response: channelListTypes) => {
+    socket.on('gamelist-update', () => {
+      socket.emit('gamelist-request', '', (response: channelListTypes) => {
+        setChannelList(response);
+      });
+    });
+    socket.emit('gamelist-request', '', (response: channelListTypes) => {
       setChannelList(response);
     });
   }, []);

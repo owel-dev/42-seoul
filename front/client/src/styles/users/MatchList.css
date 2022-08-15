@@ -11,15 +11,19 @@
 }
 .matchTable {
   border: 1px #00babc solid;
+
   color: black;
   overflow-y: scroll;
   height: 40vh;
 }
 .matchRow {
-  font-size: large;
+  font-size: 1.25rem;
   height: 15%;
   display: flex;
   align-items: center;
+}
+a:visited {
+  color: #00babc;
 }
 
 .matchLeft {

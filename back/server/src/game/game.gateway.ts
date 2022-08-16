@@ -14,7 +14,7 @@ import { ApiTags } from '@nestjs/swagger';
 })
 @ApiTags('게임 관련 소켓 API')
 export class GameGateway {
-  constructor(private readonly gameService: GameService) { }
+  constructor(private readonly gameService: GameService) {}
 
   @WebSocketServer()
   server: Server;
@@ -29,13 +29,13 @@ export class GameGateway {
 
   @SubscribeMessage('match-request')
   matchRequest(socket: Socket, data: any): void {
-    console.log("match-request");
+    console.log('match-request');
     this.gameService.matchRequest(socket, data, this.server);
   }
 
   @SubscribeMessage('match-cancel')
   matchCancel(socket: Socket): void {
-    console.log("match-cancel");
+    console.log('match-cancel');
     this.gameService.matchCancel(socket);
   }
 
@@ -45,8 +45,10 @@ export class GameGateway {
   }
 
   @SubscribeMessage('gamelist-request')
-  gamelistRequest(): any {
-    return { channelList: this.gameService.gamelistRequest() };
+  gamelistRequest(socket: Socket): any {
+    socket.emit('gamelist', {
+      channelList: this.gameService.gamelistRequest(),
+    });
   }
 
   @SubscribeMessage('change-password')
@@ -75,7 +77,7 @@ export class GameGateway {
   @SubscribeMessage('game-player-data')
   gamePlayerData(socket: Socket, channelId: string): any {
     const a = this.gameService.gamePlayerData(socket, channelId);
-    console.log("palyer: ", a);
+    console.log('palyer: ', a);
     return a;
     // console.log();
   }
@@ -91,6 +93,4 @@ export class GameGateway {
     console.log('together-response');
     this.gameService.togetherResponse(socket, data, this.server);
   }
-
-
 }

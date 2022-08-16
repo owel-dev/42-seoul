@@ -180,8 +180,11 @@ function ProfileModal() {
   };
 
   const setAdmin = () => {
-    socket.emit('admin', userData?.nickName);
-    alert(`${userData?.nickName}에게 관리자 권한을 부여하였습니다.`);
+    if (userData?.admin) {
+      socket.emit('cancel-admin', userData?.nickName);
+    } else {
+      socket.emit('set-admin', userData?.nickName);
+    }
     setModalInfo({ modalName: null });
   };
 
@@ -259,9 +262,7 @@ function ProfileModal() {
                         <input
                           type='button'
                           onClick={setAdmin}
-                          value={
-                            userData.admin ? '방장권한해제' : '방장권한부여'
-                          }
+                          value={userData.admin ? '방장박탈' : '방장임명'}
                           className='modalButtonInner'
                         />
                       )}

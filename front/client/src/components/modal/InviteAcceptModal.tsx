@@ -4,13 +4,14 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { socket } from 'components/layout/Layout';
 import { inviteType } from 'types/GameTypes';
 import { modalState } from 'utils/recoil/modal';
-import { channelState, inviteState } from 'utils/recoil/gameState';
+import { channelState, inviteState, matchState } from 'utils/recoil/gameState';
 import 'styles/modal/Modal.css';
 
 function InviteAcceptModal() {
   const inviteData = useRecoilValue<inviteType>(inviteState);
   const setModalState = useSetRecoilState(modalState);
   const [channelInfo, setChannelInfo] = useRecoilState(channelState);
+  const setMatchWait = useSetRecoilState(matchState);
 
   const inviteAccept = () => {
     socket.emit('together-response', { status: true, data: inviteData });
@@ -23,6 +24,11 @@ function InviteAcceptModal() {
   useEffect(() => {
     socket.on('game-wait', (data) => {
       setChannelInfo(data);
+    });
+    socket.on('match-cancel', () => {
+      setMatchWait(false);
+      alert(`${inviteData.nickName}(이)가 같이하기를 취소하였습니다.`);
+      setModalState({ modalName: null });
     });
   }, []);
 

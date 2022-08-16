@@ -27,7 +27,7 @@ function Side() {
       chatScroll.current.addEventListener('scroll', scroll);
       scrollToBottom();
     }
-  });
+  }, [chatList]);
 
   const sendMessage = () => {
     if (message.indexOf('#') === 0 && message.indexOf(' ') !== -1) {

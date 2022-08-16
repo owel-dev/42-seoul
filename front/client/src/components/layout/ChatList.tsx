@@ -2,10 +2,10 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { modalState } from 'utils/recoil/modal';
 import { myDataState } from 'utils/recoil/myData';
 import { chat } from 'types/chatTypes';
+import { useEffect } from 'react';
 
 function ChatList({ chatList }: { chatList: chat[] }) {
   const myData = useRecoilValue(myDataState);
-  const setModalInfo = useSetRecoilState(modalState);
 
   return (
     <>
@@ -19,9 +19,9 @@ function ChatList({ chatList }: { chatList: chat[] }) {
               element.nickName === myData.nickName ? 'myNick' : 'userNick'
             }
           >
-            {`${element.nickName} `}
+            {element.nickName && `${element.nickName} - `}
           </span>
-          {`- ${element.message}`}
+          {`${element.message}`}
         </div>
       ))}
     </>

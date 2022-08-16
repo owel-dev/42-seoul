@@ -39,3 +39,8 @@ export const inviteState = atom<inviteType>({
     oppNickName: '',
   },
 });
+
+export const matchState = atom<boolean>({
+  key: `matchState/${v1()}`,
+  default: false,
+});

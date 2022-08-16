@@ -4,7 +4,7 @@ import { Navigate } from 'react-router-dom';
 import RadioOption from 'components/modal/RadioOption';
 import { socket } from 'components/layout/Layout';
 import { modalState } from 'utils/recoil/modal';
-import { channelState } from 'utils/recoil/gameState';
+import { channelState, matchState } from 'utils/recoil/gameState';
 import { myDataState } from 'utils/recoil/myData';
 import { myData } from 'types/myDataTypes';
 import 'styles/modal/Modal.css';
@@ -13,7 +13,7 @@ function GameStartModal() {
   const myData = useRecoilValue<myData>(myDataState);
   const setModalInfo = useSetRecoilState(modalState);
   const [channelInfo, setChannelInfo] = useRecoilState(channelState);
-  const [matchWait, setMatchWait] = useState<boolean>(false);
+  const [matchWait, setMatchWait] = useRecoilState(matchState);
   const [inputValue, setInputValue] = useState('');
   const [radioValue, setRadioValue] = useState('none');
   const [disable, SetDisable] = useState<boolean>(false);
@@ -21,6 +21,7 @@ function GameStartModal() {
   function closeModal() {
     if (matchWait === true) {
       socket.emit('match-cancel');
+      setMatchWait(false);
     }
     setModalInfo({ modalName: null });
   }

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { socket } from 'components/layout/Layout';
 import { modalState } from 'utils/recoil/modal';
-import { channelState } from 'utils/recoil/gameState';
+import { channelState, matchState } from 'utils/recoil/gameState';
 import { myDataState } from 'utils/recoil/myData';
 import { chatListState } from 'utils/recoil/chat';
 import GameModule from 'components/game/GameModule';
@@ -20,6 +20,7 @@ function Game() {
   const setChatList = useSetRecoilState(chatListState);
   const myData = useRecoilValue(myDataState);
   const [channelInfo, setChannelInfo] = useRecoilState(channelState);
+  const [matchWait, setMatchWait] = useRecoilState(matchState);
   const [gameInfo, setGameInfo] = useState<gameInfoType>({
     gameMode: '',
     firstPlayer: '',
@@ -27,8 +28,14 @@ function Game() {
   });
 
   useEffect(() => {
+    socket.emit('match-cancel');
+    setMatchWait(false);
+  }, []);
+
+  useEffect(() => {
     setModalInfo({ modalName: null });
     setChatList([]);
+
     socket.emit(
       'game-player-data',
       channelInfo.channelId,

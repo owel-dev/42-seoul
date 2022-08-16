@@ -58,7 +58,7 @@ import { ChatModule } from './chat/chat.module';
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_DATABASE'),
         entities: [User, Friend, Ban, Stat, Match],
-        synchronize: true,
+        synchronize: false,
       }),
       inject: [ConfigService],
     }),
@@ -66,4 +66,4 @@ import { ChatModule } from './chat/chat.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

@@ -1,8 +1,4 @@
-import {
-  forwardRef,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Server, Socket } from 'socket.io';
 import { AuthService } from 'src/auth/auth.service';
@@ -27,7 +23,7 @@ export class ChatService {
     private friendRepository: Repository<Friend>,
     @InjectRepository(Ban)
     private banRepository: Repository<Ban>,
-  ) { }
+  ) {}
 
   static channels = new Map([['0', new Channel()]]);
   static users: ChatUser[] = [];
@@ -116,14 +112,11 @@ export class ChatService {
     if (
       !ChatService.channels.get(user.curChannel).muteList.includes(user.intraId)
     ) {
-      server
-        .to(user.curChannel)
-        .except(bannerList)
-        .emit('message', {
-          nickName: data.nickName,
-          message: data.message,
-          isDM: false,
-        });
+      server.to(user.curChannel).except(bannerList).emit('message', {
+        nickName: data.nickName,
+        message: data.message,
+        isDM: false,
+      });
       //   console.log(
       //     `sendMessage to channel ${user.curChannel} from ${data.nickName} "${data.message}"`,
       //   );
@@ -171,7 +164,12 @@ export class ChatService {
       (elem) => elem !== findUser.intra_id,
     );
     if (prevChannel.adminList.includes(findUser.intra_id))
-      await this.removeChannelAdmin(user.curChannel, user.intraId, server);
+      await this.removeChannelAdmin(
+        user.curChannel,
+        user.intraId,
+        server,
+        true,
+      );
     client.leave(user.curChannel);
     if (prevChannel.players.length === 0 && user.curChannel !== '0') {
       ChatService.channels.delete(user.curChannel);
@@ -179,7 +177,6 @@ export class ChatService {
     }
     server
       .to(user.curChannel)
-      // .emit('user-list', await );
       .emit('user-list', await this.getChannelUserList(user.curChannel));
   }
 
@@ -205,10 +202,9 @@ export class ChatService {
   }
 
   async sendUserList(client: Socket, server: Server) {
-
     const curUser = ChatService.users.find(
-      (user) => user.socket.id === client.id
-    )
+      (user) => user.socket.id === client.id,
+    );
     // console.log('curUser=', curUser)
     // console.log("curChannel=: ", curUser.curChannel);
     // console.log(`sendUserList: ${ client.id }`);
@@ -239,6 +235,7 @@ export class ChatService {
   }
 
   async setAdmin(client: Socket, data: any, server: Server) {
+    // console.log(`set admin ${data}`);
     const curChannel = ChatService.users.find(
       (user) => user.socket.id === client.id,
     ).curChannel;
@@ -248,21 +245,51 @@ export class ChatService {
     await this.addChannelAdmin(curChannel, userFind.intra_id, server);
   }
 
+  async cancelAdmin(client: Socket, data: any, server: Server) {
+    // console.log(`cancel admin ${data}`);
+    const curChannel = ChatService.users.find(
+      (user) => user.socket.id === client.id,
+    ).curChannel;
+    const userFind = await this.userRepository.findOneBy({
+      nickname: data,
+    });
+    this.removeChannelAdmin(curChannel, userFind.intra_id, server, false);
+  }
+
   async addChannelAdmin(channelId: string, intraId: string, server: Server) {
-    const findUser = await this.userRepository.findOneBy({ intra_id: intraId });
+    const userFind = await this.userRepository.findOneBy({ intra_id: intraId });
     ChatService.channels.get(channelId).adminList.push(intraId);
     server
       .to(channelId)
       .emit('user-list', await this.getChannelUserList(channelId));
+    server.to(channelId).emit('message', {
+      nickName: null,
+      message: `${userFind.nickname}(을)를 방장으로 임명하였습니다)`,
+      isDM: false,
+    });
   }
 
-  async removeChannelAdmin(channelId: string, intraId: string, server: Server) {
-    const findUser = await this.userRepository.findOneBy({ intra_id: intraId });
+  async removeChannelAdmin(
+    channelId: string,
+    intraId: string,
+    server: Server,
+    isMoveChannel: boolean,
+  ) {
+    const userFind = await this.userRepository.findOneBy({ intra_id: intraId });
     let adminList = ChatService.channels.get(channelId).adminList;
-    adminList = adminList.filter((user) => user !== intraId);
-    server
-      .to(channelId)
-      .emit('user-list', await this.getChannelUserList(channelId));
+    for (let i = 0; i < adminList.length; ++i) {
+      if (adminList[i] === intraId) adminList.splice(i, 1);
+    }
+    if (!isMoveChannel) {
+      server
+        .to(channelId)
+        .emit('user-list', await this.getChannelUserList(channelId));
+      server.to(channelId).emit('message', {
+        nickName: null,
+        message: `${userFind.nickname}의 방장 권한을 박탈하였습니다)`,
+        isDM: false,
+      });
+    }
   }
 
   async updateFriendList(client: Socket, data: any, server: Server) {

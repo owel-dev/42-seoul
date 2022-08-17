@@ -14,7 +14,7 @@ import { ChatService } from './chat.service';
   },
 })
 export class ChatGateway {
-  constructor(private readonly chatService: ChatService) { }
+  constructor(private readonly chatService: ChatService) {}
 
   @WebSocketServer()
   server: Server;
@@ -49,9 +49,14 @@ export class ChatGateway {
     return this.chatService.muteUser(client, data, this.server);
   }
 
-  @SubscribeMessage('admin')
-  setAdmin(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
+  @SubscribeMessage('set-admin')
+  addAdmin(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
     return this.chatService.setAdmin(client, data, this.server);
+  }
+
+  @SubscribeMessage('cancel-admin')
+  cancelAdmin(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
+    return this.chatService.cancelAdmin(client, data, this.server);
   }
 
   @SubscribeMessage('friend-start')

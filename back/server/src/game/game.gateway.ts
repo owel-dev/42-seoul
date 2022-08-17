@@ -30,13 +30,13 @@ export class GameGateway {
   @SubscribeMessage('match-request')
   matchRequest(socket: Socket, data: any): void {
     console.log('match-request');
-    this.gameService.matchRequest(socket, data, this.server);
+    this.gameService.matchRequest(socket, data, this.server, false);
   }
 
   @SubscribeMessage('match-cancel')
-  matchCancel(socket: Socket): void {
+  matchCancel(socket: Socket, data: any): void {
     console.log('match-cancel');
-    this.gameService.matchCancel(socket);
+    this.gameService.matchCancel(socket, data, this.server);
   }
 
   @SubscribeMessage('spectate-request')
@@ -46,9 +46,9 @@ export class GameGateway {
 
   @SubscribeMessage('gamelist-request')
   gamelistRequest(socket: Socket): any {
-    socket.emit('gamelist', {
+    return {
       channelList: this.gameService.gamelistRequest(),
-    });
+    };
   }
 
   @SubscribeMessage('change-password')

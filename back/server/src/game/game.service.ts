@@ -60,10 +60,19 @@ export class GameService {
   // }, 60 * 1000 * 3);
   // }
 
-  async matchRequest(socket: Socket, data: any, server: Server): Promise<void> {
+  async matchRequest(
+    socket: Socket,
+    data: any,
+    server: Server,
+    togetherAccept: Boolean,
+  ): Promise<void> {
     console.log('in matchRequest');
     let remakeMode = data.gameMode + ' ' + data.password.replace(' ', '');
-
+    if (data.oppNickName && !togetherAccept)
+      remakeMode += ' ' + data.oppNickName;
+    else if (data.oppNickName && togetherAccept)
+      remakeMode += ' ' + data.nickName;
+    console.log('@@remakeMode=', remakeMode);
     this.matchManager.addUser(
       socket,
       remakeMode,
@@ -81,8 +90,20 @@ export class GameService {
     }
   }
 
-  matchCancel(socket: Socket): void {
+  async matchCancel(
+    socket: Socket,
+    nickName: any,
+    server: Server,
+  ): Promise<void> {
     this.matchManager.clearQueueSocket(socket.id);
+    if (nickName) {
+      const userRow = await this.userRepository.findOne({
+        where: { nickname: nickName },
+      });
+      if (!userRow) throw new NotFoundException();
+      console.log(`match-cancel to ${userRow.socket_id}`);
+      server.to(userRow.socket_id).emit('match-cancel');
+    }
   }
 
   async spectateRequest(
@@ -107,13 +128,11 @@ export class GameService {
   }
 
   spectatePassword(data: any): boolean {
-    //     if (!data.password || !data.channelId)
-    //         return false;
-    //     games.map((item) => {
-    //         if (item.channelId === data.channelId &&
-    //             item.password === data.password)
-    //             return true;
-    //     });
+    // if (!data.password || !data.channelId) return false;
+    // games.map((item) => {
+    //   if (item.channelId === data.channelId && item.password === data.password)
+    //     return true;
+    // });
     return false;
     // }
   }
@@ -147,7 +166,7 @@ export class GameService {
     if (findChannelUser.length === 0) {
       console.log('closegame');
       this.gameManager.closeGame(prevChannel);
-      // server.emit('gamelist-update');
+      server.emit('gamelist-update');
     }
   }
 
@@ -181,21 +200,29 @@ export class GameService {
     if (!userRow) throw new NotFoundException();
     console.log('together: ', server.sockets.adapter.rooms);
     server.to(userRow.socket_id).emit('together-request', data);
-    this.matchRequest(socket, data, server);
+    this.matchRequest(socket, data, server, false);
     // socket.emit('together-request', { nickName: , gameMode: , });
     // let remakeMode = data.gameMode + ' ' + data.password.replace(' ', '');
     // this.matchManager.addUser(socket, remakeMode, data.nickName, data.password, data.gameMode);
   }
 
-  togetherResponse(socket: Socket, response: any, server: Server) {
+  async togetherResponse(socket: Socket, response: any, server: Server) {
     const temp = response.data.nickName;
     response.data.nickName = response.data.oppNickName;
     response.data.oppNickName = temp;
 
     if (response.status === true) {
-      this.matchRequest(socket, response.data, server);
+      this.matchRequest(socket, response.data, server, true);
       return;
     }
+    // else {
+    //   const userFind = await this.userRepository.findOneBy({
+    //     nickname: response.data.oppNickName,
+    //   });
+    //   if (!userFind) throw new NotFoundException();
+    //   console.log(`match-cancel to ${userFind.nickname} `);
+    //   server.to(userFind.socket_id).emit('match-cancel');
+    // }
 
     let remakeMode =
       response.data.gameMode + ' ' + response.data.password.replace(' ', '');

@@ -129,8 +129,6 @@ export class GameManager {
     //     game.stopSendData();
     //   }
     // });
-    this.games = this.games.filter((game) => game.gameId !== channelId);
-
     for (let i = 0; i < this.gameChannelList.length; ++i) {
       if (this.gameChannelList[i].channelId === channelId)
         this.gameChannelList.splice(i, 1);

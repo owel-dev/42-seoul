@@ -10,8 +10,7 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import { ResUserNavi } from 'src/users/dto/res-user-navi.dto';
 import { AuthService } from './auth.service';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
@@ -19,12 +18,13 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 @Controller('oauth')
 @ApiTags('auth(인증) API')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Get('test')
   @ApiOperation({ summary: '테스트 API', description: '테스트 API' })
-  test(@Req() req: Request) {
-    console.log(req.cookies);
+  async testLogin(@Res() response: Response) {
+    console.log("testLogin");
+    await this.authService.testLogin(response);
   }
 
   @Get('login')

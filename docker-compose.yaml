@@ -1,0 +1,50 @@
+version: '3.4'
+
+services:
+  postgres-db:
+    image: postgres:14-alpine
+    container_name: postgres-db
+    restart: always
+    networks:
+      - private-network
+    ports:
+      - 5432:5432
+    volumes:
+      - ./back/server/backup-db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+
+  nest-server:
+    image: node:16-alpine
+    container_name: nest-server
+    restart: always
+    networks:
+      - private-network
+    ports:
+      - 3000:3000
+    volumes:
+      - ./back/server/:/nest
+    working_dir: /nest
+    command: sh -c "npm i && npm run start"
+    depends_on:
+      - postgres-db
+
+  react-client:
+    image: node:16-alpine
+    container_name: react-client
+    restart: always
+    networks:
+      - private-network
+    ports:
+      - 3001:3001
+    volumes:
+      - ./front/client:/react
+    working_dir: /react
+    command: sh -c "npm i && npm start"
+
+networks:
+  private-network:
+
+

@@ -28,7 +28,7 @@ export class AuthService {
     private mailerService: MailerService,
     private config: ConfigService,
     private authJwtService: AuthJwtService,
-  ) {}
+  ) { }
 
   async getAccessToken(code: string): Promise<string> {
     // console.log('code=', code);
@@ -134,8 +134,7 @@ export class AuthService {
     response.redirect(
       `http://${this.config.get('FRONT_HOST')}:${this.config.get(
         'FRONT_PORT',
-      )}?accessToken=${jwtToken.accessToken}&refreshToken=${
-        jwtToken.refreshToken
+      )}?accessToken=${jwtToken.accessToken}&refreshToken=${jwtToken.refreshToken
       }`,
       302,
     );
@@ -204,5 +203,71 @@ export class AuthService {
 
   async logout() {
     //소켓 연결 끊기
+  }
+
+
+  async fetchData(url) {
+    try {
+      const res = await axios.get(url);
+      if (res.status !== 200) {
+        throw new Error('Network response was not ok');
+      }
+      return res.data;
+    } catch (error) {
+      console.error('Unable to fetch data:', error);
+    }
+  }
+
+  pickRandom(list) {
+    return list[Math.floor(Math.random() * list.length)];
+  }
+
+  async generateName() {
+    try {
+      const randomNameList = await this.fetchData(`https://www.randomlists.com/data/names-surnames.json`);
+      const randomName = this.pickRandom(randomNameList.data);
+      return randomName;
+    } catch (error) {
+      console.error('Unable to generate name:', error);
+    }
+  }
+
+  async testLogin(@Res() response: Response) {
+    console.log('testLogin-service');
+    let userEntity = new User();
+    let randomName = await this.generateName();
+    userEntity = {
+      intra_id: randomName,
+      nickname: randomName,
+      intra_email: "mail@test.com",
+      avatar: "",
+      status: 'offline',
+      channel_id: '0',
+      socket_id: null,
+      stats: new Stat(),
+      is_second_auth: true,
+    };
+    await this.userRepository.save(userEntity);
+    const jwtToken = await this.login(userEntity.intra_id);
+    response.cookie('accessToken', jwtToken.accessToken, {
+      sameSite: 'lax',
+      httpOnly: true,
+      path: '/',
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    response.cookie('refreshToken', jwtToken.refreshToken, {
+      sameSite: 'lax',
+      httpOnly: true,
+      path: '/',
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    response.redirect(
+      `http://${this.config.get('FRONT_HOST')}:${this.config.get(
+        'FRONT_PORT',
+      )}?accessToken=${jwtToken.accessToken}&refreshToken=${jwtToken.refreshToken
+      }`,
+      302,
+    );
+    return response;
   }
 }

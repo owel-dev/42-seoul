@@ -19,6 +19,14 @@ function Login() {
         >
           <input type='button' className={styles.buttons} value='로그인' />
         </a>
+
+        <br />
+        <a
+          href={`${process.env.REACT_APP_SERVERIP}/oauth/test`}
+          style={{ textDecoration: 'none' }}
+        >
+          <input type='button' className={styles.buttons} value='테스트 로그인' />
+        </a>
       </div>
     </div>
   );

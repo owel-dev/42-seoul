@@ -23,7 +23,6 @@ function GameInviteModal() {
       socket.emit('match-cancel', modalInfo.user);
       setMatchWait(false);
     }
-
     setModalInfo({ modalName: null });
   }
 

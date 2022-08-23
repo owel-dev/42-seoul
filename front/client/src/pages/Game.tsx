@@ -30,12 +30,11 @@ function Game() {
   useEffect(() => {
     socket.emit('match-cancel');
     setMatchWait(false);
+    setChatList([]);
   }, []);
 
   useEffect(() => {
     setModalInfo({ modalName: null });
-    setChatList([]);
-
     socket.emit(
       'game-player-data',
       channelInfo.channelId,

@@ -17,8 +17,9 @@ function FriendTable() {
   function spectateRequest(channelId: string) {
     socket.emit('spectate-request', { channelId: channelId });
   }
-  const sendInvite = () => {
-    setModalInfo({ modalName: 'GAME-INVITE', user: modalInfo.user });
+  const sendInvite = (nickName: string) => {
+    setModalInfo({ modalName: 'GAME-INVITE', user: nickName });
+    console.log(nickName);
   };
 
   useEffect(() => {
@@ -58,7 +59,10 @@ function FriendTable() {
             </Link>
           )}
           {element.status === 'online' && (
-            <button className='friendButton' onClick={sendInvite}>
+            <button
+              className='friendButton'
+              onClick={() => sendInvite(element.nickName)}
+            >
               같이하기
             </button>
           )}

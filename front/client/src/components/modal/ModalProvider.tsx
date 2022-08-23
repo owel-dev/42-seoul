@@ -10,17 +10,23 @@ import ChannelSettingModal from './ChannelSettingModal';
 import PasswordSubmitModal from './PasswordSubmitModal';
 import GameInviteModal from './GameInviteModal';
 import InviteAcceptModal from './InviteAcceptModal';
-import 'styles/modal/Modal.css';
 import GameGuideModal from './GameGuideModal';
+import { matchState } from 'utils/recoil/gameState';
+import 'styles/modal/Modal.css';
 
 export default function ModalProvider() {
   const [modalInfo, setModalInfo] = useRecoilState(modalState);
+  const [matchWait, setMatchWait] = useRecoilState(matchState);
 
   const modalCloseHandler = (e: React.MouseEvent) => {
     if (e.target instanceof HTMLDivElement && e.target.id === 'modalOutside') {
       setModalInfo({ modalName: null });
-      if (modalInfo.modalName === 'MAIN-START') {
-        socket.emit('match-cancel');
+      if (
+        modalInfo.modalName === 'MAIN-START' ||
+        modalInfo.modalName === 'GAME-INVITE'
+      ) {
+        socket.emit('match-cancel', modalInfo.user);
+        setMatchWait(false);
       }
     }
   };

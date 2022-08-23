@@ -1,12 +1,4 @@
-import {
-  ConsoleLogger,
-  forwardRef,
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Server, Socket } from 'socket.io';
 import { AuthService } from 'src/auth/auth.service';
@@ -36,41 +28,41 @@ export class ChatService {
   static channels = new Map([['0', new Channel()]]);
   static users: ChatUser[] = [];
 
-  async handleConnection(socket: Socket, server: Server) {
-    // console.log(`Chat: New client connected: ${socket.id}`);
-    const token = socket.handshake.query.accessToken as string;
-    const clientNick = await this.authService.getUserNickByToken(token);
-    if (!clientNick) return;
-    const client = await this.userRepository.findOneBy({
-      nickname: clientNick,
-    });
-    const user = ChatService.users.find(
-      (user) => user.intraId === client.intra_id,
-    );
-    ChatService.users.push(new ChatUser(client.intra_id, socket));
-    socket.join(client.intra_id);
-    client.status = 'online';
-    client.channel_id = '0';
-    this.userRepository.save(client);
-    await this.joinChannel(socket, { channelId: '0' }, server);
-  }
+  // async handleConnection(socket: Socket, server: Server) {
+  // console.log(`Chat: New client connected: ${socket.id}`);
+  // const token = socket.handshake.query.accessToken as string;
+  // const clientNick = await this.authService.getUserNickByToken(token);
+  // if (!clientNick) return;
+  // const client = await this.userRepository.findOneBy({
+  //   nickname: clientNick,
+  // });
+  // const user = ChatService.users.find(
+  //   (user) => user.intraId === client.intra_id,
+  // );
+  // ChatService.users.push(new ChatUser(client.intra_id, socket));
+  // socket.join(client.intra_id);
+  // client.status = 'online';
+  // client.channel_id = '0';
+  // this.userRepository.save(client);
+  // await this.joinChannel(socket, { channelId: '0' }, server);
+  // }
 
-  async handleDisconnect(socket: Socket, server: Server) {
-    // console.log(`Chat: client disconnected: ${socket.id}`);
-    const user = ChatService.users.find((user) => user.socket.id === socket.id);
-    if (!user) {
-      return;
-    }
-    const findUser = await this.userRepository.findOneBy({
-      intra_id: user.intraId,
-    });
-    findUser.status = 'offline';
-    this.userRepository.save(findUser);
-    this.leaveChannel(socket, server);
-    ChatService.users = ChatService.users.filter(
-      (user) => user.socket.id !== socket.id,
-    );
-  }
+  // async handleDisconnect(socket: Socket, server: Server) {
+  //   // console.log(`Chat: client disconnected: ${socket.id}`);
+  //   const user = ChatService.users.find((user) => user.socket.id === socket.id);
+  //   if (!user) {
+  //     return;
+  //   }
+  //   const findUser = await this.userRepository.findOneBy({
+  //     intra_id: user.intraId,
+  //   });
+  //   findUser.status = 'offline';
+  //   this.userRepository.save(findUser);
+  //   this.leaveChannel(socket, server);
+  //   ChatService.users = ChatService.users.filter(
+  //     (user) => user.socket.id !== socket.id,
+  //   );
+  // }
 
   async sendDirectMessage(client: Socket, data: any, server: Server) {
     // console.log(`sendDirectMessage: ${client.id}`, data);
@@ -120,14 +112,11 @@ export class ChatService {
     if (
       !ChatService.channels.get(user.curChannel).muteList.includes(user.intraId)
     ) {
-      server
-        .to(user.curChannel + '-chat')
-        .except(bannerList)
-        .emit('message', {
-          nickName: data.nickName,
-          message: data.message,
-          isDM: false,
-        });
+      server.to(user.curChannel).except(bannerList).emit('message', {
+        nickName: data.nickName,
+        message: data.message,
+        isDM: false,
+      });
       //   console.log(
       //     `sendMessage to channel ${user.curChannel} from ${data.nickName} "${data.message}"`,
       //   );
@@ -145,8 +134,9 @@ export class ChatService {
   }
 
   async joinChannel(client: Socket, data: any, server: Server) {
-    // console.log(`joinChannel: ${client.id}, ${data}`);
     const user = ChatService.users.find((user) => user.socket.id === client.id);
+    console.log(`@@client.id: ${client.id}, ${data}`);
+    // console.log(user);
     const findUser = await this.userRepository.findOneBy({
       intra_id: user.intraId,
     });
@@ -154,9 +144,9 @@ export class ChatService {
       await this.leaveChannel(client, server);
     }
     user.curChannel = data.channelId;
+    console.log(`@@channelId: ${data.channelId}`);
     ChatService.channels.get(data.channelId).players.push(findUser.intra_id);
     client.join(data.channelId);
-    client.join(data.channelId + '-chat');
     await this.sendUserList(client, server);
   }
 
@@ -174,9 +164,13 @@ export class ChatService {
       (elem) => elem !== findUser.intra_id,
     );
     if (prevChannel.adminList.includes(findUser.intra_id))
-      await this.removeChannelAdmin(user.curChannel, user.intraId, server);
+      await this.removeChannelAdmin(
+        user.curChannel,
+        user.intraId,
+        server,
+        true,
+      );
     client.leave(user.curChannel);
-    client.leave(user.curChannel + '-chat');
     if (prevChannel.players.length === 0 && user.curChannel !== '0') {
       ChatService.channels.delete(user.curChannel);
       return;
@@ -188,6 +182,7 @@ export class ChatService {
 
   async getChannelUserList(curChannel: string): Promise<ResChatUser[]> {
     // console.log('getChannelUserList');
+    // console.log("curChannel=: ", curChannel)
     const userList = await Promise.all(
       ChatService.channels.get(curChannel).players.map(async (user) => {
         const findUser = await this.userRepository.findOneBy({
@@ -202,18 +197,20 @@ export class ChatService {
         return resChatUser;
       }),
     );
-    // console.log(`user-list in ${curChannel}`, userList);
+    // console.log(`user - list in ${ curChannel }`, userList);
     return userList;
   }
 
   async sendUserList(client: Socket, server: Server) {
-    // console.log(`sendUserList: ${client.id}`);
-    const curChannel = ChatService.users.find(
+    const curUser = ChatService.users.find(
       (user) => user.socket.id === client.id,
-    ).curChannel;
+    );
+    // console.log('curUser=', curUser)
+    // console.log("curChannel=: ", curUser.curChannel);
+    // console.log(`sendUserList: ${ client.id }`);
     server
-      .to(curChannel)
-      .emit('user-list', await this.getChannelUserList(curChannel));
+      .to(curUser.curChannel)
+      .emit('user-list', await this.getChannelUserList(curUser.curChannel));
   }
 
   async muteUser(client: Socket, data: any, server: Server) {
@@ -238,6 +235,7 @@ export class ChatService {
   }
 
   async setAdmin(client: Socket, data: any, server: Server) {
+    // console.log(`set admin ${data}`);
     const curChannel = ChatService.users.find(
       (user) => user.socket.id === client.id,
     ).curChannel;
@@ -247,21 +245,51 @@ export class ChatService {
     await this.addChannelAdmin(curChannel, userFind.intra_id, server);
   }
 
+  async cancelAdmin(client: Socket, data: any, server: Server) {
+    // console.log(`cancel admin ${data}`);
+    const curChannel = ChatService.users.find(
+      (user) => user.socket.id === client.id,
+    ).curChannel;
+    const userFind = await this.userRepository.findOneBy({
+      nickname: data,
+    });
+    this.removeChannelAdmin(curChannel, userFind.intra_id, server, false);
+  }
+
   async addChannelAdmin(channelId: string, intraId: string, server: Server) {
-    const findUser = await this.userRepository.findOneBy({ intra_id: intraId });
+    const userFind = await this.userRepository.findOneBy({ intra_id: intraId });
     ChatService.channels.get(channelId).adminList.push(intraId);
     server
       .to(channelId)
       .emit('user-list', await this.getChannelUserList(channelId));
+    server.to(channelId).emit('message', {
+      nickName: null,
+      message: `${userFind.nickname}(을)를 방장으로 임명하였습니다)`,
+      isDM: false,
+    });
   }
 
-  async removeChannelAdmin(channelId: string, intraId: string, server: Server) {
-    const findUser = await this.userRepository.findOneBy({ intra_id: intraId });
+  async removeChannelAdmin(
+    channelId: string,
+    intraId: string,
+    server: Server,
+    isMoveChannel: boolean,
+  ) {
+    const userFind = await this.userRepository.findOneBy({ intra_id: intraId });
     let adminList = ChatService.channels.get(channelId).adminList;
-    adminList = adminList.filter((user) => user !== intraId);
-    server
-      .to(channelId)
-      .emit('user-list', await this.getChannelUserList(channelId));
+    for (let i = 0; i < adminList.length; ++i) {
+      if (adminList[i] === intraId) adminList.splice(i, 1);
+    }
+    if (!isMoveChannel) {
+      server
+        .to(channelId)
+        .emit('user-list', await this.getChannelUserList(channelId));
+      server.to(channelId).emit('message', {
+        nickName: null,
+        message: `${userFind.nickname}의 방장 권한을 박탈하였습니다)`,
+        isDM: false,
+      });
+    }
   }
 
   async updateFriendList(client: Socket, data: any, server: Server) {

@@ -1,16 +1,11 @@
-import { Param } from '@nestjs/common';
 import {
-  ConnectedSocket,
-  MessageBody,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { GameService } from './game.service';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
 @WebSocketGateway({
   cors: {
@@ -18,29 +13,30 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
   },
 })
 @ApiTags('게임 관련 소켓 API')
-export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private readonly gameService: GameService) { }
+export class GameGateway {
+  constructor(private readonly gameService: GameService) {}
 
   @WebSocketServer()
   server: Server;
 
-  handleConnection(socket: Socket) {
-    this.gameService.handleConnection(socket);
-  }
+  // handleConnection(socket: Socket) {
+  //   this.gameService.handleConnection(socket);
+  // }
 
-  handleDisconnect(socket: Socket) {
-    this.gameService.handleDisconnect(socket);
-  }
+  // handleDisconnect(socket: Socket) {
+  //   this.gameService.handleDisconnect(socket);
+  // }
 
   @SubscribeMessage('match-request')
   matchRequest(socket: Socket, data: any): void {
-    // console.log("match-request");
-    this.gameService.matchRequest(socket, data, this.server);
+    console.log('match-request');
+    this.gameService.matchRequest(socket, data, this.server, false);
   }
 
   @SubscribeMessage('match-cancel')
-  matchCancel(socket: Socket): void {
-    this.gameService.matchCancel();
+  matchCancel(socket: Socket, data: any): void {
+    console.log('match-cancel');
+    this.gameService.matchCancel(socket, data, this.server);
   }
 
   @SubscribeMessage('spectate-request')
@@ -49,8 +45,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('gamelist-request')
-  gamelistRequest(): any {
-    return { channelList: this.gameService.gamelistRequest() };
+  gamelistRequest(socket: Socket): any {
+    return {
+      channelList: this.gameService.gamelistRequest(),
+    };
   }
 
   @SubscribeMessage('change-password')
@@ -59,7 +57,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('spectate-password')
-  submitPassword(socket: Socket, data: any): boolean {
+  spectatePassword(socket: Socket, data: any): boolean {
     return this.gameService.spectatePassword(data);
   }
 
@@ -79,7 +77,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('game-player-data')
   gamePlayerData(socket: Socket, channelId: string): any {
     const a = this.gameService.gamePlayerData(socket, channelId);
-    console.log("palyer: ", a);
+    console.log('palyer: ', a);
     return a;
     // console.log();
   }
@@ -87,14 +85,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('together-request')
   togetherRequest(socket: Socket, data: any): any {
     console.log('together-request');
-    const a = this.gameService.togetherRequest(socket, data, this.server);
+    this.gameService.togetherRequest(socket, data, this.server);
   }
 
   @SubscribeMessage('together-response')
   togetherResponse(socket: Socket, data: any): any {
     console.log('together-response');
-    const a = this.gameService.togetherResponse(socket, data, this.server);
+    this.gameService.togetherResponse(socket, data, this.server);
   }
-
-
 }

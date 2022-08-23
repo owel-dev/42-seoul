@@ -1,9 +1,6 @@
 import {
   ConnectedSocket,
   MessageBody,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
-  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -16,23 +13,11 @@ import { ChatService } from './chat.service';
     origin: '*',
   },
 })
-export class ChatGateway
-  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
-{
+export class ChatGateway {
   constructor(private readonly chatService: ChatService) {}
 
   @WebSocketServer()
   server: Server;
-
-  afterInit() {}
-
-  handleConnection(socket: Socket) {
-    this.chatService.handleConnection(socket, this.server);
-  }
-
-  handleDisconnect(socket: Socket) {
-    this.chatService.handleDisconnect(socket, this.server);
-  }
 
   @SubscribeMessage('create-channel')
   createChannel(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
@@ -64,9 +49,14 @@ export class ChatGateway
     return this.chatService.muteUser(client, data, this.server);
   }
 
-  @SubscribeMessage('admin')
-  setAdmin(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
+  @SubscribeMessage('set-admin')
+  addAdmin(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
     return this.chatService.setAdmin(client, data, this.server);
+  }
+
+  @SubscribeMessage('cancel-admin')
+  cancelAdmin(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
+    return this.chatService.cancelAdmin(client, data, this.server);
   }
 
   @SubscribeMessage('friend-start')

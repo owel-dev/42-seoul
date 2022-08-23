@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Server, Socket } from 'socket.io';
 import { GetChannelDto } from 'src/channel/dto/get-channelList.dto';
 import { ChatService } from 'src/chat/chat.service';
-import { CreateMatchDto } from 'src/match/dto/create-match.dto';
 import { Match } from 'src/match/entities/match.entity';
 import { Stat } from 'src/stats/entities/stat.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -23,7 +22,7 @@ export class GameManager {
   ) {}
 
   games = [];
-  gameChannelList = [];
+  gameChannelList: GetChannelDto[] = [];
 
   async addNewGame(data: any, server: Server) {
     const game = new Game(data, server);
@@ -59,8 +58,14 @@ export class GameManager {
         },
       });
       winPlayer.win++;
-      winPlayer.winrate = (winPlayer.win + winPlayer.lose) / winPlayer.win;
+      winPlayer.winrate = 0;
+      if (winPlayer.win != 0)
+        winPlayer.winrate = winPlayer.win / (winPlayer.win + winPlayer.lose);
       await this.statRepository.save(winPlayer);
+      this.userRepository.update(
+        { nickname: data.winPlayer },
+        { status: 'spectate' },
+      );
 
       const losePlayer = await this.statRepository.findOne({
         relations: ['user'],
@@ -69,8 +74,15 @@ export class GameManager {
         },
       });
       losePlayer.lose++;
-      losePlayer.winrate = (losePlayer.win + losePlayer.lose) / losePlayer.win;
+      losePlayer.winrate = 0;
+      if (losePlayer.win != 0)
+        losePlayer.winrate =
+          losePlayer.win / (losePlayer.win + losePlayer.lose);
       await this.statRepository.save(losePlayer);
+      this.userRepository.update(
+        { nickname: data.losePlayer },
+        { status: 'online' },
+      );
 
       const matchData = new Match();
       console.log('gameMode: ', data);
@@ -105,7 +117,7 @@ export class GameManager {
     this.gameChannelList.push(getChannelDto);
   }
 
-  getChannelList() {
+  getChannelList(): GetChannelDto[] {
     return this.gameChannelList;
   }
 
@@ -117,10 +129,14 @@ export class GameManager {
     //     game.stopSendData();
     //   }
     // });
-    this.games = this.games.filter((game) => game.gameId !== channelId);
-    this.gameChannelList = this.games.filter(
-      (gameChannel) => gameChannel.channelId !== channelId,
-    );
+    for (let i = 0; i < this.gameChannelList.length; ++i) {
+      if (this.gameChannelList[i].channelId === channelId)
+        this.gameChannelList.splice(i, 1);
+    }
+
+    // this.gameChannelList = this.games.filter(
+    //   (gameChannel) => gameChannel.channelId !== channelId,
+    // );
     // console.log(this.games);
     // console.log(this.gameChannelList);
   }
@@ -190,13 +206,28 @@ export class GameManager {
         };
       }
     }
-    return undefined;
+    return {
+      firstPlayer: undefined,
+      secondPlayer: undefined,
+    };
+  }
+
+  getPassword(channelId: string): any {
+    for (const game of this.games) {
+      if (game.channelId === channelId) {
+        return {
+          password: game.password,
+        };
+      }
+    }
+    return { password: undefined };
   }
 
   stopGame(channelId: string, user: string) {
+    console.log('@stopgame');
     for (const game of this.games) {
       if (game.channelId === channelId) {
-        game.stopSignal(user);
+        game.onStopSignal(user);
       }
     }
   }

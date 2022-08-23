@@ -7,9 +7,9 @@ export class MatchManager {
     matchQueue = {};
 
     addUser(socket: Socket, remakeMode: string, nickName: string, password: string, gameMode: string) {
-        // console.log("mode", mode);
 
         if (this.matchQueue[remakeMode] === undefined) {
+            console.log("add-user");
             this.matchQueue[remakeMode] = [{
                 socketId: socket.id,
                 socket: socket,
@@ -17,7 +17,7 @@ export class MatchManager {
                 password: password,
                 gameMode: gameMode,
             }];
-            // console.log(gameMode);
+            // console.log(gameMode`);
             // console.log(this.matchQueue);
             return;
         }
@@ -52,9 +52,20 @@ export class MatchManager {
         )
     }
 
-    clearQueue(mode: string) {
-        // console.log("#1 clearQueue:", this.matchQueue[mode]);
+    clearQueueMode(mode: string) {
+        console.log("clearQueue");
         delete this.matchQueue[mode];
-        // console.log("#2 clearQueue:", this.matchQueue[mode]);
     }
+
+    clearQueueSocket(socketId: string) {
+        console.log("clearSocket");
+        for (let [key, value] of Object.entries(this.matchQueue)) {
+            // console.log("matchQueue: ", key, value);
+            if (value[0].socketId === socketId) {
+                delete this.matchQueue[key];
+            }
+        }
+    }
+
+    // console.log("#2 clearQueue:", this.matchQueue[mode]);
 }

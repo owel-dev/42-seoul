@@ -22,12 +22,16 @@ function InviteAcceptModal() {
   };
 
   useEffect(() => {
+    let checkalert = false;
     socket.on('game-wait', (data) => {
       setChannelInfo(data);
     });
     socket.on('match-cancel', () => {
       setMatchWait(false);
-      alert(`${inviteData.nickName}(이)가 같이하기를 취소하였습니다.`);
+      if (checkalert === false) {
+        alert(`${inviteData.nickName}(이)가 같이하기를 취소하였습니다.`);
+        checkalert = true;
+      }
       setModalState({ modalName: null });
     });
   }, []);

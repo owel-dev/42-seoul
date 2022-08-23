@@ -17,7 +17,7 @@ function PasswordSubmitModal() {
 
   function submitPassword() {
     socket.emit(
-      'submit-password',
+      'spectate-password',
       { channelId: channelInfo.channelId, password: inputValue },
       (data: boolean) => {
         if (data === true) {

@@ -58,14 +58,26 @@ function MatchTable() {
             <div className='matchRow' key={index}>
               <span className='matchLeft'>
                 <Link to={`/users/${element.player1}/mypage`}>
-                  <span>{element.player1}</span>
+                  <span
+                    onClick={() => {
+                      socket.emit('friend-end');
+                    }}
+                  >
+                    {element.player1}
+                  </span>
                 </Link>
                 <span> {element.score1}</span>
               </span>
               <span className='matchMiddle'> vs </span>
               <span className='matchRight'>
                 <Link to={`/users/${element.player2}/mypage`}>
-                  <span>{element.player2}</span>
+                  <span
+                    onClick={() => {
+                      socket.emit('friend-end');
+                    }}
+                  >
+                    {element.player2}
+                  </span>
                 </Link>
                 <span> {element.score2}</span>
               </span>

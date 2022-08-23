@@ -57,7 +57,7 @@ export class GameGateway {
   }
 
   @SubscribeMessage('spectate-password')
-  submitPassword(socket: Socket, data: any): boolean {
+  spectatePassword(socket: Socket, data: any): boolean {
     return this.gameService.spectatePassword(data);
   }
 

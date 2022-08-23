@@ -212,6 +212,17 @@ export class GameManager {
     };
   }
 
+  getPassword(channelId: string): any {
+    for (const game of this.games) {
+      if (game.channelId === channelId) {
+        return {
+          password: game.password,
+        };
+      }
+    }
+    return { password: undefined };
+  }
+
   stopGame(channelId: string, user: string) {
     console.log('@stopgame');
     for (const game of this.games) {

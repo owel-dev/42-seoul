@@ -101,7 +101,7 @@ export class GameService {
         where: { nickname: nickName },
       });
       if (!userRow) throw new NotFoundException();
-      console.log(`match-cancel to ${userRow.socket_id}`);
+      //   console.log(`match-cancel to ${userRow.socket_id}`);
       server.to(userRow.socket_id).emit('match-cancel');
     }
   }
@@ -113,7 +113,7 @@ export class GameService {
   ): Promise<void> {
     this.userRepository.update(
       { socket_id: socket.id },
-      { status: 'spectate' },
+      { channel_id: data.channelId, status: 'spectate' },
     );
     socket.join(data.channelId);
     this.chatService.joinChannel(socket, data, server);
@@ -128,13 +128,14 @@ export class GameService {
   }
 
   spectatePassword(data: any): boolean {
-    // if (!data.password || !data.channelId) return false;
-    // games.map((item) => {
-    //   if (item.channelId === data.channelId && item.password === data.password)
-    //     return true;
-    // });
-    return false;
-    // }
+    if (!data.password || !data.channelId) return false;
+    if (
+      data.password == this.gameManager.getPassword(data.channelId).password
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   async clientLeave(socket: Socket, server: Server) {

@@ -12,7 +12,11 @@ import { GameService } from './game.service';
 import { MatchManager } from './match-manager';
 
 @Module({
-  imports: [AuthModule, TypeOrmModule.forFeature([User, Stat, Match]), ChatModule],
+  imports: [
+    AuthModule,
+    TypeOrmModule.forFeature([User, Stat, Match]),
+    ChatModule,
+  ],
   controllers: [],
   providers: [
     GameGateway,
@@ -21,9 +25,6 @@ import { MatchManager } from './match-manager';
     MatchManager,
     GameManager,
   ],
-  exports: [
-    GameManager,
-    GameService,
-  ]
+  exports: [GameManager, GameService, MatchManager],
 })
-export class GameModule { }
+export class GameModule {}

@@ -188,6 +188,10 @@ export class UsersService {
     return userRepo.avatar;
   }
 
+  async initializeStatus() {
+    this.userRepository.update({}, { channel_id: '0', status: 'offline' });
+  }
+
   //   async delete(nickName: string) {
   //     console.log('delete user');
   //     await this.userRepository.delete({ nickname: nickName });

@@ -28,7 +28,7 @@ export class AuthService {
     private mailerService: MailerService,
     private config: ConfigService,
     private authJwtService: AuthJwtService,
-  ) { }
+  ) {}
 
   async getAccessToken(code: string): Promise<string> {
     // console.log('code=', code);
@@ -134,7 +134,8 @@ export class AuthService {
     response.redirect(
       `http://${this.config.get('FRONT_HOST')}:${this.config.get(
         'FRONT_PORT',
-      )}?accessToken=${jwtToken.accessToken}&refreshToken=${jwtToken.refreshToken
+      )}?accessToken=${jwtToken.accessToken}&refreshToken=${
+        jwtToken.refreshToken
       }`,
       302,
     );
@@ -188,6 +189,7 @@ export class AuthService {
     resDto.nickName = userFind.nickname;
     resDto.avatar = userFind.avatar;
     resDto.isSecondAuth = userFind.is_second_auth;
+    resDto.enable2FA = userFind.enable2fa;
     return resDto;
   }
 
@@ -204,7 +206,6 @@ export class AuthService {
   async logout() {
     //소켓 연결 끊기
   }
-
 
   async fetchData(url) {
     try {
@@ -224,7 +225,9 @@ export class AuthService {
 
   async generateName() {
     try {
-      const randomNameList = await this.fetchData(`https://www.randomlists.com/data/names-surnames.json`);
+      const randomNameList = await this.fetchData(
+        `https://www.randomlists.com/data/names-surnames.json`,
+      );
       const randomName = this.pickRandom(randomNameList.data);
       return randomName;
     } catch (error) {
@@ -239,8 +242,8 @@ export class AuthService {
     userEntity = {
       intra_id: randomName,
       nickname: randomName,
-      intra_email: "mail@test.com",
-      avatar: "",
+      intra_email: 'mail@test.com',
+      avatar: '',
       status: 'offline',
       channel_id: '0',
       socket_id: null,
@@ -264,7 +267,8 @@ export class AuthService {
     response.redirect(
       `http://${this.config.get('FRONT_HOST')}:${this.config.get(
         'FRONT_PORT',
-      )}?accessToken=${jwtToken.accessToken}&refreshToken=${jwtToken.refreshToken
+      )}?accessToken=${jwtToken.accessToken}&refreshToken=${
+        jwtToken.refreshToken
       }`,
       302,
     );

@@ -27,7 +27,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const userService = app.get(UsersService);
-  userService.initializeStatus();
+  await userService.initializeStatus();
 
   await app.listen(3000);
 }

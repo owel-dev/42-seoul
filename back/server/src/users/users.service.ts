@@ -132,7 +132,7 @@ export class UsersService {
       throw new NotFoundException(`${requester}: Cannot find user`);
     return ChatService.channels
       .get(findUser.channel_id)
-      .adminList.includes(intraId);
+      ?.adminList.includes(intraId);
   }
 
   async isOwner(requester: string, intraId: string): Promise<boolean> {
@@ -142,7 +142,7 @@ export class UsersService {
     if (!findUser)
       throw new NotFoundException(`${requester}: Cannot find user`);
 
-    return ChatService.channels.get(findUser.channel_id).owner === intraId;
+    return ChatService.channels.get(findUser.channel_id)?.owner === intraId;
   }
 
   create(createUserDto: CreateUserDto, file: Express.Multer.File) {
@@ -189,7 +189,13 @@ export class UsersService {
   }
 
   async initializeStatus() {
-    this.userRepository.update({}, { channel_id: '0', status: 'offline' });
+    this.userRepository.update(
+      {},
+      {
+        channel_id: '0',
+        status: 'offline',
+      },
+    );
   }
 
   //   async delete(nickName: string) {

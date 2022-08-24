@@ -156,9 +156,9 @@ export class GameService {
     if (user.status !== 'offline') {
       await this.chatService.joinChannel(socket, { channelId: '0' }, server);
       user.status = 'online';
-      user.channel_id = '0';
-      await this.userRepository.save(user);
     }
+    user.channel_id = '0';
+    await this.userRepository.save(user);
 
     const findChannelUser = await this.userRepository.find({
       where: { channel_id: prevChannel },

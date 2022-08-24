@@ -53,7 +53,7 @@ export class GameGateway {
 
   @SubscribeMessage('change-password')
   changePassword(socket: Socket, data: any): any {
-    return this.gameService.changePassword(data);
+    return this.gameService.changePassword(data, this.server);
   }
 
   @SubscribeMessage('spectate-password')

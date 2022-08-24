@@ -141,7 +141,7 @@ export class GameManager {
     // console.log(this.gameChannelList);
   }
 
-  changePassword(channelId: string, password: string) {
+  changePassword(channelId: string, password: string, server: Server) {
     for (const game of this.games) {
       if (game.channelId === channelId) {
         game.password = password;
@@ -154,6 +154,7 @@ export class GameManager {
         break;
       }
     }
+    server.emit('gamelist-update');
   }
 
   changeSocket(channelId: string, nickName: string, socket: Socket) {

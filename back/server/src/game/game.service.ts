@@ -123,8 +123,8 @@ export class GameService {
     return this.gameManager.getChannelList();
   }
 
-  changePassword(data: any): void {
-    this.gameManager.changePassword(data.channelId, data.password);
+  changePassword(data: any, server: Server): void {
+    this.gameManager.changePassword(data.channelId, data.password, server);
   }
 
   spectatePassword(data: any): boolean {

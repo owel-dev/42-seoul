@@ -35,6 +35,7 @@ import { ConnectModule } from './connect/connect.module';
     ConnectModule,
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '../../.env',
     }),
     MailerModule.forRootAsync({
       useFactory: async (config: ConfigService) => ({
@@ -68,4 +69,4 @@ import { ConnectModule } from './connect/connect.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

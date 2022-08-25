@@ -1,4 +1,4 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { modalState } from 'utils/recoil/modal';
 import { socket } from 'components/layout/Layout';
 import GameStartModal from './GameStartModal';
@@ -11,16 +11,17 @@ import PasswordSubmitModal from './PasswordSubmitModal';
 import GameInviteModal from './GameInviteModal';
 import InviteAcceptModal from './InviteAcceptModal';
 import GameGuideModal from './GameGuideModal';
-import { matchState } from 'utils/recoil/gameState';
+import { inviteState, matchState } from 'utils/recoil/gameState';
+import { inviteType } from 'types/GameTypes';
 import 'styles/modal/Modal.css';
 
 export default function ModalProvider() {
   const [modalInfo, setModalInfo] = useRecoilState(modalState);
   const [matchWait, setMatchWait] = useRecoilState(matchState);
+  const inviteData = useRecoilValue<inviteType>(inviteState);
 
   const modalCloseHandler = (e: React.MouseEvent) => {
     if (e.target instanceof HTMLDivElement && e.target.id === 'modalOutside') {
-      setModalInfo({ modalName: null });
       if (
         modalInfo.modalName === 'MAIN-START' ||
         modalInfo.modalName === 'GAME-INVITE'
@@ -28,6 +29,10 @@ export default function ModalProvider() {
         socket.emit('match-cancel', modalInfo.user);
         setMatchWait(false);
       }
+      if (modalInfo.modalName === 'GAME-ACCEPT') {
+        socket.emit('together-response', { status: false, data: inviteData });
+      }
+      setModalInfo({ modalName: null });
     }
   };
 

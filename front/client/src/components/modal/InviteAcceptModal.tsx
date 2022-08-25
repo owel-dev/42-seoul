@@ -44,7 +44,7 @@ function InviteAcceptModal() {
         <div className='modal'>
           <div className='modalTitle'>Invite Accept</div>
           <div className='modalContent'>
-            {inviteData.nickName}님의 초대를 수락겠습니까?
+            {inviteData.nickName}님의 초대를 수락하겠습니까?
           </div>
           <div className='modalSelect'>
             <button className='modalButton' onClick={inviteAccept}>

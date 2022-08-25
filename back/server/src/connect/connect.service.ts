@@ -6,6 +6,7 @@ import { ChatUser } from 'src/chat/chat';
 import { ChatService } from 'src/chat/chat.service';
 import { GameManager } from 'src/game/game-manager';
 import { GameService } from 'src/game/game.service';
+import { MatchManager } from 'src/game/match-manager';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 
@@ -18,6 +19,7 @@ export class ConnectService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly gameManager: GameManager,
+    private readonly matchManager: MatchManager,
   ) {}
 
   async handleConnection(socket: Socket, server: Server) {
@@ -51,7 +53,7 @@ export class ConnectService {
 
     // chat user에 추가
     socket.join(client.intra_id);
-    this.chatService.joinChannel(socket, { channelId: '0' }, server);
+    await this.chatService.joinChannel(socket, { channelId: '0' }, server);
     socket.emit('connected');
   }
 
@@ -65,7 +67,10 @@ export class ConnectService {
       intra_id: user.intraId,
     });
 
-    this.chatService.leaveChannel(socket, server);
+    findUser.status = 'offline';
+    await this.userRepository.save(findUser);
+
+    await this.chatService.leaveChannel(socket, server);
     if (findUser.channel_id !== '0')
       await this.gameService.clientLeave(socket, server);
 
@@ -73,7 +78,6 @@ export class ConnectService {
       (user) => user.socket.id !== socket.id,
     );
 
-    findUser.status = 'offline';
-    this.userRepository.save(findUser);
+    this.matchManager.clearQueueSocket(socket.id);
   }
 }

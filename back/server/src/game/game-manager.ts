@@ -87,8 +87,12 @@ export class GameManager {
       const matchData = new Match();
       console.log('gameMode: ', data);
       matchData.mode = data.gameMode;
-      matchData.player_1 = data.winPlayer;
-      matchData.player_2 = data.losePlayer;
+      matchData.player_1 = await this.userRepository.findOneBy({
+        nickname: data.winPlayer,
+      });
+      matchData.player_2 = await this.userRepository.findOneBy({
+        nickname: data.losePlayer,
+      });
       matchData.score_1 = data.winScore;
       matchData.score_2 = data.loseScore;
       this.matchRepository.save(matchData);

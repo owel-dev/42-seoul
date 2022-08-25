@@ -145,7 +145,7 @@ export class GameService {
 
     const user = await this.userRepository.findOneBy({ socket_id: socket.id });
     console.log(`socket.id: ${socket.id}, user: ${user}`);
-    if (user.status === 'gaming') {
+    if (user.status === 'gaming' || user.status === 'offline') {
       this.gameManager.stopGame(user.channel_id, user.nickname);
     }
     const prevChannel = user.channel_id;
@@ -156,9 +156,9 @@ export class GameService {
     if (user.status !== 'offline') {
       await this.chatService.joinChannel(socket, { channelId: '0' }, server);
       user.status = 'online';
-      user.channel_id = '0';
-      await this.userRepository.save(user);
     }
+    user.channel_id = '0';
+    await this.userRepository.save(user);
 
     const findChannelUser = await this.userRepository.find({
       where: { channel_id: prevChannel },
@@ -215,15 +215,14 @@ export class GameService {
     if (response.status === true) {
       this.matchRequest(socket, response.data, server, true);
       return;
+    } else {
+      const userFind = await this.userRepository.findOneBy({
+        nickname: response.data.oppNickName,
+      });
+      if (!userFind) throw new NotFoundException();
+      this.matchManager.clearQueueSocket(userFind.socket_id);
+      server.to(userFind.socket_id).emit('match-cancel');
     }
-    // else {
-    //   const userFind = await this.userRepository.findOneBy({
-    //     nickname: response.data.oppNickName,
-    //   });
-    //   if (!userFind) throw new NotFoundException();
-    //   console.log(`match-cancel to ${userFind.nickname} `);
-    //   server.to(userFind.socket_id).emit('match-cancel');
-    // }
 
     let remakeMode =
       response.data.gameMode + ' ' + response.data.password.replace(' ', '');

@@ -135,7 +135,7 @@ export class ChatService {
 
   async joinChannel(client: Socket, data: any, server: Server) {
     const user = ChatService.users.find((user) => user.socket.id === client.id);
-    console.log(`@@client.id: ${client.id}, ${data}`);
+    console.log(`@@client.id: ${client.id}`, data);
     // console.log(user);
     const findUser = await this.userRepository.findOneBy({
       intra_id: user.intraId,
@@ -184,20 +184,20 @@ export class ChatService {
     // console.log('getChannelUserList');
     // console.log("curChannel=: ", curChannel)
     const userList = await Promise.all(
-      ChatService.channels.get(curChannel).players.map(async (user) => {
+      ChatService.channels.get(curChannel)?.players.map(async (user) => {
         const findUser = await this.userRepository.findOneBy({
           intra_id: user,
         });
         const resChatUser = new ResChatUser();
         resChatUser.nickName = findUser.nickname;
-        resChatUser.owner = ChatService.channels.get(curChannel).owner === user;
+        resChatUser.owner =
+          ChatService.channels.get(curChannel)?.owner === user;
         resChatUser.admin = ChatService.channels
           .get(curChannel)
           .adminList.includes(user);
         return resChatUser;
       }),
     );
-    // console.log(`user - list in ${ curChannel }`, userList);
     return userList;
   }
 

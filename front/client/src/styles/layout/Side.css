@@ -9,6 +9,8 @@
 }
 
 .userContainer {
+  display: flex;
+  flex-direction: column;
   height: 45%;
 }
 
@@ -69,8 +71,7 @@
 }
 
 .messageContainer {
-  display: flex;
-  justify-content: space-between;
+  width: 100%;
 }
 
 .myNick {
@@ -98,12 +99,12 @@
 }
 
 .sendMessage {
-  width: 16.9vw;
-  min-width: 150px;
+  width: 100%;
+  min-width: 130px;
 }
 .message {
   height: 2rem;
-  width: 70%;
+  width: 75%;
   border: 1px #00babc solid;
   box-sizing: border-box;
   font-size: 1.25rem;
@@ -111,7 +112,7 @@
 
 .button {
   height: 2rem;
-  width: 30%;
+  width: 25%;
   border: 1px #00babc solid;
   box-sizing: border-box;
   background-color: #00babc;

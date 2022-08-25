@@ -1,7 +1,8 @@
 import { MouseEvent, useEffect, useRef } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { socket } from 'components/layout/Layout';
 import { countState, gameState } from 'utils/recoil/gameState';
+import { errorState } from 'utils/recoil/error';
 import 'styles/game/Game.css';
 
 let mouseState = 0;
@@ -12,6 +13,7 @@ function GameModule(props: { gameMode: string }) {
   const background = useRef<HTMLCanvasElement>(null);
   const [gameData, setGameData] = useRecoilState(gameState);
   const [countData, setCountData] = useRecoilState(countState);
+  const setErrorMessage = useSetRecoilState(errorState);
 
   function draw_background(
     ctx: CanvasRenderingContext2D,
@@ -85,7 +87,10 @@ function GameModule(props: { gameMode: string }) {
     });
     socket.on('game-data', (data, callback) => {
       setGameData(data);
-      if (typeof callback === 'function') callback((mouseState / 500) * 100);
+      if (typeof callback === 'function') callback((mouseState / 350) * 100);
+    });
+    socket.on('spectate-data', (data) => {
+      setGameData(data);
     });
     socket.on('game-end', (data: string) => {
       clearInterval(ping_interval);
@@ -158,13 +163,13 @@ function GameModule(props: { gameMode: string }) {
     <div>
       <canvas
         ref={background}
-        height='400px'
+        height='350px'
         width='700px'
         id='background-layer'
       />
       <canvas
         ref={canvas}
-        height='400px'
+        height='350px'
         width='700px'
         onMouseMove={saveMouseState}
         id='game-layer'

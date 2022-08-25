@@ -1,8 +1,6 @@
-.content {
-  background-color: black;
-  display: flex;
-  flex: 1;
+.contentSetting {
+  background-color: rgb(255, 255, 255);
+  width: 82vw;
   height: 90vh;
-  justify-content: center;
-  align-items: center;
+  text-align: center;
 }

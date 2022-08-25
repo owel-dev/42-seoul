@@ -37,7 +37,6 @@ function Layout({ children }: LayoutProps) {
         }?accessToken=${window.localStorage.getItem('accessToken')}`
       );
     }
-    getMyData();
     socket.on('together-request', (data) => {
       setInviteData(data);
       setModalInfo({ modalName: 'GAME-ACCEPT' });
@@ -57,11 +56,8 @@ function Layout({ children }: LayoutProps) {
     if (!window.localStorage.getItem('accessToken')) {
       window.location.reload();
     }
-  }, [socket]);
-
-  useEffect(() => {
     getMyData();
-  }, []);
+  }, [socket]);
 
   const getMyData = async () => {
     try {
@@ -93,7 +89,7 @@ function Layout({ children }: LayoutProps) {
           <Side />
         </>
       )}
-      <div className='content'>{children}</div>
+      <div className='contentSetting'>{children}</div>
     </div>
   ) : (
     <>

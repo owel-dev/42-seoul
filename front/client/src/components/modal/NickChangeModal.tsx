@@ -52,6 +52,7 @@ function NickChangeModal() {
           nickName: inputValue,
         });
         socket.emit('user-list');
+        socket.emit('friend-end');
         setMyData((prev) => ({ ...prev, nickName: inputValue }));
         setProfileData((prev) => ({ ...prev, nickName: inputValue }));
         setIsChange(true);
@@ -83,7 +84,7 @@ function NickChangeModal() {
 
   return (
     <div className='modal'>
-      <div className='modalTitle'>nickname change</div>
+      <div className='modalTitle'>닉네임 변경</div>
       <div className='modalContent'>
         <div>
           <span>nickname </span>

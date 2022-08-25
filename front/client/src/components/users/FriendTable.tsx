@@ -6,10 +6,12 @@ import { friendList } from 'types/profileTypes';
 import { friendState } from 'utils/recoil/friend';
 import { profileState } from 'utils/recoil/profileData';
 import { modalState } from 'utils/recoil/modal';
+import { myDataState } from 'utils/recoil/myData';
 import 'styles/users/FriendList.css';
 
 function FriendTable() {
   const profileData = useRecoilValue(profileState);
+  const myData = useRecoilValue(myDataState);
   const setFriend = useSetRecoilState(friendState);
   const [modalInfo, setModalInfo] = useRecoilState(modalState);
   const [list, setList] = useState<friendList | null>(null);
@@ -19,11 +21,10 @@ function FriendTable() {
   }
   const sendInvite = (nickName: string) => {
     setModalInfo({ modalName: 'GAME-INVITE', user: nickName });
-    console.log(nickName);
   };
 
   useEffect(() => {
-    socket.on('friend', (data) => {
+    socket.on('friend', (data: friendList) => {
       if (list !== data) setList(data);
     });
     setFriend(true);
@@ -48,7 +49,7 @@ function FriendTable() {
             </span>
           </Link>
 
-          {element.status === 'gaming' && (
+          {element.nickName !== myData.nickName && element.status === 'gaming' && (
             <Link to={'/channel/' + element.channelId}>
               <button
                 className='friendButton'
@@ -58,7 +59,7 @@ function FriendTable() {
               </button>
             </Link>
           )}
-          {element.status === 'online' && (
+          {element.nickName !== myData.nickName && element.status === 'online' && (
             <button
               className='friendButton'
               onClick={() => sendInvite(element.nickName)}

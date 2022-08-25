@@ -19,8 +19,11 @@ function UserList() {
 
   useEffect(() => {
     socket.on('connected', () => {
-      if (isLoggedIn) socket.emit('user-list');
+      if (isLoggedIn) {
+        socket.emit('user-list');
+      }
     });
+    socket.emit('user-list');
   }, []);
 
   useEffect(() => {

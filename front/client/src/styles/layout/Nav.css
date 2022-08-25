@@ -1,6 +1,7 @@
 .nav {
   background-color: #292d39;
   height: 8vh;
+  width: 100%;
 }
 
 #logo {
@@ -34,7 +35,6 @@
   float: right;
   height: 6vh;
   width: auto;
-
   border: solid 1px white;
   border-radius: 50%;
 }

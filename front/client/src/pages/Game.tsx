@@ -57,7 +57,7 @@ function Game() {
   };
 
   return (
-    <div>
+    <div style={{ width: '80vw' }}>
       {gameInfo.gameMode === '' ? (
         <></>
       ) : (

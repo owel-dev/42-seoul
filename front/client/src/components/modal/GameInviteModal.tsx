@@ -43,9 +43,18 @@ function GameInviteModal() {
   }
 
   useEffect(() => {
+    let checkalert = false;
     socket.on('game-wait', (data) => {
       setMatchWait(false);
       setChannelInfo(data);
+    });
+    socket.on('match-cancel', () => {
+      setMatchWait(false);
+      if (checkalert === false) {
+        alert(`${modalInfo.user}(이)가 같이하기를 취소하였습니다.`);
+        checkalert = true;
+      }
+      setModalInfo({ modalName: null });
     });
   }, []);
 

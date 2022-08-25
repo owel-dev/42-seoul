@@ -1,16 +1,16 @@
 .game-area {
   background-color: white;
-  width: 95%;
+  width: 80vw;
 }
 
 .player-game-area {
   display: flex;
   align-items: center;
   height: 55vh;
-  width: 75vw;
+  width: 80vw;
 }
 .game-setting-area {
-  height: 8vh;
+  width: 75vw;
   text-align: right;
 }
 
@@ -26,14 +26,14 @@
 .game-content {
   flex: 5;
   height: 100%;
-  text-align: right;
+  text-align: center;
 }
 
 .game-setting {
-  all: none;
-
-  height: 2rem;
-  margin: 1rem;
+  all: unset;
+  height: 30%;
+  padding: 1%;
+  margin: 1%;
   font-size: 1rem;
   background-color: #00babc;
   color: white;
@@ -41,10 +41,10 @@
 
 canvas {
   position: absolute;
-  top: 20%;
-  left: 15%;
-  height: 50%;
-  width: 50%;
+  top: 17%;
+  left: 16%;
+  width: 50vw;
+  height: 50vh;
 }
 #background-layer {
   z-index: 1;

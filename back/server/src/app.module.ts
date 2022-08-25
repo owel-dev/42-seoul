@@ -35,7 +35,6 @@ import { ConnectModule } from './connect/connect.module';
     ConnectModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '../../.env',
     }),
     MailerModule.forRootAsync({
       useFactory: async (config: ConfigService) => ({

@@ -7,6 +7,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
 import { Ban } from 'src/ban/entities/ban.entity';
@@ -31,6 +32,7 @@ export class UsersService {
     @InjectRepository(Ban)
     private banRepository: Repository<Ban>,
     private readonly authService: AuthService,
+    private config: ConfigService,
   ) {}
 
   async findOneMyPage(token: string, nickName: string) {
@@ -145,9 +147,9 @@ export class UsersService {
     return ChatService.channels.get(findUser.channel_id)?.owner === intraId;
   }
 
-  create(createUserDto: CreateUserDto, file: Express.Multer.File) {
-    return this.saveUser(createUserDto, file);
-  }
+  //   create(createUserDto: CreateUserDto, file: Express.Multer.File) {
+  //     return this.saveUser(createUserDto, file);
+  //   }
 
   async update(
     nickName: string,
@@ -163,7 +165,6 @@ export class UsersService {
     if (userRepo === undefined)
       throw new NotFoundException(`${nickName}: Cannot find user`);
 
-    const ipv4 = await this.getIpAdrress();
     if (
       updateUserDto.nickName !== undefined &&
       (await this.isNickAvailable(updateUserDto.nickName))
@@ -171,7 +172,9 @@ export class UsersService {
       userRepo.nickname = updateUserDto.nickName;
     }
     if (file !== undefined) {
-      userRepo.avatar = `http://${ipv4}:3000/public/avatar/${file.filename}`;
+      userRepo.avatar = `http://${this.config.get(
+        'BACK_HOST',
+      )}:3000/public/avatar/${file.filename}`;
       if (!prevAvatar.includes('https://cdn.intra.42.fr')) {
         const prevFilename = prevAvatar.split('/').pop();
         const prevPath = `${file.destination}/${prevFilename}`;
@@ -203,24 +206,24 @@ export class UsersService {
   //     await this.userRepository.delete({ nickname: nickName });
   //   }
 
-  private async saveUser(
-    createUserDto: CreateUserDto,
-    file: Express.Multer.File,
-  ) {
-    const user = new User();
-    const filePath = `avatar/${file.filename}`;
-    const ipv4 = await this.getIpAdrress();
+  //   private async saveUser(
+  //     createUserDto: CreateUserDto,
+  //     file: Express.Multer.File,
+  //   ) {
+  //     const user = new User();
+  //     const filePath = `avatar/${file.filename}`;
+  //     const ipv4 = await this.getIpAdrress();
 
-    user.intra_id = createUserDto.intraId;
-    user.nickname = createUserDto.nickName;
-    user.intra_email = createUserDto.intraEmail;
-    user.avatar = `http://${ipv4}:3000/public/${filePath}`;
-    user.status = createUserDto.status;
-    user.channel_id = createUserDto.channelId;
-    user.stats = new Stat();
+  //     user.intra_id = createUserDto.intraId;
+  //     user.nickname = createUserDto.nickName;
+  //     user.intra_email = createUserDto.intraEmail;
+  //     user.avatar = `http://${ipv4}:3000/public/${filePath}`;
+  //     user.status = createUserDto.status;
+  //     user.channel_id = createUserDto.channelId;
+  //     user.stats = new Stat();
 
-    return await this.userRepository.save(user);
-  }
+  //     return await this.userRepository.save(user);
+  //   }
 
   private async isNickAvailable(nickName: string) {
     const users = await this.userRepository.find({
@@ -238,12 +241,12 @@ export class UsersService {
     }
   }
 
-  private async getIpAdrress() {
-    const { networkInterfaces } = require('os');
-    const nets = networkInterfaces();
-    const ipv4 = nets['en0'][1]['address'];
-    return ipv4;
-  }
+  //   private async getIpAdrress() {
+  //     const { networkInterfaces } = require('os');
+  //     const nets = networkInterfaces();
+  //     const ipv4 = nets['en0'][1]['address'];
+  //     return ipv4;
+  //   }
 
   private async deleteFile(path: string) {
     const fs = require('fs');

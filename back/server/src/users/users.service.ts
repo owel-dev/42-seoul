@@ -7,7 +7,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
 import { Ban } from 'src/ban/entities/ban.entity';
@@ -21,6 +20,7 @@ import { ResUserMyPage } from './dto/res-user-mypage.dto';
 import { ResUserNavi } from './dto/res-user-navi.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
@@ -187,7 +187,7 @@ export class UsersService {
       }
       userRepo.enable2fa = updateUserDto.enable2FA;
     }
-    this.userRepository.save(userRepo);
+    await this.userRepository.save(userRepo);
     return userRepo.avatar;
   }
 

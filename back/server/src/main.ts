@@ -19,7 +19,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  app.useStaticAssets(join(__dirname, '../dist/uploads'), {
+  app.useStaticAssets(join(__dirname, '../uploads'), {
     prefix: '/public',
   });
   app.use(cookieParser());

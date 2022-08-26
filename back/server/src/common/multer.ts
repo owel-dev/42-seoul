@@ -11,7 +11,7 @@ const createFolder = (folder: string) => {
   try {
     console.log('💾 Create a root uploads folder...');
 
-    fs.mkdirSync(path.join(__dirname, '..', `uploads`)); //폴더를 만드는 명령어
+    fs.mkdirSync(path.join(__dirname, '../../', `uploads`)); //폴더를 만드는 명령어
   } catch (error) {
     console.log('The folder already exists...');
   }
@@ -19,7 +19,7 @@ const createFolder = (folder: string) => {
   try {
     console.log(`💾 Create a ${folder} uploads folder...`);
 
-    fs.mkdirSync(path.join(__dirname, '..', `uploads/${folder}`)); //폴더 생성
+    fs.mkdirSync(path.join(__dirname, '../../', `uploads/${folder}`)); //폴더 생성
   } catch (error) {
     console.log(`The ${folder} folder already exists...`);
   }
@@ -30,7 +30,7 @@ const storage = (folder: string): multer.StorageEngine => {
   return multer.diskStorage({
     //옵션을 써준다.
     destination(req, file, cb) {
-      const folderName = path.join(__dirname, '..', `uploads/${folder}`);
+      const folderName = path.join(__dirname, '../../', `uploads/${folder}`);
       cb(null, folderName); //callback에 두번째 인자가 어디에 저장할지다.
     },
 

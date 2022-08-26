@@ -22,6 +22,7 @@ function InviteAcceptModal() {
   };
 
   useEffect(() => {
+    setChannelInfo({channelId: '', firstPlayer: '', secondPlayer: ''});
     let checkalert = false;
     socket.on('game-wait', (data) => {
       setChannelInfo(data);

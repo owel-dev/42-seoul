@@ -14,11 +14,13 @@ import { Response } from 'express';
 import { ResUserNavi } from 'src/users/dto/res-user-navi.dto';
 import { AuthService } from './auth.service';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('oauth')
 @ApiTags('auth(인증) API')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService, 
+    private config: ConfigService) { }
 
   @Get('test')
   @ApiOperation({ summary: '테스트 API', description: '테스트 API' })
@@ -46,18 +48,16 @@ export class AuthController {
     return;
   }
 
-  @Redirect(
-    'https://api.intra.42.fr/oauth/authorize?client_id=10fd003cd72e573d39cefc1302e9a5c3a9722ad06f7bffe91bf3b3587ace5036&redirect_uri=http%3A%2F%2F10.19.236.57%3A3000%2Foauth%2Flogin&response_type=code',
-    302,
-  )
   @ApiOperation({
     summary: '42 Oauth API 로그인',
     description: '42 Oauth API에 로그인을 시도한다.',
   })
   @Get('42')
-  getOauthPage() {
-    console.log('authorization/42');
-    return;
+  getOauthPage(@Res() res: Response) {
+    // console.log('authorization/42');
+    res.redirect(this.config.get('REDIRECT_INTRA'))
+    res.status(302)
+    return ;
   }
 
   @Post('sendEmail')

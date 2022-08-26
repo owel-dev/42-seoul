@@ -19,7 +19,7 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'jwt-access-to
         const now = new Date().getTime() / 1000;
         const exp = payload.exp;
 
-        console.log("JwtAccessStrategy ", exp - now);
+        // console.log("JwtAccessStrategy ", exp - now);
 
         if (exp - now < 0)
         {

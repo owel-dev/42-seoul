@@ -26,21 +26,21 @@ export class ChannelController {
   @Get(':channelid')
   @ApiOperation({ summary: ' ', description: ' ' })
   getOneChannel(@Param('channelid') channelid: number) {
-    console.log(`getOneChannel ${channelid}`);
+    // console.log(`getOneChannel ${channelid}`);
     return this.channelService.getOneChannel(channelid);
   }
 
   @Patch(':channelid/password')
   @ApiOperation({ summary: ' ', description: ' ' })
   updatePassword(@Param('channelid') channelid: number, @Body() updateChannelDto: UpdateChannelDto) {
-    console.log("updatePassword");
+    // console.log("updatePassword");
     return this.channelService.updatePassword(channelid, updateChannelDto);
   }
 
   @Patch(':channelid/entry')
   @ApiOperation({ summary: ' ', description: ' ' })
   updateCurNumUser(@Param('channelid') channelid: number) {
-    console.log("updateCurNumUser");
+    // console.log("updateCurNumUser");
     return this.channelService.updateCurNumUser(channelid);
   }
 

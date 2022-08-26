@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { socket } from 'components/layout/Layout';
 import { modalState } from 'utils/recoil/modal';
@@ -26,12 +26,17 @@ function Game() {
     firstPlayer: '',
     secondPlayer: '',
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     socket.emit('match-cancel');
     setMatchWait(false);
     setChatList([]);
     setModalInfo({ modalName: null });
+    if (channelInfo.channelId === '')
+    {
+      navigate('/');
+    }
   }, []);
 
   useEffect(() => {

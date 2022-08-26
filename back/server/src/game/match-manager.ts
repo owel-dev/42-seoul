@@ -53,12 +53,12 @@ export class MatchManager {
     }
 
     clearQueueMode(mode: string) {
-        console.log("clearQueue");
+        // console.log("clearQueue");
         delete this.matchQueue[mode];
     }
 
     clearQueueSocket(socketId: string) {
-        console.log("clearSocket");
+        // console.log("clearSocket");
         for (let [key, value] of Object.entries(this.matchQueue)) {
             // console.log("matchQueue: ", key, value);
             if (value[0].socketId === socketId) {

@@ -18,7 +18,7 @@ export class FriendService {
   ) {}
 
   async create(token: string, createFriendDto: CreateFriendDto) {
-    console.log('Friend created');
+    // console.log('Friend created');
     const friend1 = await this.userRepository.findOne({
       where: { nickname: createFriendDto.player1 },
     });
@@ -90,7 +90,7 @@ export class FriendService {
   }
 
   async deletefriend(token: string, nickName: string) {
-    console.log('delete friend');
+    // console.log('delete friend');
     const reqUser = await this.authService.getUserNickByToken(token);
     const findFriend = await this.friendRepository.findOne({
       relations: ['friend_1', 'friend_2'],

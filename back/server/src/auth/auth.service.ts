@@ -50,7 +50,7 @@ export class AuthService {
         ret = res.data.access_token;
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
     return ret;
   }
@@ -82,7 +82,7 @@ export class AuthService {
           };
         })
         .catch((res) => {
-          console.log('get /v2/me error');
+          // console.log('get /v2/me error');
         });
     }
     return userData;

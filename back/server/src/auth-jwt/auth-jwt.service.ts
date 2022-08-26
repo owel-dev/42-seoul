@@ -54,7 +54,7 @@ export class AuthJwtService {
         });
     }
     catch (err) {
-      console.log("jwtVerify 에러 발생");
+      // console.log("jwtVerify 에러 발생");
       // 토큰이 만료되거나 토큰정보가 일치하지 않았을떄.
       // throw new HttpException(
       //   { statusCode: 'SC01', error: '잘못된 코드입니다.' },

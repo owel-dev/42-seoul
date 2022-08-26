@@ -23,14 +23,14 @@ export class ConnectService {
   ) {}
 
   async handleConnection(socket: Socket, server: Server) {
-    console.log(`New client connected: ${socket.id}`);
+    // console.log(`New client connected: ${socket.id}`);
 
     // 소켓 연결한 유저 닉네임 가져오기.
     const token = socket.handshake.query.accessToken as string;
     const clientNick = await this.authService.getUserNickByToken(token);
     if (!clientNick) return;
 
-    console.log(`nick: ${clientNick}, socket: ${socket.id}`);
+    // console.log(`nick: ${clientNick}, socket: ${socket.id}`);
 
     // 닉네임으로 row 가져오기.
     const client = await this.userRepository.findOneBy({
@@ -58,7 +58,7 @@ export class ConnectService {
   }
 
   async handleDisconnect(socket: Socket, server: Server) {
-    console.log(`Chat: client disconnected: ${socket.id}`);
+    // console.log(`Chat: client disconnected: ${socket.id}`);
     const user = ChatService.users.find((user) => user.socket.id === socket.id);
     if (!user) {
       return;

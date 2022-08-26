@@ -145,7 +145,7 @@ export class GameService {
 
     const user = await this.userRepository.findOneBy({ socket_id: socket.id });
     console.log(`socket.id: ${socket.id}, user: ${user}`);
-    if (user.status === 'gaming' || user.status === 'offline') {
+    if (this.gameManager.isPlayer(user)) {
       this.gameManager.stopGame(user.channel_id, user.nickname);
     }
     const prevChannel = user.channel_id;

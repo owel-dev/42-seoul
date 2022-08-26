@@ -29,13 +29,13 @@ export class GameGateway {
 
   @SubscribeMessage('match-request')
   matchRequest(socket: Socket, data: any): void {
-    console.log('match-request');
+    // console.log('match-request');
     this.gameService.matchRequest(socket, data, this.server, false);
   }
 
   @SubscribeMessage('match-cancel')
   matchCancel(socket: Socket, data: any): void {
-    console.log('match-cancel');
+    // console.log('match-cancel');
     this.gameService.matchCancel(socket, data, this.server);
   }
 
@@ -77,20 +77,20 @@ export class GameGateway {
   @SubscribeMessage('game-player-data')
   gamePlayerData(socket: Socket, channelId: string): any {
     const a = this.gameService.gamePlayerData(socket, channelId);
-    console.log('palyer: ', a);
+    // console.log('palyer: ', a);
     return a;
     // console.log();
   }
 
   @SubscribeMessage('together-request')
   togetherRequest(socket: Socket, data: any): any {
-    console.log('together-request');
+    // console.log('together-request');
     this.gameService.togetherRequest(socket, data, this.server);
   }
 
   @SubscribeMessage('together-response')
   togetherResponse(socket: Socket, data: any): any {
-    console.log('together-response');
+    // console.log('together-response');
     this.gameService.togetherResponse(socket, data, this.server);
   }
 }

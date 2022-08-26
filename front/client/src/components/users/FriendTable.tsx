@@ -7,6 +7,7 @@ import { friendState } from 'utils/recoil/friend';
 import { profileState } from 'utils/recoil/profileData';
 import { modalState } from 'utils/recoil/modal';
 import { myDataState } from 'utils/recoil/myData';
+import { channelState } from 'utils/recoil/gameState';
 import 'styles/users/FriendList.css';
 
 function FriendTable() {
@@ -14,9 +15,11 @@ function FriendTable() {
   const myData = useRecoilValue(myDataState);
   const setFriend = useSetRecoilState(friendState);
   const [modalInfo, setModalInfo] = useRecoilState(modalState);
+  const setChannelInfo = useSetRecoilState(channelState);
   const [list, setList] = useState<friendList | null>(null);
 
   function spectateRequest(channelId: string) {
+    setChannelInfo((prev)=> ({...prev, channelId: channelId}));
     socket.emit('spectate-request', { channelId: channelId });
   }
   const sendInvite = (nickName: string) => {

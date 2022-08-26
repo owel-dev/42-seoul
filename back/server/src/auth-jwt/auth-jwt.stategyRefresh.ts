@@ -26,7 +26,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
   async validate(payload: any) {
     const now = new Date().getTime() / 1000;
     const exp = payload.exp;
-    console.log('JwtRefreshStrategy ', exp - now);
+    // console.log('JwtRefreshStrategy ', exp - now);
     if (exp - now < 0) {
       this.userRepository.update(
         { intra_id: payload.intra_id },

@@ -155,7 +155,7 @@ export class Game {
     });
 
     for (let i = COUNTDOWN; i >= 0; --i) {
-      console.log(i.toString());
+      // console.log(i.toString());
       this.firstPlayer.socket.emit('count-down', i.toString());
       this.secondPlayer.socket.emit('count-down', i.toString());
       this.server.to(this.channelId).emit('count-down', i.toString());

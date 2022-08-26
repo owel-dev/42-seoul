@@ -14,14 +14,14 @@ export class AuthJwtController {
   @Get("access/:intra_id")
   @ApiOperation({ summary: ' ', description: ' ' })
   createaccessJwt(@Param("intra_id") intra_id:string) {
-    console.log("엑세스 토큰 발행");
+    // console.log("엑세스 토큰 발행");
     return this.authJwtService.createAccessJwt(intra_id);
   }
 
   @Get("refresh/:intra_id")
   @ApiOperation({ summary: ' ', description: ' ' })
   createRefreshJwt(@Param("intra_id") intra_id:string) {
-    console.log("리프래쉬 토큰 발행");
+    // console.log("리프래쉬 토큰 발행");
     return this.authJwtService.createRefreshJwt(intra_id);
   }
 
@@ -39,8 +39,8 @@ export class AuthJwtController {
   @UseGuards(AuthGuard('jwt-access-token'))
   async test(@Req() req:Request)
   {  
-    console.log(req.headers.authorization.split('Bearer ')[1]);
-    console.log("test확인");
+    // console.log(req.headers.authorization.split('Bearer ')[1]);
+    // console.log("test확인");
     return "test 확인";
   }
 }

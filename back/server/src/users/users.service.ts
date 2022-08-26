@@ -251,8 +251,8 @@ export class UsersService {
   private async deleteFile(path: string) {
     const fs = require('fs');
     fs.unlink(path, (err) => {
-      if (err) console.log(err);
-      return;
+      if (err) 
+        return;
     });
   }
 }

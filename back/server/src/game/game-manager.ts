@@ -177,13 +177,14 @@ export class GameManager {
     }
   }
 
-  async isPlayer(user: User): Promise<boolean> {
+  isPlayer(user: User): boolean{
     const curChannel = this.games.find(
       (game) => game.channelId === user.channel_id,
     );
+    console.log("in-isPlayer", curChannel.firstPlayer, curChannel.secondPlayer, user.nickname);
     if (
-      curChannel.firstPlayer === user.nickname ||
-      curChannel.secondPlayer === user.nickname
+      curChannel.firstPlayer.nickName === user.nickname ||
+      curChannel.secondPlayer.nickName === user.nickname
     ) {
       return true;
     } else {

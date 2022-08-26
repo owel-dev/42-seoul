@@ -183,6 +183,8 @@ export class ChatService {
   async getChannelUserList(curChannel: string): Promise<ResChatUser[]> {
     // console.log('getChannelUserList');
     // console.log("curChannel=: ", curChannel)
+    if (!ChatService.channels.get(curChannel))
+      return ;
     const userList = await Promise.all(
       ChatService.channels.get(curChannel)?.players.map(async (user) => {
         const findUser = await this.userRepository.findOneBy({
@@ -205,6 +207,8 @@ export class ChatService {
     const curUser = ChatService.users.find(
       (user) => user.socket.id === client.id,
     );
+    if (!curUser)
+      return ;
     // console.log('curUser=', curUser)
     // console.log("curChannel=: ", curUser.curChannel);
     // console.log(`sendUserList: ${ client.id }`);

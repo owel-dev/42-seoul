@@ -132,7 +132,7 @@ export class AuthService {
       maxAge: 24 * 60 * 60 * 1000,
     });
     response.redirect(
-      `http://${this.config.get('FRONT_HOST')}:${this.config.get(
+      `https://${this.config.get('FRONT_HOST')}:${this.config.get(
         'FRONT_PORT',
       )}?accessToken=${jwtToken.accessToken}&refreshToken=${
         jwtToken.refreshToken
@@ -265,7 +265,7 @@ export class AuthService {
       maxAge: 24 * 60 * 60 * 1000,
     });
     response.redirect(
-      `http://${this.config.get('FRONT_HOST')}:${this.config.get(
+      `https://${this.config.get('FRONT_HOST')}:${this.config.get(
         'FRONT_PORT',
       )}?accessToken=${jwtToken.accessToken}&refreshToken=${
         jwtToken.refreshToken

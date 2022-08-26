@@ -172,7 +172,7 @@ export class UsersService {
       userRepo.nickname = updateUserDto.nickName;
     }
     if (file !== undefined) {
-      userRepo.avatar = `http://${this.config.get(
+      userRepo.avatar = `https://${this.config.get(
         'BACK_HOST',
       )}:3000/public/avatar/${file.filename}`;
       if (!prevAvatar.includes('https://cdn.intra.42.fr')) {

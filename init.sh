@@ -3,12 +3,16 @@
 INPUT=$1
 INPUT_COUNT=$#
 BACKUP_DB_PATH=./back/server/backup-db
+SSL_PATH=./back/server/secrets
 
 if [ $INPUT_COUNT -ne 1 ]; then
     exit
 fi
 
 if [ $INPUT = "up" ]; then
+    if [ ! -d $SSL_PATH ]; then
+        mkdir $SSL_PATH
+    fi
 	openssl req -x509 -newkey rsa:4096 -nodes -sha256 -keyout ./back/server/secrets/private-key.pem -out ./back/server/secrets/public-certificate.pem -days 365 -subj "/C=KR/ST=Seoul/L=Gaepo/O=42Seoul/OU=gon/CN=ft-trans" && \
     if [ ! -d $BACKUP_DB_PATH ]; then
         mkdir $BACKUP_DB_PATH

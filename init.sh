@@ -9,6 +9,7 @@ if [ $INPUT_COUNT -ne 1 ]; then
 fi
 
 if [ $INPUT = "up" ]; then
+	openssl req -x509 -newkey rsa:4096 -nodes -sha256 -keyout ./back/server/secrets/private-key.pem -out ./back/server/secrets/public-certificate.pem -days 365 -subj "/C=KR/ST=Seoul/L=Gaepo/O=42Seoul/OU=gon/CN=ft-trans" && \
     if [ ! -d $BACKUP_DB_PATH ]; then
         mkdir $BACKUP_DB_PATH
     fi

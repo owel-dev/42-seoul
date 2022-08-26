@@ -11,6 +11,7 @@ import refreshToken from 'utils/token';
 import FriendList from 'components/users/FriendList';
 import MatchList from 'components/users/MatchList';
 import UserInfo from 'components/users/UserInfo';
+import { modalState } from 'utils/recoil/modal';
 import 'styles/users/MyPage.css';
 
 function UserPage() {
@@ -19,6 +20,7 @@ function UserPage() {
   const [profileData, setProfileData] = useRecoilState(profileState);
   const location = useLocation();
   const currentUser = location.pathname.split('/')[2];
+  const setModalInfo = useSetRecoilState(modalState);
 
   const logout = () => {
     socket.emit('logout', () => {
@@ -28,6 +30,10 @@ function UserPage() {
     localStorage.removeItem('refreshToken');
     setIsLoggedIn(false);
   };
+
+  useEffect(() => {
+    setModalInfo({ modalName: null });
+  }, []);
 
   useEffect(() => {
     getData();

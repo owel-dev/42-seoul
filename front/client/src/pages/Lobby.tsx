@@ -2,6 +2,7 @@ import { useSetRecoilState } from 'recoil';
 import ChannelList from 'components/lobby/ChannelList';
 import { modalState } from 'utils/recoil/modal';
 import 'styles/Lobby/Lobby.css';
+import { useEffect } from 'react';
 
 function Lobby() {
   const setModalInfo = useSetRecoilState(modalState);
@@ -9,6 +10,10 @@ function Lobby() {
   const openGameModal = () => {
     setModalInfo({ modalName: 'MAIN-START' });
   };
+
+  useEffect(() => {
+    setModalInfo({ modalName: null });
+  }, []);
 
   return (
     <div className='lobby'>

@@ -31,6 +31,7 @@ function Game() {
     socket.emit('match-cancel');
     setMatchWait(false);
     setChatList([]);
+    setModalInfo({ modalName: null });
   }, []);
 
   useEffect(() => {

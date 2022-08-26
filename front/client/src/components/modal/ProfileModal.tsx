@@ -216,7 +216,7 @@ function ProfileModal() {
               <br />
               <span>{`${userData.win} 승`} </span>
               <span>{`${userData.lose} 패`} </span>
-              <span>{`승률 ${userData.win}%`}</span>
+              <span>{`승률 ${userData.winRate}`}</span>
             </section>
             <br />
             <>

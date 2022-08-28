@@ -13,9 +13,9 @@ var cookieParser = require('cookie-parser');
 
 async function bootstrap() {
   const httpsOptions = {
-    key: fs.readFileSync(path.join(__dirname, '..', 'secrets/private-key.pem')),
+    key: fs.readFileSync(path.join('./private-key.pem')),
     cert: fs.readFileSync(
-      path.join(__dirname, '..', 'secrets/public-certificate.pem'),
+      path.join('./public-certificate.pem'),
     ),
   };
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {

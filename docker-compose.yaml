@@ -33,10 +33,10 @@ services:
         apk update
         apk upgrade
         apk add openssl
-        openssl req -x509 -newkey rsa:4096 -nodes -sha256 \
+        openssl ${SSL_ALGO} \
         -keyout private-key.pem \
         -out public-certificate.pem \
-        -days 365 -subj "/C=KR/ST=Seoul/L=Gaepo/O=42Seoul/OU=gon/CN=ft-trans"
+        ${SSL_INFO}
         npm i
         npm run start
     depends_on:

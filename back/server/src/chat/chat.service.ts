@@ -67,6 +67,8 @@ export class ChatService {
   async sendDirectMessage(client: Socket, data: any, server: Server) {
     // console.log(`sendDirectMessage: ${client.id}`, data);
     const user = ChatService.users.find((user) => user.socket.id === client.id);
+    if (!user)
+      return ;
     const findUser = await this.userRepository.findOne({
       where: {
         intra_id: user.intraId,
@@ -84,7 +86,8 @@ export class ChatService {
       const sendTo = await this.userRepository.findOneBy({
         nickname: data.nickName,
       });
-
+      if (!sendTo)
+        return ;
       client.join(sendTo.intra_id);
       server.to(sendTo.intra_id).emit('message', {
         nickName: findUser.nickname,

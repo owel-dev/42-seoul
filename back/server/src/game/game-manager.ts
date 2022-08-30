@@ -85,7 +85,7 @@ export class GameManager {
       );
 
       const matchData = new Match();
-      console.log('gameMode: ', data);
+      // console.log('gameMode: ', data);
       matchData.mode = data.gameMode;
       matchData.player_1 = await this.userRepository.findOneBy({
         nickname: data.winPlayer,
@@ -181,7 +181,7 @@ export class GameManager {
     const curChannel = this.games.find(
       (game) => game.channelId === user.channel_id,
     );
-    console.log("in-isPlayer", curChannel.firstPlayer, curChannel.secondPlayer, user.nickname);
+    // console.log("in-isPlayer", curChannel.firstPlayer, curChannel.secondPlayer, user.nickname);
     if (
       curChannel.firstPlayer.nickName === user.nickname ||
       curChannel.secondPlayer.nickName === user.nickname
@@ -230,7 +230,7 @@ export class GameManager {
   }
 
   stopGame(channelId: string, user: string) {
-    console.log('@stopgame');
+    // console.log('@stopgame');
     for (const game of this.games) {
       if (game.channelId === channelId) {
         game.onStopSignal(user);

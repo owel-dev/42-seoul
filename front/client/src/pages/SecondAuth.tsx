@@ -27,15 +27,9 @@ function SecondAuth() {
   };
 
   const sendEmail = async () => {
-    if (emailInput.indexOf('@') === -1 || emailInput.indexOf('.') === -1) {
-      alert('이메일 양식을 확인해주세요');
-    } else if (emailInput === '') {
-      alert('이메일을 입력해주세요');
-    } else {
       try {
-        await instance.post(`/oauth/sendEmail?id=${myData.nickName}`, {
-          email: emailInput,
-        });
+        await instance.post(`/oauth/sendEmail?id=${myData.nickName}`);
+        alert('인트라에 등록된 이메일로 코드가 전송되었습니다');
       } catch (err) {
         const e = err as errorType;
         if (e.message === `Network Error`) {
@@ -50,7 +44,6 @@ function SecondAuth() {
             });
         } else setErrorMessage('SA01');
       }
-    }
   };
 
   const submitCode = async () => {
@@ -84,23 +77,16 @@ function SecondAuth() {
     <div className={styles.loginContainer}>
       <div className='secondAuthTitle'>2차 인증을 완료해주세요.</div>
       <div className={styles.innerContainer}>
-        <div className='submitFrame'>
-          <label className='submitLabel'>email</label>
-          <input
-            placeholder='ex) marvin@student.42.fr'
-            className='submitInput'
-            onChange={(e) => setEmailInput(e.target.value)}
-          />
-          <button className='submitButton' onClick={sendEmail}>
-            발송
-          </button>
-        </div>
+        <label className='secondAuthInfo'>발송 버튼을 누르면 인트라에 등록된 이메일로 인증코드가 발송됩니다</label>
         <div className='submitFrame'>
           <label className='submitLabel'>코드</label>
           <input
             className='submitInput'
             onChange={(e) => setCodeInput(e.target.value)}
           />
+          <button className='submitButton' onClick={sendEmail}>
+            발송
+          </button>
           <button className='submitButton' onClick={submitCode}>
             확인
           </button>

@@ -9,7 +9,7 @@ export class MatchManager {
     addUser(socket: Socket, remakeMode: string, nickName: string, password: string, gameMode: string) {
 
         if (this.matchQueue[remakeMode] === undefined) {
-            console.log("add-user");
+            // console.log("add-user");
             this.matchQueue[remakeMode] = [{
                 socketId: socket.id,
                 socket: socket,

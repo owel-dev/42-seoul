@@ -25,7 +25,7 @@ export class AuthController {
   @Get('test')
   @ApiOperation({ summary: '테스트 API', description: '테스트 API' })
   async testLogin(@Res() response: Response) {
-    console.log("testLogin");
+    // console.log("testLogin");
     await this.authService.testLogin(response);
   }
 
@@ -66,10 +66,9 @@ export class AuthController {
     description: '2차 인증을 위해 이메일을 전송한다.',
   })
   async sendEmail(
-    @Query('id') id: string,
-    @Body('email') email: string,
+    @Query('id') id: string
   ): Promise<void> {
-    await this.authService.sendEmail(id, email);
+    await this.authService.sendEmail(id);
   }
 
   @Post('validEmail')

@@ -135,7 +135,7 @@ export class ChatService {
 
   async joinChannel(client: Socket, data: any, server: Server) {
     const user = ChatService.users.find((user) => user.socket.id === client.id);
-    console.log(`@@client.id: ${client.id}`, data);
+    // console.log(`@@client.id: ${client.id}`, data);
     // console.log(user);
     const findUser = await this.userRepository.findOneBy({
       intra_id: user.intraId,
@@ -144,7 +144,7 @@ export class ChatService {
       await this.leaveChannel(client, server);
     }
     user.curChannel = data.channelId;
-    console.log(`@@channelId: ${data.channelId}`);
+    // console.log(`@@channelId: ${data.channelId}`);
     ChatService.channels.get(data.channelId).players.push(findUser.intra_id);
     client.join(data.channelId);
     await this.sendUserList(client, server);
@@ -323,14 +323,14 @@ export class ChatService {
   }
 
   async logout(client: Socket) {
-    console.log('logout');
+    // console.log('logout');
     const user = ChatService.users.find((user) => user.socket.id === client.id);
     const findUser = await this.userRepository.findOneBy({
       intra_id: user.intraId,
     });
-    console.log('findUser', findUser);
+    // console.log('findUser', findUser);
     if (findUser.enable2fa) {
-      console.log('enable2fa');
+      // console.log('enable2fa');
       findUser.is_second_auth = false;
       await this.userRepository.save(findUser);
     }

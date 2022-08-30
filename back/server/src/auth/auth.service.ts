@@ -132,12 +132,12 @@ export class AuthService {
       maxAge: 24 * 60 * 60 * 1000,
     });
     response.redirect(
+      302,
       `https://${this.config.get('FRONT_HOST')}:${this.config.get(
         'FRONT_PORT',
       )}?accessToken=${jwtToken.accessToken}&refreshToken=${
         jwtToken.refreshToken
-      }`,
-      302,
+      }`
     );
     return response;
   }
@@ -155,7 +155,7 @@ export class AuthService {
     return userFind.nickname;
   }
 
-  async sendEmail(id: string, email: string): Promise<void> {
+  async sendEmail(id: string): Promise<void> {
     if (hashedCodes[id]) return;
 
     const code = Math.floor(1000 + Math.random() * 9000).toString();
@@ -164,8 +164,11 @@ export class AuthService {
 
     hashedCodes[id] = hashedCode.toString();
 
+    const userRow = await this.userRepository.findOneBy({nickname: id});
+    if (userRow.intra_email === undefined)
+      return ;
     await this.mailerService.sendMail({
-      to: email,
+      to: userRow.intra_email,
       from: 'mailer_ulee@naver.com',
       subject: '2차 인증 코드입니다.',
       text: hashedCode,
@@ -236,7 +239,7 @@ export class AuthService {
   }
 
   async testLogin(@Res() response: Response) {
-    console.log('testLogin-service');
+    // console.log('testLogin-service');
     let userEntity = new User();
     let randomName = await this.generateName();
     userEntity = {

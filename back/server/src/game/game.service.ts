@@ -66,13 +66,13 @@ export class GameService {
     server: Server,
     togetherAccept: Boolean,
   ): Promise<void> {
-    console.log('in matchRequest');
+    ('in matchRequest');
     let remakeMode = data.gameMode + ' ' + data.password.replace(' ', '');
     if (data.oppNickName && !togetherAccept)
       remakeMode += ' ' + data.oppNickName;
     else if (data.oppNickName && togetherAccept)
       remakeMode += ' ' + data.nickName;
-    console.log('@@remakeMode=', remakeMode);
+    // console.log('@@remakeMode=', remakeMode);
     this.matchManager.addUser(
       socket,
       remakeMode,
@@ -81,7 +81,7 @@ export class GameService {
       data.gameMode,
     );
     if (this.matchManager.isTwoUser(remakeMode)) {
-      console.log('isTwoUser');
+      // console.log('isTwoUser');
       this.gameManager.addNewGame(
         this.matchManager.getMatchData(remakeMode),
         server,
@@ -144,7 +144,7 @@ export class GameService {
     // 만약 플레이어면 stopsignal 호출.
 
     const user = await this.userRepository.findOneBy({ socket_id: socket.id });
-    console.log(`socket.id: ${socket.id}, user: ${user}`);
+    // console.log(`socket.id: ${socket.id}, user: ${user}`);
     if (this.gameManager.isPlayer(user)) {
       this.gameManager.stopGame(user.channel_id, user.nickname);
     }
@@ -165,7 +165,7 @@ export class GameService {
     });
 
     if (findChannelUser.length === 0) {
-      console.log('closegame');
+      // console.log('closegame');
       this.gameManager.closeGame(prevChannel);
       server.emit('gamelist-update');
     }
@@ -174,7 +174,7 @@ export class GameService {
   gamePlayerData(socket: Socket, channelId: string) {
     const gameMode = this.gameManager.getMode(channelId);
     const { firstPlayer, secondPlayer } = this.gameManager.getPlayer(channelId);
-    console.log(`gameMode: ${gameMode} ${firstPlayer} ${secondPlayer}`);
+    // console.log(`gameMode: ${gameMode} ${firstPlayer} ${secondPlayer}`);
     if (
       gameMode !== undefined &&
       firstPlayer !== undefined &&
@@ -194,12 +194,12 @@ export class GameService {
     data: any,
     server: Server,
   ): Promise<void> {
-    console.log('in together-request: ', data);
+    // console.log('in together-request: ', data);
     const userRow = await this.userRepository.findOne({
       where: { nickname: data.oppNickName },
     });
     if (!userRow) throw new NotFoundException();
-    console.log('together: ', server.sockets.adapter.rooms);
+    // console.log('together: ', server.sockets.adapter.rooms);
     server.to(userRow.socket_id).emit('together-request', data);
     this.matchRequest(socket, data, server, false);
     // socket.emit('together-request', { nickName: , gameMode: , });

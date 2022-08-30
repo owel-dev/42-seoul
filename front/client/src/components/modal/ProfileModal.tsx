@@ -222,7 +222,7 @@ function ProfileModal() {
             <>
               {userData.nickName !== myData.nickName && (
                 <section>
-                  {userData.status === 'online' && (
+                  {userData.status === 'online' && channelInfo.channelId === '' && (
                     <input
                       type='button'
                       onClick={sendInvite}

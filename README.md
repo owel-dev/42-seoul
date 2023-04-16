@@ -1,7 +1,7 @@
 # 42seoul-curcus
 
 42Seoul 공통과정 소스들을 모아놓은 레포입니다.   
-각기 다른 레포로 분리되어 있던 것을 SubModule 기능을 이용하여 하나의 레포에 합쳤습니다.   
+각기 다른 레포로 분리되어 있던 것을 SubTree 기능을 이용하여 하나의 레포에 합쳤습니다.   
 브랜치를 선택하시거나, 아래에 제시된 링크들을 누르면 레포를 보실 수 있습니다.   
 <br/><br/>
 # 1서클
@@ -72,4 +72,4 @@ C++을 사용하여 IRC(Internet Relay Chat) 프로토콜을 사용하는 채팅
 ## ft-transcendense
 풀스택 Javascript를 이용한 웹 앱을 만드는 5인 팀 과제입니다.   
 회원가입, 로그인, 채팅 (DM, 강퇴, 벤), 게임(실시간 매칭, 실시간 핑퐁게임 진행, 랭킹 기능) 등을 구현합니다.   
-[ft-transcendense 레포 보기](https://github.com/owel-dev/42Seoul-Inner-Circle-Collection/tree/ft-transcendence)
+[ft-transcendense 레포 보기](https://github.com/Hi-Transcendence/ft_transcendence)

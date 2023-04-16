@@ -72,4 +72,4 @@ C++을 사용하여 IRC(Internet Relay Chat) 프로토콜을 사용하는 채팅
 ## ft-transcendense
 풀스택 Javascript를 이용한 웹 앱을 만드는 5인 팀 과제입니다.   
 회원가입, 로그인, 채팅 (DM, 강퇴, 벤), 게임(실시간 매칭, 실시간 핑퐁게임 진행, 랭킹 기능) 등을 구현합니다.   
-[ft-transcendense 레포 보기](https://github.com/owel-dev/42Seoul-Inner-Circle-Collection/tree/ft-transcendense)
+[ft-transcendense 레포 보기](https://github.com/owel-dev/42Seoul-Inner-Circle-Collection/tree/ft-transcendence)

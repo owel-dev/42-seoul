@@ -49,7 +49,7 @@ C언어 그래픽 라이브러리를 사용하여 레이캐스팅 기법으로 3
 
 ## cpp-modules
 c++ 기본 문법과 클래스, 템플릿을 이용한 프로그래밍 기초를 배울 수 있는 과제입니다.   
-[cpp-modules 레포 보기](https://github.com/owel-dev/42Seoul-Inner-Circle-Collection/tree/cpp-modules)
+[cpp-modules 레포 보기](https://github.com/owel-dev/42Seoul-Inner-Circle-Collection/tree/cpp-module)
 <br/><br/>
 # 5서클
 ## inception

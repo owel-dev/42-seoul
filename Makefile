@@ -13,6 +13,10 @@
 CLANG = c++
 CLANGFLAGS = -Wall -Wextra -Werror -std=c++98
 
+ifdef USE_STL
+	CLANGFLAGS += -D USE_STL=$(USE_STL)
+endif
+
 NAME = ft_containers
 RM = rm -rf
 
@@ -35,10 +39,10 @@ $(OBJ_DIR) :
 	@mkdir obj
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	$(CLANG) $(CLANGFLAGS) -I $(INC_DIR) -c $< -o $@	
+	@$(CLANG) $(CLANGFLAGS) -I $(INC_DIR) -c $< -o $@	
 
 $(NAME): $(OBJS)
-	$(CLANG) $(CLANGFLAGS) -o $(NAME) $(OBJS)
+	@$(CLANG) $(CLANGFLAGS) -o $(NAME) $(OBJS)
 
 clean:
 	@$(RM) $(OBJS)
@@ -47,5 +51,15 @@ fclean: clean
 	@$(RM) $(NAME)
 
 re: clean $(NAME)
+
+test:
+	@$(MAKE) USE_STL=1
+	@echo "Testing with STL"
+	@time ./$(NAME)
+	@$(MAKE) clean
+	@echo
+	@$(MAKE) USE_STL=0
+	@echo "Testing with my ft-containers STL"
+	@time ./$(NAME)
 
 .PHONY: all clean fclean re test

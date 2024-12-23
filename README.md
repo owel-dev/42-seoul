@@ -20,7 +20,7 @@
 |[Push_Swap](https://github.com/owel-dev/42Seoul-Assignments/tree/push-swap)		      |`C언어`, `Algorithm`,  `Data Structure` | C언어를 사용하여 두 개의 Deque를 이용하여 무작위로 주어진 숫자들을 정렬하는 프로그램을 만드는 과제.   
 |3 레벨 :moon:|			---					|		---			|
 |[Philosopher](https://github.com/owel-dev/42Seoul-Assignments/tree/philosophers)     |`C언어`,  `MultiThreading`,  `MultiProcessing`	| Thread, Mutex, Semaphore 관련 표준 함수를 사용하여 다중 쓰레드, 상호배제, 교착상태 방지기법 등을 직접 구현해보는 과제.|
-|[Minishell](https://github.com/owel-dev/42Seoul-Assignments/tree/minishell)          |`C언어`,  `System Progmramming` | **2인 팀 과제** 👫 - Bash Shell의 mini 버전을 만들어보는 과제. |
+|[Minishell](https://github.com/kyoshong/minishell)          |`C언어`,  `System Progmramming` | **2인 팀 과제** 👫 - Bash Shell의 mini 버전을 만들어보는 과제. |
 |4 레벨 :moon:|			---					|			---		|
 |[Cub3d](https://github.com/owel-dev/42Seoul-Assignments/tree/cub3d)			            |`C언어`,  `Computer Graphics`,  `3D Raycasting`	| 울펜슈타인 3D 게임의 mini 버전을 만들어보는 과제. |
 |[CPP_Module](https://github.com/owel-dev/42Seoul-Assignments/tree/cpp-module)	      |`C++`,	 `OOP`,  `Template`	| C++ 기본 문법과 클래스, 템플릿을 이용한 프로그래밍 기초를 배울 수 있는 과제.  | 
@@ -29,4 +29,4 @@
 |[ft_containers](https://github.com/owel-dev/42Seoul-Assignments/tree/ft-containers)	|`C++`,  `STL`,  `Template`| 직접 C++ stl container 클래스 Vector, Map, Set을 구현하는 과제, Map과 Set은 레드블랙 트리를 기반으로 구현. |
 |[ft_irc](https://github.com/owel-dev/42Seoul-Assignments/tree/ft-irc)	              |`C++`,  `OOP`,  `Socket Programming` | **3인 팀 과제** 👨‍👧‍👦 - IRC(Internet Relay Chat) 프로토콜을 사용하는 멀티플렉싱 채팅 서버 구현. |
 |6 레벨 :moon:|		---					|			---		|
-|[ft_transcendence](https://github.com/owel-dev/42Seoul-Assignments/tree/ft_transcendence)	|`React`, `NestJS`, `PostgreSQL`, `Web`, `JWT`|  **5인 팀 과제** 🎆 - 풀스택 Javascript를 이용한 웹 앱을 만드는 과제. &nbsp; 회원가입, 로그인, 채팅 (DM, 강퇴, 벤), 게임(실시간 매칭, 실시간 핑퐁게임 진행, 랭킹)기능 등을 구현.  
+|[ft_transcendence](https://github.com/Hi-Transcendence/ft_transcendence)	|`React`, `NestJS`, `PostgreSQL`, `Web`, `JWT`|  **5인 팀 과제** 🎆 - 풀스택 Javascript를 이용한 웹 앱을 만드는 과제. &nbsp; 회원가입, 로그인, 채팅 (DM, 강퇴, 벤), 게임(실시간 매칭, 실시간 핑퐁게임 진행, 랭킹)기능 등을 구현.  
